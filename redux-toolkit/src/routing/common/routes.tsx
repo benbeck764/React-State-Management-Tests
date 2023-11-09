@@ -1,7 +1,6 @@
 export enum RouteName {
   // Site Routes
   Site = "Site",
-  Home = "Home",
 }
 
 export type AppRoute = {
@@ -15,9 +14,5 @@ export const AppRoutes: Record<RouteName, AppRoute> = {
   [RouteName.Site]: {
     displayName: "Site",
     path: "/",
-  },
-  [RouteName.Home]: {
-    displayName: "Home",
-    path: "/home",
   },
 };

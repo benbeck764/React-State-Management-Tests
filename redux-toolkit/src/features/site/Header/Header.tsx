@@ -49,8 +49,8 @@ export const Header: FC = () => {
                         height: (theme) => theme.headerHeights?.[breakpoint],
                       }}
                       onClick={() => {
-                        if (pathname !== AppRoutes[RouteName.Home].path) {
-                          navigate(AppRoutes[RouteName.Home].path);
+                        if (pathname !== AppRoutes[RouteName.Site].path) {
+                          navigate(AppRoutes[RouteName.Site].path);
                         }
                       }}
                     ></Box>

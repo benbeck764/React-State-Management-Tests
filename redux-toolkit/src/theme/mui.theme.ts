@@ -68,6 +68,16 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
           },
         },
       },
+      MuiCard: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            backgroundColor: themeBase.palette.coolGrey[900],
+          },
+        },
+      },
       MuiInput: {
         defaultProps: {
           disableUnderline: true,

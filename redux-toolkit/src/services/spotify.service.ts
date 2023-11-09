@@ -40,10 +40,16 @@ class SpotifyService extends ApiService {
     window.location.href = window.location.origin;
   };
 
-  public getMyTopItems = async (
-    request: GetUserTopItemsRequest
+  public getMyTopArtists = async (
+    request?: GetUserTopItemsRequest
   ): ServiceResult<void> => {
     return this.get(endpoints.spotify.me.topArtists, request);
+  };
+
+  public getMyTopTracks = async (
+    request?: GetUserTopItemsRequest
+  ): ServiceResult<void> => {
+    return this.get(endpoints.spotify.me.topTracks, request);
   };
 
   static getInstance(): SpotifyService {

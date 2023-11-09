@@ -12,7 +12,6 @@ abstract class ApiService {
   }
 
   protected get<T>(url: string, params?: unknown): ServiceResult<T> {
-    console.log(params);
     return this.axiosInstance.get(url, { params });
   }
 

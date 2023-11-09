@@ -18,13 +18,13 @@ export const getSiteRoutes = (): RouteProps[] => [
       <>
         <Route
           index
-          path={AppRoutes[RouteName.Home].path}
+          path={AppRoutes[RouteName.Site].path}
           element={<Home />}
         ></Route>
         <Route
           index
           path="*"
-          element={<Navigate to={AppRoutes[RouteName.Home].path} replace />}
+          element={<Navigate to={AppRoutes[RouteName.Site].path} replace />}
         ></Route>
       </>
     ),

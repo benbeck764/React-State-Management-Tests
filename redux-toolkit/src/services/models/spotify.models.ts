@@ -4,7 +4,6 @@ export const SPOTIFY_ACCESS_TOKEN = "spotify.token";
 //#region Request Types
 
 export type GetUserTopItemsRequest = {
-  type?: "artists" | "tracks";
   time_range?: "short_term" | "medium_term" | "long_term";
   limit?: number;
   offset?: number;
