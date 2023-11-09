@@ -57,11 +57,13 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          body: {
+          html: {
             "*::-webkit-scrollbar": {
               width: "14px",
             },
-
+            "*::-webkit-scrollbar-thumb": {
+              backgroundColor: themeBase.palette.coolGrey[500],
+            },
             "*::-webkit-scrollbar-track": {
               backgroundColor: "transparent",
             },
@@ -177,6 +179,16 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
             "&::placeholder": {
               color: themeBase.palette.coolGrey[700],
             },
+          },
+        },
+      },
+      MuiPaper: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            backgroundColor: themeBase.palette.coolGrey[900],
           },
         },
       },

@@ -11,7 +11,28 @@ export type GetUserTopItemsRequest = {
 
 //#endregion
 
-//#region Response Types
+//#region Request Types
+
+type GetUserTopItemsBaseResponse = {
+  href: string;
+  limit: number;
+  next: string | null;
+  offset: number;
+  previous: string | null;
+  total: number;
+};
+
+export type GetUserTopArtistsResponse = GetUserTopItemsBaseResponse & {
+  items: SpotifyArtist[];
+};
+
+export type GetUserTopTracksResponse = GetUserTopItemsBaseResponse & {
+  items: SpotifyTrack[];
+};
+
+//#endregion
+
+//#region Models
 
 export type SpotifyAccessToken = {
   access_token: string;

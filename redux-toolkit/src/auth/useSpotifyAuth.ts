@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { endpoints } from "../services/common/endpoints";
+import { endpoints } from "../state/queries/common/endpoints";
 import {
   SPOTIFY_ACCESS_TOKEN,
   SPOTIFY_VERIFIER_CODE,
-} from "../services/models/spotify.models";
-import SpotifyService from "../services/spotify.service";
+  SpotifyAccessToken,
+} from "../state/queries/models/spotify.models";
+import axios, { AxiosHeaders } from "axios";
 
 type SpotifyAuthContext = {
   isAuthenticated: boolean;
@@ -12,14 +13,13 @@ type SpotifyAuthContext = {
 };
 
 export const useSpotifyAuth = (): SpotifyAuthContext => {
-  const spotifyService = SpotifyService.getInstance();
   const token = localStorage.getItem(SPOTIFY_ACCESS_TOKEN);
   const [isAuthenticated] = useState<boolean>(token !== null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    if (code) spotifyService.getToken(code);
+    if (code) getAccessToken(code);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.search]);
 
@@ -68,6 +68,34 @@ export const useSpotifyAuth = (): SpotifyAuthContext => {
 
     authUrl.search = new URLSearchParams(params).toString();
     window.location.href = authUrl.toString();
+  };
+
+  const getAccessToken = async (code: string) => {
+    const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+    if (!clientId) throw new Error("Missing Spotify Client ID");
+
+    const codeVerifier = localStorage.getItem(SPOTIFY_VERIFIER_CODE);
+    if (!codeVerifier) return;
+
+    const headers = new AxiosHeaders().set(
+      "Content-Type",
+      "application/x-www-form-urlencoded"
+    );
+
+    const response = await axios.post<SpotifyAccessToken>(
+      endpoints.spotify.token,
+      new URLSearchParams({
+        client_id: clientId,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: window.location.origin, // validates against original redirect_uri
+        code_verifier: codeVerifier,
+      }),
+      { headers }
+    );
+
+    localStorage.setItem(SPOTIFY_ACCESS_TOKEN, JSON.stringify(response.data));
+    window.location.href = window.location.origin;
   };
 
   return { isAuthenticated, loginWithRedirect };

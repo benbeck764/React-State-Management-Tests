@@ -1,10 +1,11 @@
 export const endpoints = {
   spotify: {
+    base: "https://api.spotify.com/v1/",
     auth: "https://accounts.spotify.com/authorize",
     token: "https://accounts.spotify.com/api/token",
     me: {
-      topArtists: "https://api.spotify.com/v1/me/top/artists",
-      topTracks: "https://api.spotify.com/v1/me/top/tracks",
+      topArtists: "me/top/artists",
+      topTracks: "me/top/tracks",
     },
   },
 };

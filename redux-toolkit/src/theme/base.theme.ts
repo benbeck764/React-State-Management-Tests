@@ -112,7 +112,7 @@ const paragraphExtraSmallBold = {
 };
 
 const spacing = 8;
-const pageContentMargin = spacing * 2;
+const pageContentMargin = spacing * 4;
 
 const headerHeights = {
   xs: 48,
@@ -230,7 +230,7 @@ export function getThemeBase(palette: PaletteOptions): ThemeOptions {
       },
     },
     shape: {
-      borderRadius: 4,
+      borderRadius: 8,
     },
     breakpoints: breakPointsOptions,
   };

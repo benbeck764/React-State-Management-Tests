@@ -1,24 +1,17 @@
-import AppCard from "@benbeck764/react-components/Card";
-import { Typography } from "@mui/material";
-import { FC, useEffect } from "react";
-import SpotifyService from "../../services/spotify.service";
+import { FC } from "react";
+import { useGetTopArtistsQuery } from "../../state/queries/spotify.api";
+import TopArtistsGrid from "./TopArtistsGrid/TopArtistsGrid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 const Home: FC = () => {
-  const spotifyService = SpotifyService.getInstance();
-  useEffect(() => {
-    (async () => {
-      const res = await spotifyService.getMyTopArtists();
-      console.log(res.data);
-    })();
-  }, []);
+  const { data, isLoading } = useGetTopArtistsQuery({});
 
   return (
-    <AppCard
-      paperSx={{ backgroundColor: (theme) => theme.palette.coolGrey[900] }}
-      sx={{ px: 2, pb: 4 }}
-    >
-      <Typography variant="h1">Spotify Home</Typography>
-    </AppCard>
+    <Stack>
+      <Typography variant="h1">Good afternoon</Typography>
+      <TopArtistsGrid data={data} loading={isLoading} />
+    </Stack>
   );
 };
 
