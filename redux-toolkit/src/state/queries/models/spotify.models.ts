@@ -9,26 +9,32 @@ export type GetUserTopItemsRequest = {
   offset?: number;
 };
 
+export type GetArtistAlbumsRequest = {
+  id: string;
+  include_groups?: string;
+  market?: string;
+  limit?: number;
+  offset?: number;
+};
+
 //#endregion
 
-//#region Request Types
+//#region Response Types
 
-type GetUserTopItemsBaseResponse = {
+type GetItemsBaseResponse<T> = {
   href: string;
   limit: number;
   next: string | null;
   offset: number;
   previous: string | null;
   total: number;
+  items: T[];
 };
 
-export type GetUserTopArtistsResponse = GetUserTopItemsBaseResponse & {
-  items: SpotifyArtist[];
-};
-
-export type GetUserTopTracksResponse = GetUserTopItemsBaseResponse & {
-  items: SpotifyTrack[];
-};
+export type GetUserTopArtistsResponse = GetItemsBaseResponse<SpotifyArtist>;
+export type GetUserTopTracksResponse = GetItemsBaseResponse<SpotifyTrack>;
+export type GetArtistAlbumsResponse =
+  GetItemsBaseResponse<SimplifiedSpotifyAlbum>;
 
 //#endregion
 
@@ -83,6 +89,7 @@ export type SpotifyAlbum = {
   url: string;
   artists: SimplifiedSpotifyArtist[];
 };
+type SimplifiedSpotifyAlbum = SpotifyAlbum & { album_group: string };
 
 export type SpotifyArtist = {
   external_urls: SpotifyExternalUrls;

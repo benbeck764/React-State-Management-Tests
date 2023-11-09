@@ -153,10 +153,11 @@ export function getThemeBase(palette: PaletteOptions): ThemeOptions {
       fontWeightLight: 400,
       fontSize: 14,
       h1: {
-        fontSize: 26,
-        fontWeight: 700,
-        lineHeight: lineHeights.h1 + "px",
+        fontSize: "clamp(46px, 8vw, 72px)",
+        fontWeight: 600,
+        lineHeight: 1.1,
         letterSpacing: -0.5,
+        wordSpacing: "-0.025em",
       },
       h2: {
         fontSize: 22,

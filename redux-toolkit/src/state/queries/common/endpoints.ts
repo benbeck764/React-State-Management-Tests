@@ -7,5 +7,8 @@ export const endpoints = {
       topArtists: "me/top/artists",
       topTracks: "me/top/tracks",
     },
+    artists: {
+      albums: (artistId: string) => `artists/${artistId}/albums`,
+    },
   },
 };

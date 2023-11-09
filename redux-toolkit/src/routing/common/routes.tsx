@@ -1,18 +1,22 @@
 export enum RouteName {
   // Site Routes
   Site = "Site",
+  Artist = "Artist",
 }
 
 export type AppRoute = {
-  displayName: string;
   path: string;
+  displayName?: string;
   params?: string[];
 };
 
 export const AppRoutes: Record<RouteName, AppRoute> = {
   // Site Routes
   [RouteName.Site]: {
-    displayName: "Site",
     path: "/",
+  },
+  [RouteName.Artist]: {
+    path: "/artist/:artistId",
+    params: [":artistId"],
   },
 };

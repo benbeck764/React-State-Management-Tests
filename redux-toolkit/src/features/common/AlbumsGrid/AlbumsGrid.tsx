@@ -9,18 +9,17 @@ import AppGrid, {
   AppGridData,
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
-import { createCardViewDefinitions } from "./TopArtistsGrid.card";
+import { createCardViewDefinitions } from "./ArtistsGrid.card";
 
-type TopArtistsGridProps = {
+type AlbumsGridProps = {
   data: GetUserTopArtistsResponse | undefined;
   loading: boolean;
   pagination?: boolean;
+  onArtistSelected: (artist: SpotifyArtist) => void;
 };
 
-const TopArtistsGrid: FC<TopArtistsGridProps> = (
-  props: TopArtistsGridProps
-) => {
-  const { data: dataRequest, loading, pagination } = props;
+const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
+  const { data: dataRequest, loading, pagination, onArtistSelected } = props;
 
   const gridData: AppGridData<SpotifyArtist> = {
     pages:
@@ -54,7 +53,7 @@ const TopArtistsGrid: FC<TopArtistsGridProps> = (
     displayMode: "card",
     cursorStyle: "pointer",
     //onDataRequested: onDataRequested,
-    //onItemClicked: onPoemSelected,
+    onItemClicked: onArtistSelected,
     noItemsMessage: (
       <Typography variant="paragraph">No artists found.</Typography>
     ),
@@ -66,4 +65,4 @@ const TopArtistsGrid: FC<TopArtistsGridProps> = (
   );
 };
 
-export default TopArtistsGrid;
+export default AlbumsGrid;
