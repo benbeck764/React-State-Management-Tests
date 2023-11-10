@@ -14,7 +14,7 @@ import { createCardViewDefinitions } from "./AlbumsGrid.card";
 type AlbumsGridProps = {
   data: GetArtistAlbumsResponse | undefined;
   loading: boolean;
-  onAlbumSelected: (artist: SpotifyAlbum) => void;
+  onAlbumSelected: (album: SpotifyAlbum) => void;
 };
 
 const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {

@@ -1,7 +1,10 @@
 import { FC } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetTopArtistsQuery } from "../../state/queries/spotify.api";
-import { SpotifyArtist } from "../../state/queries/models/spotify.models";
+import {
+  SpotifyAlbum,
+  SpotifyArtist,
+} from "../../state/queries/models/spotify.models";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,11 +15,12 @@ import {
 import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
 import TracksGrid from "../common/TracksGrid/TracksGrid";
 import { StyledTopTracksHeader } from "./Artist.styles";
-import { getArtistDiscographyUrl } from "../../routing/common/url";
+import { getAlbumUrl, getArtistDiscographyUrl } from "../../routing/common/url";
 import { AppLink } from "../common/AppLink";
 
 const Artist: FC = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const artistId = params["artistId"];
 
   const { artist } = useGetTopArtistsQuery(
@@ -28,8 +32,6 @@ const Artist: FC = () => {
     }
   );
 
-  console.log(artist);
-
   const { data: albumsData, isFetching: isLoadingAlbums } =
     useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
@@ -38,6 +40,10 @@ const Artist: FC = () => {
       { id: artistId!, market: "US" },
       { skip: !artistId }
     );
+
+  const handleAlbumSelected = (album: SpotifyAlbum): void => {
+    navigate(getAlbumUrl(album.id));
+  };
 
   return (
     <Stack gap={1}>
@@ -83,7 +89,7 @@ const Artist: FC = () => {
           <AlbumsGrid
             data={albumsData}
             loading={isLoadingAlbums}
-            onAlbumSelected={() => void 0}
+            onAlbumSelected={handleAlbumSelected}
           />
         </Box>
       </Stack>

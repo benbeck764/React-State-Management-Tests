@@ -3,6 +3,7 @@ export enum RouteName {
   Site = "Site",
   Artist = "Artist",
   ArtistDiscography = "ArtistDiscography",
+  Album = "Album",
 }
 
 export type AppRoute = {
@@ -23,5 +24,9 @@ export const AppRoutes: Record<RouteName, AppRoute> = {
   [RouteName.ArtistDiscography]: {
     path: "/artist/:artistId/discography",
     params: [":artistId"],
+  },
+  [RouteName.Album]: {
+    path: "/album/:albumId",
+    params: [":albumId"],
   },
 };

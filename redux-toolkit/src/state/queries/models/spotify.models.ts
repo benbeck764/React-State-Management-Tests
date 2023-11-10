@@ -22,6 +22,11 @@ export type GetArtistTopTracksRequest = {
   market?: string;
 };
 
+export type GetAlbumRequest = {
+  id: string;
+  market?: string;
+};
+
 export type GetAlbumsRequest = {
   ids: string;
   market?: string;
