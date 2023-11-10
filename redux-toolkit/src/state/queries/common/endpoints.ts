@@ -13,6 +13,7 @@ export const endpoints = {
     },
     albums: {
       all: "albums",
+      tracks: (albumId: string) => `albums/${albumId}/tracks`,
     },
   },
 };

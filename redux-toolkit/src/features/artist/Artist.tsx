@@ -28,10 +28,10 @@ const Artist: FC = () => {
     }
   );
 
-  const { data: albumsData, isLoading: isLoadingAlbums } =
+  const { data: albumsData, isFetching: isLoadingAlbums } =
     useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
-  const { data: topTracksData, isLoading: isLoadingTopTracks } =
+  const { data: topTracksData, isFetching: isLoadingTopTracks } =
     useGetArtistTopTracksQuery(
       { id: artistId!, market: "ES" },
       { skip: !artistId }

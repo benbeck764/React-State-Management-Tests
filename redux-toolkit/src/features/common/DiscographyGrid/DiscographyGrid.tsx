@@ -23,24 +23,39 @@ const DiscographyGrid: FC<DiscographyGridProps> = (
   const { data: dataRequest, loading, onAlbumSelected } = props;
 
   const gridData: AppGridData<SpotifyAlbum> = {
-    pages:
-      !dataRequest || loading
-        ? [
-            {
-              items: [],
-              pageIndex: 0,
-              pageSize: 15,
-              isLoading: true,
-            },
-          ]
-        : [
-            {
-              items: dataRequest.albums,
-              pageIndex: 0,
-              pageSize: dataRequest.albums.length,
-              isLoading: false,
-            },
-          ],
+    pages: !dataRequest
+      ? [
+          {
+            items: [],
+            pageIndex: 0,
+            pageSize: 15,
+            isLoading: true,
+          },
+        ]
+      : !loading
+      ? [
+          {
+            items: dataRequest.albums,
+            pageIndex: 0,
+            pageSize: dataRequest.albums.length,
+            isLoading: false,
+          },
+        ]
+      : [
+          {
+            items: dataRequest.albums,
+            pageIndex: 0,
+            pageSize: dataRequest.albums.length,
+            isLoading: false,
+          },
+        ].concat([
+          {
+            items: [],
+            pageIndex: 0,
+            pageSize: 15,
+            isLoading: true,
+          },
+        ]),
     totalItemCount: dataRequest?.albums?.length ?? 15,
     totalPageCount: 1,
     pagingMode: "none",

@@ -10,7 +10,7 @@ import { getArtistUrl } from "../../routing/common/url";
 const Home: FC = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetTopArtistsQuery({
+  const { data, isFetching } = useGetTopArtistsQuery({
     limit: 24,
   });
 
@@ -23,7 +23,7 @@ const Home: FC = () => {
       <Typography variant="h1">Good afternoon</Typography>
       <ArtistsGrid
         data={data}
-        loading={isLoading}
+        loading={isFetching}
         onArtistSelected={handleArtistSelected}
         pagination
       />

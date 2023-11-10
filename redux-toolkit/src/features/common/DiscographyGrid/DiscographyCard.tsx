@@ -21,6 +21,7 @@ import { getArtistUrl } from "../../../routing/common/url";
 import Box from "@mui/material/Box";
 import { groupBy } from "../../../utilities/array";
 import Divider from "@mui/material/Divider";
+import { Fragment } from "react";
 
 type AlbumCardProps =
   | {
@@ -164,13 +165,10 @@ const ArtistCard = (props: AlbumCardProps) => {
             }}
           />
           {Object.entries(discs).map(
-            (
-              [discNumber, tracks]: [string, SimplifiedSpotifyTrack[]],
-              index: number
-            ) => {
+            ([discNumber, tracks]: [string, SimplifiedSpotifyTrack[]]) => {
               const numDiscs = Object.keys(discs).length;
               return (
-                <>
+                <Fragment key={discNumber}>
                   {numDiscs > 1 && (
                     <>
                       <Stack
@@ -193,7 +191,7 @@ const ArtistCard = (props: AlbumCardProps) => {
                   {tracks.map((t) => (
                     <Stack
                       direction="row"
-                      key={index}
+                      key={t.track_number}
                       alignItems="center"
                       justifyContent="space-between"
                       p={1}
@@ -229,7 +227,7 @@ const ArtistCard = (props: AlbumCardProps) => {
                       </Typography>
                     </Stack>
                   ))}
-                </>
+                </Fragment>
               );
             }
           )}
