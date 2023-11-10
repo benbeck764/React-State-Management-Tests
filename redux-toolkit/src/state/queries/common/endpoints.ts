@@ -11,5 +11,8 @@ export const endpoints = {
       albums: (artistId: string) => `artists/${artistId}/albums`,
       topTracks: (artistId: string) => `artists/${artistId}/top-tracks`,
     },
+    albums: {
+      all: "albums",
+    },
   },
 };

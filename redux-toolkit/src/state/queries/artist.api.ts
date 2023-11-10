@@ -1,5 +1,7 @@
 import { endpoints } from "./common/endpoints";
 import {
+  GetAlbumsRequest,
+  GetAlbumsResponse,
   GetArtistAlbumsRequest,
   GetArtistAlbumsResponse,
   GetArtistTopTracksRequest,
@@ -19,6 +21,13 @@ const artistApi = spotifyApi.injectEndpoints({
         params: request,
       }),
     }),
+    getArtistDiscography: builder.query<GetAlbumsResponse, GetAlbumsRequest>({
+      query: (request: GetAlbumsRequest) => ({
+        url: endpoints.spotify.albums.all,
+        method: "GET",
+        params: request,
+      }),
+    }),
     getArtistTopTracks: builder.query<
       GetArtistTopTracksResponse,
       GetArtistTopTracksRequest
@@ -32,5 +41,8 @@ const artistApi = spotifyApi.injectEndpoints({
   }),
 });
 
-export const { useGetArtistAlbumsQuery, useGetArtistTopTracksQuery } =
-  artistApi;
+export const {
+  useGetArtistAlbumsQuery,
+  useGetArtistDiscographyQuery,
+  useGetArtistTopTracksQuery,
+} = artistApi;

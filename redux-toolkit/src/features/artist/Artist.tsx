@@ -12,6 +12,8 @@ import {
 import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
 import TracksGrid from "../common/TracksGrid/TracksGrid";
 import { StyledTopTracksHeader } from "./Artist.styles";
+import { getArtistDiscographyUrl } from "../../routing/common/url";
+import { AppLink } from "../common/AppLink";
 
 const Artist: FC = () => {
   const params = useParams();
@@ -25,6 +27,7 @@ const Artist: FC = () => {
       }),
     }
   );
+
   const { data: albumsData, isLoading: isLoadingAlbums } =
     useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
@@ -64,12 +67,16 @@ const Artist: FC = () => {
             justifyContent="space-between"
           >
             <Typography variant="h2">Discography</Typography>
-            <Typography
-              variant="paragraphLink"
-              sx={{ color: (theme) => theme.palette.grey[400] }}
-            >
-              Show all
-            </Typography>
+            {artistId && (
+              <AppLink to={getArtistDiscographyUrl(artistId)}>
+                <Typography
+                  variant="paragraphLink"
+                  sx={{ color: (theme) => theme.palette.grey[400] }}
+                >
+                  Show all
+                </Typography>
+              </AppLink>
+            )}
           </Stack>
           <AlbumsGrid
             data={albumsData}

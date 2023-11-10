@@ -5,7 +5,6 @@ import { AppRoutes, RouteName } from "../common/routes";
 import { AppPageLoader } from "@benbeck764/react-components";
 
 const Home = lazy(() => import("../../features/home/Home"));
-const Artist = lazy(() => import("../../features/artist/Artist"));
 
 export const getSiteRoutes = (): RouteProps[] => [
   {
@@ -21,11 +20,6 @@ export const getSiteRoutes = (): RouteProps[] => [
           index
           path={AppRoutes[RouteName.Site].path}
           element={<Home />}
-        ></Route>
-        <Route
-          index
-          path={AppRoutes[RouteName.Artist].path}
-          element={<Artist />}
         ></Route>
         <Route
           index

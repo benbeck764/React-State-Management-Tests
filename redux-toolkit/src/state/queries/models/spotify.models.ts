@@ -22,6 +22,11 @@ export type GetArtistTopTracksRequest = {
   market?: string;
 };
 
+export type GetAlbumsRequest = {
+  ids: string;
+  market?: string;
+};
+
 //#endregion
 
 //#region Response Types
@@ -43,6 +48,9 @@ export type GetArtistAlbumsResponse =
   GetItemsBaseResponse<SimplifiedSpotifyAlbum>;
 export type GetArtistTopTracksResponse = {
   tracks: SpotifyTrack[];
+};
+export type GetAlbumsResponse = {
+  albums: SpotifyAlbum[];
 };
 
 //#endregion
@@ -82,6 +90,11 @@ type SpotifyRestrictions = {
   reason: string;
 };
 
+type SpotifyCopyRights = {
+  text: string;
+  type: string;
+};
+
 export type SpotifyAlbum = {
   album_type: string;
   total_tracks: number;
@@ -97,8 +110,14 @@ export type SpotifyAlbum = {
   type: "album";
   url: string;
   artists: SimplifiedSpotifyArtist[];
+  tracks: SpotifyAlbumTracks;
+  copyrights: SpotifyCopyRights[];
+  external_ids: SpotifyExternalIds;
+  genres: string[];
+  label: string;
+  popularity: number;
 };
-type SimplifiedSpotifyAlbum = SpotifyAlbum & { album_group: string };
+export type SimplifiedSpotifyAlbum = SpotifyAlbum & { album_group: string };
 
 export type SpotifyArtist = {
   external_urls: SpotifyExternalUrls;
@@ -116,6 +135,16 @@ type SimplifiedSpotifyArtist = Pick<
   SpotifyArtist,
   "external_urls" | "href" | "id" | "name" | "type" | "uri"
 >;
+
+type SpotifyAlbumTracks = {
+  href: string;
+  limit: number;
+  next: string | null;
+  offset: number;
+  previous: string | null;
+  total: number;
+  items: SimplifiedSpotifyTrack[];
+};
 
 export type SpotifyTrack = {
   album: SpotifyAlbum;
@@ -139,5 +168,9 @@ export type SpotifyTrack = {
   uri: string;
   is_local: boolean;
 };
+export type SimplifiedSpotifyTrack = Omit<
+  SpotifyTrack,
+  "album" | "external_urls" | "popularity"
+>;
 
 //#endregion
