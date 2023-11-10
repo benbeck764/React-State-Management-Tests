@@ -20,7 +20,7 @@ const Artist: FC = () => {
   const artistId = params["artistId"];
 
   const { artist } = useGetTopArtistsQuery(
-    {},
+    { limit: 24 },
     {
       selectFromResult: (res) => ({
         artist: res.data?.items.find((a: SpotifyArtist) => a.id === artistId),
@@ -28,12 +28,14 @@ const Artist: FC = () => {
     }
   );
 
+  console.log(artist);
+
   const { data: albumsData, isFetching: isLoadingAlbums } =
     useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
   const { data: topTracksData, isFetching: isLoadingTopTracks } =
     useGetArtistTopTracksQuery(
-      { id: artistId!, market: "ES" },
+      { id: artistId!, market: "US" },
       { skip: !artistId }
     );
 

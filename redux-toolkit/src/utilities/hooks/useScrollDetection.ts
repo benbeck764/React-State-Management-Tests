@@ -29,21 +29,11 @@ const useScrollDetection = ({
       }
     };
 
-    const handleScrollEnd = () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        handleScroll();
-        timeoutId = undefined;
-      }
-    };
-
     window.addEventListener("scroll", updateScrollPercentage);
-    window.addEventListener("scroll", handleScrollEnd);
 
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("scroll", updateScrollPercentage);
-      window.removeEventListener("scroll", handleScrollEnd);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

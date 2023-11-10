@@ -14,13 +14,14 @@ import { createCardViewDefinitions } from "./DiscographyGrid.card";
 type DiscographyGridProps = {
   data: GetAlbumsResponse | undefined;
   loading: boolean;
+  pageSize: number;
   onAlbumSelected: (artist: SpotifyAlbum) => void;
 };
 
 const DiscographyGrid: FC<DiscographyGridProps> = (
   props: DiscographyGridProps
 ) => {
-  const { data: dataRequest, loading, onAlbumSelected } = props;
+  const { data: dataRequest, loading, pageSize, onAlbumSelected } = props;
 
   const gridData: AppGridData<SpotifyAlbum> = {
     pages: !dataRequest
@@ -28,7 +29,7 @@ const DiscographyGrid: FC<DiscographyGridProps> = (
           {
             items: [],
             pageIndex: 0,
-            pageSize: 15,
+            pageSize: pageSize,
             isLoading: true,
           },
         ]
@@ -52,11 +53,11 @@ const DiscographyGrid: FC<DiscographyGridProps> = (
           {
             items: [],
             pageIndex: 0,
-            pageSize: 15,
+            pageSize: pageSize,
             isLoading: true,
           },
         ]),
-    totalItemCount: dataRequest?.albums?.length ?? 15,
+    totalItemCount: dataRequest?.albums?.length ?? pageSize,
     totalPageCount: 1,
     pagingMode: "none",
   };
