@@ -9,7 +9,6 @@ import {
   SPOTIFY_ACCESS_TOKEN,
   SpotifyAccessToken,
 } from "../models/spotify.models";
-import { axiosBaseQuery } from "./axios-api-helpers";
 import { endpoints } from "./endpoints";
 
 let axiosInstance: AxiosInstance;

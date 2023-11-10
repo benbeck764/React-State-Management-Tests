@@ -5,7 +5,13 @@ import { SpotifyArtist } from "../../state/queries/models/spotify.models";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useGetArtistAlbumsQuery } from "../../state/queries/artist.api";
+import {
+  useGetArtistAlbumsQuery,
+  useGetArtistTopTracksQuery,
+} from "../../state/queries/artist.api";
+import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
+import TracksGrid from "../common/TracksGrid/TracksGrid";
+import { StyledTopTracksHeader } from "./Artist.styles";
 
 const Artist: FC = () => {
   const params = useParams();
@@ -20,19 +26,58 @@ const Artist: FC = () => {
     }
   );
   const { data: albumsData, isLoading: isLoadingAlbums } =
-    useGetArtistAlbumsQuery({ id: artistId! }, { skip: !artistId });
+    useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
-  console.log(albumsData);
+  const { data: topTracksData, isLoading: isLoadingTopTracks } =
+    useGetArtistTopTracksQuery(
+      { id: artistId!, market: "ES" },
+      { skip: !artistId }
+    );
 
   return (
     <Stack gap={1}>
       <Typography variant="h1">{artist?.name}</Typography>
-      <Box
-        component="img"
-        src={artist?.images[1].url}
-        width={300}
-        height={300}
-      ></Box>
+      <Stack gap={2}>
+        <Stack direction="row" gap={2}>
+          <Stack>
+            <Box
+              component="img"
+              src={artist?.images[1].url}
+              width={300}
+              height={300}
+              sx={{ borderRadius: 2 }}
+            ></Box>
+          </Stack>
+          <Box width="100%">
+            <StyledTopTracksHeader>
+              <Typography variant="h2">Popular</Typography>
+            </StyledTopTracksHeader>
+            <Box maxHeight="250px" sx={{ overflowY: "scroll" }}>
+              <TracksGrid data={topTracksData} loading={isLoadingTopTracks} />
+            </Box>
+          </Box>
+        </Stack>
+        <Box>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h2">Discography</Typography>
+            <Typography
+              variant="paragraphLink"
+              sx={{ color: (theme) => theme.palette.grey[400] }}
+            >
+              Show all
+            </Typography>
+          </Stack>
+          <AlbumsGrid
+            data={albumsData}
+            loading={isLoadingAlbums}
+            onAlbumSelected={() => void 0}
+          />
+        </Box>
+      </Stack>
     </Stack>
   );
 };

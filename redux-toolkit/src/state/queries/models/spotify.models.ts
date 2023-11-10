@@ -17,6 +17,11 @@ export type GetArtistAlbumsRequest = {
   offset?: number;
 };
 
+export type GetArtistTopTracksRequest = {
+  id: string;
+  market?: string;
+};
+
 //#endregion
 
 //#region Response Types
@@ -33,8 +38,12 @@ type GetItemsBaseResponse<T> = {
 
 export type GetUserTopArtistsResponse = GetItemsBaseResponse<SpotifyArtist>;
 export type GetUserTopTracksResponse = GetItemsBaseResponse<SpotifyTrack>;
+
 export type GetArtistAlbumsResponse =
   GetItemsBaseResponse<SimplifiedSpotifyAlbum>;
+export type GetArtistTopTracksResponse = {
+  tracks: SpotifyTrack[];
+};
 
 //#endregion
 

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import {
-  GetUserTopArtistsResponse,
-  SpotifyArtist,
+  GetArtistAlbumsResponse,
+  SpotifyAlbum,
 } from "../../../state/queries/models/spotify.models";
 import Box from "@mui/material/Box";
 import AppGrid, {
@@ -9,26 +9,25 @@ import AppGrid, {
   AppGridData,
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
-import { createCardViewDefinitions } from "./ArtistsGrid.card";
+import { createCardViewDefinitions } from "./AlbumsGrid.card";
 
 type AlbumsGridProps = {
-  data: GetUserTopArtistsResponse | undefined;
+  data: GetArtistAlbumsResponse | undefined;
   loading: boolean;
-  pagination?: boolean;
-  onArtistSelected: (artist: SpotifyArtist) => void;
+  onAlbumSelected: (artist: SpotifyAlbum) => void;
 };
 
 const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
-  const { data: dataRequest, loading, pagination, onArtistSelected } = props;
+  const { data: dataRequest, loading, onAlbumSelected } = props;
 
-  const gridData: AppGridData<SpotifyArtist> = {
+  const gridData: AppGridData<SpotifyAlbum> = {
     pages:
       !dataRequest || loading
         ? [
             {
               items: [],
               pageIndex: 0,
-              pageSize: 24,
+              pageSize: 12,
               isLoading: true,
             },
           ]
@@ -44,18 +43,17 @@ const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
     totalPageCount: dataRequest
       ? Math.floor(dataRequest.total / dataRequest.limit)
       : 0,
-    pagingMode: pagination ? "pagination" : "none",
+    pagingMode: "none",
   };
 
-  const gridProps: AppGridProps<SpotifyArtist> = {
+  const gridProps: AppGridProps<SpotifyAlbum> = {
     data: gridData,
     cardView: createCardViewDefinitions(),
     displayMode: "card",
     cursorStyle: "pointer",
-    //onDataRequested: onDataRequested,
-    onItemClicked: onArtistSelected,
+    onItemClicked: onAlbumSelected,
     noItemsMessage: (
-      <Typography variant="paragraph">No artists found.</Typography>
+      <Typography variant="paragraph">No albums found.</Typography>
     ),
   };
   return (

@@ -7,20 +7,21 @@ import {
   StyledEllipsingTextContainer,
   TypographySkeleton,
 } from "@benbeck764/react-components/common";
-import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
+import { SpotifyAlbum } from "../../../state/queries/models/spotify.models";
 import { StyledCard } from "../common.styles";
+import { capitalize } from "@mui/material/utils";
 
-type ArtistCardProps =
+type AlbumCardProps =
   | {
-      artist: SpotifyArtist;
+      album: SpotifyAlbum;
       loadingPlaceholder?: never;
     }
   | {
-      artist?: SpotifyArtist;
+      album?: SpotifyAlbum;
       loadingPlaceholder: true;
     };
 
-const ArtistCard = (props: ArtistCardProps) => {
+const ArtistCard = (props: AlbumCardProps) => {
   const theme = useTheme();
 
   if (props.loadingPlaceholder) {
@@ -30,19 +31,24 @@ const ArtistCard = (props: ArtistCardProps) => {
           <Skeleton variant="circular" width={150} height={150} />
           <TypographySkeleton
             variant="h6"
-            charCount={12}
-            charCountVariance={6}
-            lines={1}
+            charCount={18}
+            charCountVariance={8}
+            lines={2}
+            sx={{ textAlign: "center" }}
           />
         </Stack>
       </StyledCard>
     );
   } else {
-    const { artist } = props;
+    const { album } = props;
     return (
       <StyledCard>
         <Stack alignItems="center" gap={2}>
-          <Avatar sx={{ width: 150, height: 150 }} src={artist.images[0].url} />
+          <Avatar
+            variant="rounded"
+            sx={{ width: 150, height: 150 }}
+            src={album.images[0].url}
+          />
           <StyledEllipsingTextContainer
             lines={1}
             reserveHeight={
@@ -52,8 +58,26 @@ const ArtistCard = (props: ArtistCardProps) => {
               )
             }
           >
-            <Typography variant="h6">{artist.name}</Typography>
+            <Typography variant="h6" align="center">
+              {album.name}
+            </Typography>
           </StyledEllipsingTextContainer>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            width="100%"
+          >
+            <Typography
+              variant="paragraph"
+              align="center"
+              sx={{ color: (theme) => theme.palette.grey[400] }}
+            >
+              {`${new Date(album.release_date).getFullYear()} • ${capitalize(
+                album.album_type
+              )}`}
+            </Typography>
+          </Stack>
         </Stack>
       </StyledCard>
     );

@@ -10,7 +10,7 @@ import { getArtistUrl } from "../../routing/common/url";
 const Home: FC = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetTopArtistsQuery({});
+  const { data, isLoading } = useGetTopArtistsQuery({ limit: 24 });
 
   const handleArtistSelected = (artist: SpotifyArtist) => {
     navigate(getArtistUrl(artist.id), { state: artist });
@@ -23,6 +23,7 @@ const Home: FC = () => {
         data={data}
         loading={isLoading}
         onArtistSelected={handleArtistSelected}
+        pagination
       />
     </Stack>
   );

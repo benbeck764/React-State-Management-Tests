@@ -2,6 +2,8 @@ import { endpoints } from "./common/endpoints";
 import {
   GetArtistAlbumsRequest,
   GetArtistAlbumsResponse,
+  GetArtistTopTracksRequest,
+  GetArtistTopTracksResponse,
 } from "./models/spotify.models";
 import { spotifyApi } from "./spotify.api";
 
@@ -17,7 +19,18 @@ const artistApi = spotifyApi.injectEndpoints({
         params: request,
       }),
     }),
+    getArtistTopTracks: builder.query<
+      GetArtistTopTracksResponse,
+      GetArtistTopTracksRequest
+    >({
+      query: (request: GetArtistTopTracksRequest) => ({
+        url: endpoints.spotify.artists.topTracks(request.id),
+        method: "GET",
+        params: request,
+      }),
+    }),
   }),
 });
 
-export const { useGetArtistAlbumsQuery } = artistApi;
+export const { useGetArtistAlbumsQuery, useGetArtistTopTracksQuery } =
+  artistApi;
