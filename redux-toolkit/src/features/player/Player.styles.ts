@@ -1,4 +1,6 @@
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 
 export const StyledPlayerWrapper = styled(Box)(({ theme }) => ({
@@ -29,6 +31,7 @@ export const StyledPlayerContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   backgroundColor: "#000000",
   paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
 
   [theme.breakpoints.up("xs")]: {
     maxHeight: theme.playerHeights["xs"],
@@ -49,5 +52,31 @@ export const StyledPlayerContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("xl")]: {
     maxHeight: theme.playerHeights["xl"],
     height: theme.playerHeights["xl"],
+  },
+}));
+
+export const StyledPlayerButton = styled(IconButton)(() => ({
+  padding: 0,
+}));
+
+export const StyledTrackTimeSlider = styled(Slider)(({ theme }) => ({
+  color: theme.palette.common.white,
+  height: 4,
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  "&:hover": {
+    "& .MuiSlider-track": {
+      color: theme.palette.primary.main,
+    },
+  },
+  "& .MuiSlider-thumb": {
+    width: 12,
+    height: 12,
+  },
+  "& .MuiSlider-rail": {
+    color: theme.palette.grey[300],
+  },
+  "& .MuiSlider-track": {
+    color: theme.palette.common.white,
   },
 }));

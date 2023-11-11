@@ -8,18 +8,22 @@ type SpotifyWebPlaybackContext = {
   player: Spotify.Player;
   ready: boolean;
   state: Spotify.PlaybackState | undefined;
+  deviceId: string | undefined;
 };
 
 // How can I return player from this hook so that it is of type Spotify.Player rather than Spotify.Player | undefined
 const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
-  const [ready, setReady] = useState<boolean>(false);
   const [player, setPlayer] = useState<Spotify.Player | undefined>(undefined);
+  const [ready, setReady] = useState<boolean>(false);
   const [playerState, setPlayerState] = useState<
     Spotify.PlaybackState | undefined
   >(undefined);
+  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
+      let intervalId: NodeJS.Timeout;
+
       const player = new window.Spotify.Player({
         name: "Web Playback SDK",
         getOAuthToken: (cb: (token: string) => void) => {
@@ -32,23 +36,31 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
 
           if (accessToken) cb(accessToken);
         },
-        volume: 0.5,
+        volume: 1,
       });
 
       setPlayer(player);
 
       player.addListener("ready", (instance: Spotify.WebPlaybackInstance) => {
-        console.log("Ready with Device ID", instance.device_id);
         setReady(true);
+        setDeviceId(instance.device_id);
+
+        intervalId = setInterval(() => {
+          player
+            .getCurrentState()
+            .then((state: Spotify.PlaybackState | null) => {
+              if (state) {
+                setPlayerState(state);
+              }
+            });
+        }, 1000);
       });
 
-      player.addListener(
-        "not_ready",
-        (instance: Spotify.WebPlaybackInstance) => {
-          console.log("Device ID has gone offline", instance.device_id);
-          setReady(false);
-        }
-      );
+      player.addListener("not_ready", () => {
+        setReady(false);
+        setDeviceId(undefined);
+        if (intervalId) clearInterval(intervalId);
+      });
 
       // Error handling
       player.addListener("autoplay_failed", () => {
@@ -67,10 +79,7 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
         console.error(`Playback error: ${message}`);
       });
 
-      // I am using the Spotify Web Playback SDK and have the following code defined:
-      // Why is nothing being emitted from this listener?
       player.addListener("player_state_changed", (state) => {
-        console.log(state);
         setPlayerState(state);
       });
 
@@ -78,7 +87,7 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
     };
   }, []);
 
-  return { player: player!, ready, state: playerState };
+  return { player: player!, ready, state: playerState, deviceId };
 };
 
 export default useSpotifyWebPlayback;

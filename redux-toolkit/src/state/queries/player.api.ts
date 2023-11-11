@@ -1,5 +1,10 @@
 import { endpoints } from "./common/endpoints";
-import { SpotifyPlaybackState } from "./models/spotify.models";
+import {
+  GetRecentlyPlayedTracksRequest,
+  GetRecentlyPlayedTracksResponse,
+  SpotifyPlaybackState,
+  StartOrResumePlaybackRequest,
+} from "./models/spotify.models";
 import { spotifyApi } from "./spotify.api";
 
 const playerApi = spotifyApi.injectEndpoints({
@@ -16,8 +21,31 @@ const playerApi = spotifyApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getRecentlyPlayed: builder.query<
+      GetRecentlyPlayedTracksResponse,
+      GetRecentlyPlayedTracksRequest
+    >({
+      query: () => ({
+        url: endpoints.spotify.me.recentlyPlayed,
+        method: "GET",
+      }),
+    }),
+    startOrResumePlayback: builder.mutation<void, StartOrResumePlaybackRequest>(
+      {
+        query: (request: StartOrResumePlaybackRequest) => ({
+          url: endpoints.spotify.me.play,
+          method: "PUT",
+          params: { device_id: request.device_id },
+          data: request,
+        }),
+      }
+    ),
   }),
 });
 
-export const { useGetPlaybackStateQuery, useGetCurrentPlayingStateQuery } =
-  playerApi;
+export const {
+  useGetPlaybackStateQuery,
+  useGetCurrentPlayingStateQuery,
+  useGetRecentlyPlayedQuery,
+  useStartOrResumePlaybackMutation,
+} = playerApi;

@@ -118,6 +118,11 @@ type SpotifyExplicitContent = {
   filter_locked: boolean;
 };
 
+type SpotifyCursors = {
+  after: string;
+  before: string;
+};
+
 export type SpotifyArtist = {
   external_urls: SpotifyExternalUrls;
   followers: SpotifyFollowers;
@@ -305,6 +310,35 @@ export type SpotifyPlaybackState = {
   item: SpotifyTrack | SpotifyEpisode;
   currently_playing_type: "track" | "episode" | "unknown";
   actions: SpotifyPlaybackActions;
+};
+
+export type SpotifyPlayHistory = {
+  track: SpotifyTrack;
+  played_at: string | Date;
+  context: SpotifyContext;
+};
+
+export type GetRecentlyPlayedTracksRequest = {
+  limit?: number;
+  after?: number;
+  before?: number;
+};
+
+export type GetRecentlyPlayedTracksResponse = {
+  href: string;
+  limit: number;
+  next: string;
+  cursors: SpotifyCursors;
+  total: number;
+  items: SpotifyPlayHistory[];
+};
+
+export type StartOrResumePlaybackRequest = {
+  device_id: string;
+  context_uri?: string;
+  uris?: string[];
+  offset?: { position?: string; uri?: string };
+  position_ms?: number;
 };
 
 //#endregion
