@@ -85,7 +85,7 @@ const paragraphSmall = {
 
 const paragraphLarge = {
   fontSize: 16,
-  fontWeight: 400,
+  fontWeight: 700,
   lineHeight: lineHeights.paragraphLarge + "px",
   letterSpacing: 0,
 };
@@ -122,6 +122,14 @@ const headerHeights = {
   xl: 48,
 };
 
+const playerHeights = {
+  xs: 87.5,
+  sm: 87.5,
+  md: 87.5,
+  lg: 87.5,
+  xl: 87.5,
+};
+
 const pageWidths: { [key in Breakpoint]: number } = {
   xs: 375,
   sm: 414,
@@ -142,6 +150,9 @@ export function getThemeBase(palette: PaletteOptions): ThemeOptions {
   return {
     headerHeights: {
       ...headerHeights,
+    },
+    playerHeights: {
+      ...playerHeights,
     },
     pageContentMargin: pageContentMargin,
     pageWidths: pageWidths,

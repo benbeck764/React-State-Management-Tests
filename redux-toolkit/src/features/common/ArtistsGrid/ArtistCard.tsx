@@ -47,12 +47,13 @@ const ArtistCard = (props: ArtistCardProps) => {
             lines={1}
             reserveHeight={
               +(
-                theme.typography.h6.lineHeight?.toString().replace("px", "") ||
-                0
+                theme.typography.paragraphBold.lineHeight
+                  ?.toString()
+                  .replace("px", "") || 0
               )
             }
           >
-            <Typography variant="h6">{artist.name}</Typography>
+            <Typography variant="paragraphLarge">{artist.name}</Typography>
           </StyledEllipsingTextContainer>
         </Stack>
       </StyledCard>

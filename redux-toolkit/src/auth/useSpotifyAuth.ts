@@ -54,7 +54,8 @@ export const useSpotifyAuth = (): SpotifyAuthContext => {
     const codeChallenge = base64encode(hashed);
     localStorage.setItem(SPOTIFY_VERIFIER_CODE, codeVerifier);
 
-    const scope = "user-read-private user-read-email user-top-read";
+    const scope =
+      "user-read-private user-read-email user-top-read user-read-playback-state user-modify-playback-state streaming";
     const authUrl = new URL(endpoints.spotify.auth);
 
     const params: Record<string, string> = {

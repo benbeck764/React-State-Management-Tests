@@ -56,11 +56,15 @@ export const TracksGridTrackTitle: FC<TracksGridColunnProps> = (
 ) => {
   if (props.loadingPlaceholder) {
     return (
-      <TypographySkeleton variant="h6" charCount={15} charCountVariance={8} />
+      <TypographySkeleton
+        variant="paragraphBold"
+        charCount={15}
+        charCountVariance={8}
+      />
     );
   } else {
     const { item: track } = props;
-    return <Typography variant="h6">{track.name}</Typography>;
+    return <Typography variant="paragraphBold">{track.name}</Typography>;
   }
 };
 

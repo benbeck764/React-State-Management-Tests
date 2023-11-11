@@ -7,6 +7,8 @@ export const endpoints = {
       profile: "me",
       topArtists: "me/top/artists",
       topTracks: "me/top/tracks",
+      player: "me/player",
+      currentlyPlaying: "me/player/currently-playing",
     },
     artists: {
       byId: (artistId: string) => `artists/${artistId}`,

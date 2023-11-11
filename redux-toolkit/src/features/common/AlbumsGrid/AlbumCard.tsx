@@ -53,12 +53,13 @@ const ArtistCard = (props: AlbumCardProps) => {
             lines={1}
             reserveHeight={
               +(
-                theme.typography.h6.lineHeight?.toString().replace("px", "") ||
-                0
+                theme.typography.paragraphLarge.lineHeight
+                  ?.toString()
+                  .replace("px", "") || 0
               )
             }
           >
-            <Typography variant="h6" align="center">
+            <Typography variant="paragraphLarge" align="center">
               {album.name}
             </Typography>
           </StyledEllipsingTextContainer>

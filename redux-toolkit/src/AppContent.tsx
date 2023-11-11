@@ -9,6 +9,7 @@ import {
   StyledPageContent,
 } from "./App.styles";
 import { Header } from "./features/site/Header/Header";
+import Player from "./features/player/Player";
 
 const AppContent: FC = () => {
   const { isAuthenticated, loginWithRedirect } = useSpotifyAuth();
@@ -39,6 +40,7 @@ const AppContent: FC = () => {
         <StyledPageContent>
           <AppRouting />
         </StyledPageContent>
+        <Player />
       </StyledPageContainer>
     </Stack>
   );

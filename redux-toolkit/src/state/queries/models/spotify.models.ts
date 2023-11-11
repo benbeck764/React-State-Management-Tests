@@ -118,6 +118,23 @@ type SpotifyExplicitContent = {
   filter_locked: boolean;
 };
 
+export type SpotifyArtist = {
+  external_urls: SpotifyExternalUrls;
+  followers: SpotifyFollowers;
+  genres: string[];
+  href: string;
+  id: string;
+  images: SpotifyImage[];
+  name: string;
+  popularity: number;
+  type: "artist";
+  uri: string;
+};
+export type SimplifiedSpotifyArtist = Pick<
+  SpotifyArtist,
+  "external_urls" | "href" | "id" | "name" | "type" | "uri"
+>;
+
 export type SpotifyAlbum = {
   album_type: string;
   total_tracks: number;
@@ -141,23 +158,6 @@ export type SpotifyAlbum = {
   popularity: number;
 };
 export type SimplifiedSpotifyAlbum = SpotifyAlbum & { album_group: string };
-
-export type SpotifyArtist = {
-  external_urls: SpotifyExternalUrls;
-  followers: SpotifyFollowers;
-  genres: string[];
-  href: string;
-  id: string;
-  images: SpotifyImage[];
-  name: string;
-  popularity: number;
-  type: "artist";
-  uri: string;
-};
-export type SimplifiedSpotifyArtist = Pick<
-  SpotifyArtist,
-  "external_urls" | "href" | "id" | "name" | "type" | "uri"
->;
 
 type SpotifyAlbumTracks = {
   href: string;
@@ -209,6 +209,102 @@ export type SpotifyUser = {
   product: string;
   type: "user";
   uri: string;
+};
+
+//#endregion
+
+//#region Player Models
+
+type SpotifyDevice = {
+  id: string | null;
+  is_active: boolean;
+  is_private_session: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: string;
+  volume_percent: number;
+  supports_volume: boolean;
+};
+
+type SpotifyContext = {
+  type: "artist" | "playlist" | "album" | "show";
+  href: string;
+  external_urls: SpotifyExternalUrls;
+  uri: string;
+};
+
+type SpotifyResumePoint = {
+  fully_played: boolean;
+  resume_position_ms: number;
+};
+
+type SpotifyShow = {
+  available_markets: string[];
+  copyrights: SpotifyCopyRights;
+  description: string;
+  html_description: string;
+  explicit: boolean;
+  external_urls: SpotifyExternalUrls;
+  href: string;
+  id: string;
+  images: SpotifyImage[];
+  is_externally_hosted: boolean;
+  languages: string[];
+  media_type: string;
+  name: string;
+  publisher: string;
+  type: "show";
+  uri: string;
+  total_episodes: number;
+};
+
+type SpotifyEpisode = {
+  audio_preview_url: string | null;
+  description: string;
+  html_description: string;
+  duration_ms: number;
+  explicit: boolean;
+  external_urls: SpotifyExternalUrls;
+  href: string;
+  id: string;
+  images: SpotifyImage[];
+  is_externally_hosted: boolean;
+  is_playable: boolean;
+  languages: string[];
+  name: string;
+  release_date: string;
+  release_date_precision: string;
+  resume_point: SpotifyResumePoint;
+  type: "episode";
+  uri: string;
+  restrictions: SpotifyRestrictions;
+  show: SpotifyShow;
+};
+
+type SpotifyPlaybackActions = {
+  interrupting_playback: boolean;
+  pausing: boolean;
+  resuming: boolean;
+  seeking: boolean;
+  skipping_next: boolean;
+  skipping_prev: boolean;
+  toggling_repeat_context: boolean;
+  toggling_shuffle: boolean;
+  toggling_repeat_track: boolean;
+  transferring_playback: boolean;
+};
+
+export type SpotifyPlaybackState = {
+  device: SpotifyDevice;
+  repeat_state: "off" | "track" | "context";
+  shuffle_state: boolean;
+  context: SpotifyContext;
+  timestamp: number;
+  progress_ms: number;
+  is_playing: boolean;
+  item: SpotifyTrack | SpotifyEpisode;
+  currently_playing_type: "track" | "episode" | "unknown";
+  actions: SpotifyPlaybackActions;
 };
 
 //#endregion

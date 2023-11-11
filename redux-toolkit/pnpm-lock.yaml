@@ -52,6 +52,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.7
     version: 18.2.15
+  '@types/spotify-web-playback-sdk':
+    specifier: ^0.1.19
+    version: 0.1.19
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.0.0
     version: 6.10.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)(typescript@5.2.2)
@@ -335,6 +338,9 @@ packages:
       '@mui/material': ^5.14.12
       react: ^18.2.0
       react-dom: ^18.2.0
+    peerDependenciesMeta:
+      react-virtuoso:
+        optional: true
     dependencies:
       '@benbeck764/react-components': 1.4.0-beta.18(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@mui/icons-material@5.14.16)(@mui/material@5.14.17)(react-dom@18.2.0)(react@18.2.0)
       '@benbeck764/react-components-common': 1.4.0-beta.18(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@mui/material@5.14.17)(react-dom@18.2.0)(react@18.2.0)
@@ -1099,6 +1105,10 @@ packages:
 
   /@types/semver@7.5.5:
     resolution: {integrity: sha512-+d+WYC1BxJ6yVOgUgzK8gWvp5qF8ssV5r4nsDcZWKRWcDQLQ619tvWAxJQYGgBrO1MnLJC7a5GtiYsAoQ47dJg==}
+    dev: true
+
+  /@types/spotify-web-playback-sdk@0.1.19:
+    resolution: {integrity: sha512-Is7x9gMIMoERxE0uvb2SPFQoy5OR7nO1B24CJiaDAUIdq195OLTQedN95XJQtxB2mfm+zi2j3LvEtpPdHKnB3w==}
     dev: true
 
   /@types/use-sync-external-store@0.0.3:
