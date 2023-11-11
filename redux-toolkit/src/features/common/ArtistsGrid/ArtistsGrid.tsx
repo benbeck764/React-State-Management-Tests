@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import AppGrid, {
   AppGridProps,
   AppGridData,
+  AppGridDataRequest,
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./ArtistsGrid.card";
@@ -16,10 +17,17 @@ type ArtistsGridProps = {
   loading: boolean;
   pagination?: boolean;
   onArtistSelected: (artist: SpotifyArtist) => void;
+  onDataRequested: (dataRequest: AppGridDataRequest) => void;
 };
 
 const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
-  const { data: dataRequest, loading, pagination, onArtistSelected } = props;
+  const {
+    data: dataRequest,
+    loading,
+    pagination,
+    onArtistSelected,
+    onDataRequested,
+  } = props;
 
   const gridData: AppGridData<SpotifyArtist> = {
     pages:
@@ -52,7 +60,7 @@ const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
     cardView: createCardViewDefinitions(),
     displayMode: "card",
     cursorStyle: "pointer",
-    //onDataRequested: onDataRequested,
+    onDataRequested: onDataRequested,
     onItemClicked: onArtistSelected,
     noItemsMessage: (
       <Typography variant="paragraph">No artists found.</Typography>

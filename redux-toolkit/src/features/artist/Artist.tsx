@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import HeadsetIcon from "@mui/icons-material/Headset";
 import {
   useGetArtistAlbumsQuery,
   useGetArtistQuery,
@@ -48,7 +49,7 @@ const Artist: FC = () => {
     );
 
   const handleAlbumSelected = (album: SpotifyAlbum): void => {
-    navigate(getAlbumUrl(album.id));
+    navigate(getAlbumUrl(album.id), { state: album });
   };
 
   return (
@@ -64,13 +65,36 @@ const Artist: FC = () => {
             {!artist ? (
               <Skeleton variant="rounded" width={300} height={300}></Skeleton>
             ) : (
-              <Box
-                component="img"
-                src={artist.images[1].url}
-                width={300}
-                height={300}
-                sx={{ borderRadius: 2 }}
-              ></Box>
+              <>
+                {artist.images.length > 1 ? (
+                  <Box
+                    component="img"
+                    src={artist.images[1].url}
+                    width={300}
+                    height={300}
+                    sx={{ borderRadius: 2 }}
+                  />
+                ) : (
+                  <Box
+                    width={300}
+                    height={300}
+                    sx={{
+                      borderRadius: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: (theme) => theme.palette.coolGrey[900],
+                    }}
+                  >
+                    <HeadsetIcon
+                      sx={{
+                        fontSize: "100px",
+                        color: (theme) => theme.palette.grey[500],
+                      }}
+                    />
+                  </Box>
+                )}
+              </>
             )}
           </Stack>
           <Box width="100%">

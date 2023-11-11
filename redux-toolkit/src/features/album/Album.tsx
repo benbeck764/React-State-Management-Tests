@@ -1,5 +1,5 @@
 import { FC, Fragment } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useGetAlbumQuery } from "../../state/queries/album.api";
@@ -7,18 +7,27 @@ import TrackListing from "../common/TrackListing";
 import AppCard from "@benbeck764/react-components/Card";
 import Box from "@mui/material/Box";
 import { capitalize } from "@mui/material/utils";
-import { SimplifiedSpotifyArtist } from "../../state/queries/models/spotify.models";
+import {
+  SimplifiedSpotifyArtist,
+  SpotifyAlbum,
+} from "../../state/queries/models/spotify.models";
 import { AppLink } from "../common/AppLink";
 import { getArtistUrl } from "../../routing/common/url";
 
 const Album: FC = () => {
+  const location = useLocation();
   const params = useParams();
   const albumId = params["albumId"];
+  const state = location.state as SpotifyAlbum | null;
 
-  const { data: album, isFetching: loading } = useGetAlbumQuery(
+  const skipQuery = !albumId || typeof state?.tracks !== "undefined";
+
+  const { data: queriedAlbum, isFetching: loading } = useGetAlbumQuery(
     { id: albumId! },
-    { skip: !albumId }
+    { skip: skipQuery }
   );
+
+  const album = skipQuery ? state : queriedAlbum;
 
   if (loading || !album) {
     return (
