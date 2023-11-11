@@ -71,14 +71,13 @@ const ArtistCard = (props: AlbumCardProps) => {
               lines={1}
               reserveHeight={
                 +(
-                  theme.typography.h2.lineHeight
-                    ?.toString()
-                    .replace("px", "") || 0
-                )
+                  theme.typography.h3.fontSize?.toString().replace("px", "") ||
+                  0
+                ) * +(theme.typography.h3.lineHeight?.toString() || 0)
               }
             >
-              <AppLink to={getAlbumUrl(album.id)}>
-                <Typography variant="h2">{album.name}</Typography>
+              <AppLink to={getAlbumUrl(album.id)} state={album}>
+                <Typography variant="h3">{album.name}</Typography>
               </AppLink>
             </StyledEllipsingTextContainer>
             <Typography

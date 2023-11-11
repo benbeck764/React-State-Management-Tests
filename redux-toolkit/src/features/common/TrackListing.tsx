@@ -7,6 +7,7 @@ import Divider from "@mui/material/Divider";
 import {
   SimplifiedSpotifyTrack,
   SpotifyAlbum,
+  SpotifyArtist,
 } from "../../state/queries/models/spotify.models";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import { groupBy } from "../../utilities/array";
@@ -134,15 +135,31 @@ const TrackListing: FC<TrackListingProps> = (props: TrackListingProps) => {
                         {t.track_number}
                       </Typography>
                       <Stack>
-                        <Typography variant="h6">{t.name}</Typography>
-                        <AppLink to={getArtistUrl(t.artists[0].id)}>
-                          <Typography
-                            variant="paragraph"
-                            sx={{ color: (theme) => theme.palette.grey[400] }}
-                          >
-                            {t.artists[0].name}
-                          </Typography>
-                        </AppLink>
+                        <Typography variant="paragraphBold">
+                          {t.name}
+                        </Typography>
+                        <Stack direction="row" gap={0.5}>
+                          {t.artists.map(
+                            (artist: SpotifyArtist, artistIndex: number) => (
+                              <AppLink
+                                key={artist.id}
+                                to={getArtistUrl(artist.id)}
+                                state={artist}
+                                sx={{ display: "inline-block" }}
+                              >
+                                <Typography
+                                  variant="paragraph"
+                                  sx={{
+                                    color: (theme) => theme.palette.grey[400],
+                                  }}
+                                >
+                                  {artist.name}
+                                  {artistIndex < t.artists.length - 1 && ","}
+                                </Typography>
+                              </AppLink>
+                            )
+                          )}
+                        </Stack>
                       </Stack>
                     </Stack>
                     <Typography

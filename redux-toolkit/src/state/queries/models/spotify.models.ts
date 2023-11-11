@@ -149,7 +149,7 @@ export type SpotifyArtist = {
   type: "artist";
   uri: string;
 };
-type SimplifiedSpotifyArtist = Pick<
+export type SimplifiedSpotifyArtist = Pick<
   SpotifyArtist,
   "external_urls" | "href" | "id" | "name" | "type" | "uri"
 >;
