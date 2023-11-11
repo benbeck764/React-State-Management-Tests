@@ -4,6 +4,7 @@ export const endpoints = {
     auth: "https://accounts.spotify.com/authorize",
     token: "https://accounts.spotify.com/api/token",
     me: {
+      profile: "me",
       topArtists: "me/top/artists",
       topTracks: "me/top/tracks",
     },

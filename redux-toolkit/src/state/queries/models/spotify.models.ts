@@ -94,7 +94,7 @@ type SpotifyExternalIds = {
 };
 
 type SpotifyFollowers = {
-  href: string;
+  href?: string;
   total: number;
 };
 
@@ -111,6 +111,11 @@ type SpotifyRestrictions = {
 type SpotifyCopyRights = {
   text: string;
   type: string;
+};
+
+type SpotifyExplicitContent = {
+  filter_enabled: boolean;
+  filter_locked: boolean;
 };
 
 export type SpotifyAlbum = {
@@ -190,5 +195,20 @@ export type SimplifiedSpotifyTrack = Omit<
   SpotifyTrack,
   "album" | "external_urls" | "popularity"
 >;
+
+export type SpotifyUser = {
+  country: string;
+  display_name: string;
+  email: string;
+  explicit_content: SpotifyExplicitContent;
+  external_urls: SpotifyExternalUrls;
+  followers: SpotifyFollowers;
+  href: string;
+  id: string;
+  images: SpotifyImage[];
+  product: string;
+  type: "user";
+  uri: string;
+};
 
 //#endregion

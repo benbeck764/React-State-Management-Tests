@@ -68,6 +68,9 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
               backgroundColor: "transparent",
             },
           },
+          body: {
+            overflowY: "scroll", // Scrollbar always exists to avoid flickering
+          },
         },
       },
       MuiCard: {
