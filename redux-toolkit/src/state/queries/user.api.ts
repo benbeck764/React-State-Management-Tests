@@ -11,6 +11,7 @@ const userApi = spotifyApi.injectEndpoints({
       }),
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { useGetUserProfileQuery } = userApi;

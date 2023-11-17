@@ -41,6 +41,7 @@ const playerApi = spotifyApi.injectEndpoints({
       }
     ),
   }),
+  overrideExisting: true,
 });
 
 export const {

@@ -17,6 +17,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import useSpotifyWebPlayback from "./useSpotifyWebPlayback";
 import {
+  useGetCurrentPlayingStateQuery,
   useGetRecentlyPlayedQuery,
   useStartOrResumePlaybackMutation,
 } from "../../state/queries/player.api";
@@ -26,21 +27,38 @@ import { debounce } from "@mui/material/utils";
 const Player: FC = () => {
   const { player, state, deviceId } = useSpotifyWebPlayback();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
+  const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
-  // [TODO]: Do this for now, implement Episodes later?
 
-  const item = (state?.track_window.current_track ??
-    recentlyPlayedRes?.items?.[0]?.track) as Spotify.Track;
+  // [TODO]: Do this for now, implement Episodes later?
+  const item =
+    state?.track_window.current_track ??
+    (((currentlyPlayingRes?.item as unknown) ??
+      recentlyPlayedRes?.items?.[0]?.track) as Spotify.Track);
 
   useEffect(() => {
-    if (recentlyPlayedRes?.items?.[0] && deviceId) {
-      const track = recentlyPlayedRes.items[0];
+    if (currentlyPlayingRes && deviceId) {
       startOrResumePlayback({
         device_id: deviceId,
-        context_uri: track.context.uri,
+        context_uri: currentlyPlayingRes.context.uri,
+        position_ms: currentlyPlayingRes.progress_ms,
+        offset:
+          currentlyPlayingRes.currently_playing_type === "track"
+            ? {
+                uri: currentlyPlayingRes.item.uri,
+              }
+            : undefined,
       });
+    } else if (recentlyPlayedRes?.items?.[0] && deviceId) {
+      const history = recentlyPlayedRes.items[0];
+      if (history) {
+        startOrResumePlayback({
+          device_id: deviceId,
+          context_uri: history.context.uri,
+        });
+      }
     }
-  }, [recentlyPlayedRes, deviceId, startOrResumePlayback]);
+  }, [recentlyPlayedRes, currentlyPlayingRes, deviceId, startOrResumePlayback]);
 
   const handlePrevious = debounce(async (): Promise<void> => {
     if (player) await player.previousTrack();

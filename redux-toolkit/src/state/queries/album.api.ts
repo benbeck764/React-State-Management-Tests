@@ -41,6 +41,7 @@ const albumApi = spotifyApi.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { useGetAlbumQuery } = albumApi;

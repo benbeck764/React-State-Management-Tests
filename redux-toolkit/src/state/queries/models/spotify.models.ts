@@ -153,7 +153,7 @@ export type SpotifyAlbum = {
   release_date_precision: string;
   restrictions: SpotifyRestrictions;
   type: "album";
-  url: string;
+  uri: string;
   artists: SimplifiedSpotifyArtist[];
   tracks: SpotifyAlbumTracks;
   copyrights: SpotifyCopyRights[];

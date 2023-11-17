@@ -156,6 +156,7 @@ const artistApi = spotifyApi.injectEndpoints({
       }),
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

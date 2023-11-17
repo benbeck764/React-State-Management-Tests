@@ -3,6 +3,8 @@ import {
   SPOTIFY_ACCESS_TOKEN,
   SpotifyAccessToken,
 } from "../../state/queries/models/spotify.models";
+import { useDispatch } from "react-redux";
+import { playbackState } from "../../state/slices/player.slice";
 
 type SpotifyWebPlaybackContext = {
   player: Spotify.Player;
@@ -11,7 +13,6 @@ type SpotifyWebPlaybackContext = {
   deviceId: string | undefined;
 };
 
-// How can I return player from this hook so that it is of type Spotify.Player rather than Spotify.Player | undefined
 const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
   const [player, setPlayer] = useState<Spotify.Player | undefined>(undefined);
   const [ready, setReady] = useState<boolean>(false);
@@ -19,6 +20,7 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
     Spotify.PlaybackState | undefined
   >(undefined);
   const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
@@ -45,15 +47,8 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
         setReady(true);
         setDeviceId(instance.device_id);
 
-        intervalId = setInterval(() => {
-          player
-            .getCurrentState()
-            .then((state: Spotify.PlaybackState | null) => {
-              if (state) {
-                setPlayerState(state);
-              }
-            });
-        }, 1000);
+        setPlayerCurrentState(player); // Immediately, then every 1s
+        intervalId = setInterval(() => setPlayerCurrentState(player), 1000);
       });
 
       player.addListener("not_ready", () => {
@@ -85,7 +80,19 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
 
       player.connect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const setPlayerCurrentState = (spotifyPlayer: Spotify.Player) => {
+    spotifyPlayer
+      .getCurrentState()
+      .then((state: Spotify.PlaybackState | null) => {
+        if (state) {
+          setPlayerState(state);
+          dispatch(playbackState(state));
+        }
+      });
+  };
 
   return { player: player!, ready, state: playerState, deviceId };
 };
