@@ -9,6 +9,7 @@ import AppGrid, {
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
 import { createTableViewDefinitions } from "./TracksGrid.table";
+import { createCardViewDefinitions } from "./TracksGrid.card";
 
 type TracksGridProps = {
   data: GetArtistTopTracksResponse | undefined;
@@ -45,7 +46,8 @@ const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
   const gridProps: AppGridProps<SpotifyTrack> = {
     data: gridData,
     tableView: createTableViewDefinitions(),
-    displayMode: "table",
+    cardView: createCardViewDefinitions(),
+    displayMode: "card",
     cursorStyle: "pointer",
     noItemsMessage: (
       <Typography variant="paragraph">No tracks found.</Typography>
