@@ -14,6 +14,8 @@ import PlayButton from "../../player/PlayButton";
 import Box from "@mui/material/Box";
 import { useRef } from "react";
 import { useHovered } from "../../../utilities/hooks/useHovered";
+import { useAppSelector, AppRootState } from "../../../state/store";
+import Equalizer from "../Equalizer";
 
 type AlbumCardProps =
   | {
@@ -29,6 +31,9 @@ const AlbumCard = (props: AlbumCardProps) => {
   const theme = useTheme();
   const cardFocusRef = useRef<HTMLDivElement>();
   const hovered = useHovered(cardFocusRef);
+  const playbackState = useAppSelector(
+    (s: AppRootState) => s.player.playbackState
+  );
 
   if (props.loadingPlaceholder) {
     return (
@@ -47,6 +52,13 @@ const AlbumCard = (props: AlbumCardProps) => {
     );
   } else {
     const { album } = props;
+
+    const isCurrentAlbum =
+      typeof playbackState !== "undefined" &&
+      album.uri === playbackState.context.uri;
+
+    const albumPlaying = isCurrentAlbum && playbackState.paused === false;
+
     return (
       <StyledCard ref={cardFocusRef}>
         <Stack alignItems="center" gap={2}>
@@ -56,7 +68,7 @@ const AlbumCard = (props: AlbumCardProps) => {
               sx={{ width: 150, height: 150, position: "relative" }}
               src={album.images[0].url}
             />
-            {hovered && (
+            {(albumPlaying || hovered) && (
               <PlayButton
                 variant="action-button"
                 type="album"
@@ -96,6 +108,7 @@ const AlbumCard = (props: AlbumCardProps) => {
                 album.album_type
               )}`}
             </Typography>
+            {albumPlaying && <Equalizer />}
           </Stack>
         </Stack>
       </StyledCard>
