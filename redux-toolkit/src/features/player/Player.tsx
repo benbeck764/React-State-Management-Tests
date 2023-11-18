@@ -23,16 +23,19 @@ import {
 } from "../../state/queries/player.api";
 import { formatMilliseconds } from "../../utilities/number";
 import { debounce } from "@mui/material/utils";
+import { RootState, useAppSelector } from "../../state/store";
 
 const Player: FC = () => {
-  const { player, state, deviceId } = useSpotifyWebPlayback();
+  const player = useSpotifyWebPlayback();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
+  const playerState = useAppSelector((s: RootState) => s.player);
+  const { playbackState, deviceId } = playerState;
 
   // [TODO]: Do this for now, implement Episodes later?
   const item =
-    state?.track_window.current_track ??
+    playbackState?.track_window.current_track ??
     (((currentlyPlayingRes?.item as unknown) ??
       recentlyPlayedRes?.items?.[0]?.track) as Spotify.Track);
 
@@ -51,7 +54,7 @@ const Player: FC = () => {
       });
     } else if (recentlyPlayedRes?.items?.[0] && deviceId) {
       const history = recentlyPlayedRes.items[0];
-      if (history) {
+      if (history && history.context) {
         startOrResumePlayback({
           device_id: deviceId,
           context_uri: history.context.uri,
@@ -137,7 +140,7 @@ const Player: FC = () => {
                     />
                   </StyledPlayerButton>
 
-                  {!state?.paused ? (
+                  {!playbackState?.paused ? (
                     <StyledPlayerButton onClick={handlePause}>
                       <PauseCircleIcon
                         sx={{
@@ -170,12 +173,12 @@ const Player: FC = () => {
                     variant="paragraphExtraSmall"
                     sx={{ color: (theme) => theme.palette.grey[400] }}
                   >
-                    {formatMilliseconds(state?.position ?? 0)}
+                    {formatMilliseconds(playbackState?.position ?? 0)}
                   </Typography>
                   <StyledTrackTimeSlider
                     aria-label="Track Position"
                     defaultValue={0}
-                    value={state?.position ?? 0}
+                    value={playbackState?.position ?? 0}
                     min={0}
                     max={item.duration_ms}
                     step={1000}

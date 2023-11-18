@@ -14,8 +14,6 @@ import {
 import { AppLink } from "../common/AppLink";
 import { getArtistUrl } from "../../routing/common/url";
 import PlayButton from "../player/PlayButton";
-import { RootState } from "../../state/store";
-import { useSelector } from "react-redux";
 
 const Album: FC = () => {
   const location = useLocation();
@@ -25,8 +23,6 @@ const Album: FC = () => {
   const state = location.state as SpotifyAlbum | null;
 
   const skipQuery = !albumId || typeof state?.tracks !== "undefined";
-
-  const playbackState = useSelector((s: RootState) => s.player.playbackState);
 
   const { data: queriedAlbum, isFetching: loading } = useGetAlbumQuery(
     { id: albumId! },
@@ -82,14 +78,7 @@ const Album: FC = () => {
         </Stack>
 
         <AppCard paperSx={{ p: 2, borderRadius: "16px" }}>
-          <PlayButton
-            isPlaying={
-              typeof playbackState !== "undefined" &&
-              typeof album !== "undefined" &&
-              playbackState.paused === false &&
-              playbackState.context.uri === album.uri
-            }
-          />
+          <PlayButton dataUri={album.uri} />
           <TrackListing album={album} />
         </AppCard>
       </Stack>

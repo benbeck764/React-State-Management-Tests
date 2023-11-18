@@ -3,24 +3,17 @@ import {
   SPOTIFY_ACCESS_TOKEN,
   SpotifyAccessToken,
 } from "../../state/queries/models/spotify.models";
-import { useDispatch } from "react-redux";
-import { playbackState } from "../../state/slices/player.slice";
+import {
+  playbackStateChanged,
+  playerNotReady,
+  playerReady,
+} from "../../state/slices/player.slice";
+import { useAppDispatch } from "../../state/store";
 
-type SpotifyWebPlaybackContext = {
-  player: Spotify.Player;
-  ready: boolean;
-  state: Spotify.PlaybackState | undefined;
-  deviceId: string | undefined;
-};
-
-const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
+const useSpotifyWebPlayback = (): Spotify.Player => {
   const [player, setPlayer] = useState<Spotify.Player | undefined>(undefined);
-  const [ready, setReady] = useState<boolean>(false);
-  const [playerState, setPlayerState] = useState<
-    Spotify.PlaybackState | undefined
-  >(undefined);
-  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-  const dispatch = useDispatch();
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
@@ -44,16 +37,14 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
       setPlayer(player);
 
       player.addListener("ready", (instance: Spotify.WebPlaybackInstance) => {
-        setReady(true);
-        setDeviceId(instance.device_id);
+        dispatch(playerReady(instance.device_id));
 
         setPlayerCurrentState(player); // Immediately, then every 1s
         intervalId = setInterval(() => setPlayerCurrentState(player), 1000);
       });
 
       player.addListener("not_ready", () => {
-        setReady(false);
-        setDeviceId(undefined);
+        dispatch(playerNotReady());
         if (intervalId) clearInterval(intervalId);
       });
 
@@ -75,7 +66,7 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
       });
 
       player.addListener("player_state_changed", (state) => {
-        setPlayerState(state);
+        dispatch(playbackStateChanged(state));
       });
 
       player.connect();
@@ -88,13 +79,12 @@ const useSpotifyWebPlayback = (): SpotifyWebPlaybackContext => {
       .getCurrentState()
       .then((state: Spotify.PlaybackState | null) => {
         if (state) {
-          setPlayerState(state);
-          dispatch(playbackState(state));
+          dispatch(playbackStateChanged(state));
         }
       });
   };
 
-  return { player: player!, ready, state: playerState, deviceId };
+  return player!;
 };
 
 export default useSpotifyWebPlayback;

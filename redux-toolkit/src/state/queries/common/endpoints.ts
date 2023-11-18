@@ -9,6 +9,7 @@ export const endpoints = {
       topTracks: "me/top/tracks",
       player: "me/player",
       play: "me/player/play",
+      pause: "me/player/pause",
       currentlyPlaying: "me/player/currently-playing",
       recentlyPlayed: "me/player/recently-played",
     },

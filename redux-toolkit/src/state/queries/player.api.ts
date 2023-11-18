@@ -40,6 +40,13 @@ const playerApi = spotifyApi.injectEndpoints({
         }),
       }
     ),
+    pausePlayback: builder.mutation<void, string | undefined>({
+      query: (deviceId?: string) => ({
+        url: endpoints.spotify.me.pause,
+        method: "PUT",
+        params: { device_id: deviceId },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -49,4 +56,5 @@ export const {
   useGetCurrentPlayingStateQuery,
   useGetRecentlyPlayedQuery,
   useStartOrResumePlaybackMutation,
+  usePausePlaybackMutation,
 } = playerApi;
