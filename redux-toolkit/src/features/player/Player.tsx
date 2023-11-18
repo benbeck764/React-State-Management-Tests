@@ -72,21 +72,21 @@ const Player: FC = () => {
     }
   }, [recentlyPlayedRes, currentlyPlayingRes, deviceId, startOrResumePlayback]);
 
-  const handlePrevious = debounce(async (): Promise<void> => {
+  const handlePrevious = async (): Promise<void> => {
     if (player) await player.previousTrack();
-  }, 200);
+  };
 
-  const handleNext = debounce(async (): Promise<void> => {
+  const handleNext = async (): Promise<void> => {
     if (player) await player.nextTrack();
-  }, 200);
+  };
 
   const handleResume = debounce(async (): Promise<void> => {
     if (player) await player.resume();
-  }, 200);
+  }, 150);
 
   const handlePause = debounce(async (): Promise<void> => {
     if (player) await player.pause();
-  }, 200);
+  }, 150);
 
   const handleSeek = debounce(async (ms: number | number[]): Promise<void> => {
     if (player) await player.seek(ms as number);
@@ -142,7 +142,7 @@ const Player: FC = () => {
                         sx={{ display: "inline-block" }}
                       >
                         <Typography
-                          variant="paragraph"
+                          variant="paragraphExtraSmall"
                           sx={{
                             color: (theme) => theme.palette.grey[400],
                           }}
@@ -276,7 +276,12 @@ const Player: FC = () => {
                 justifyContent="flex-end"
                 height="100%"
               >
-                <PlayerVolume volume={100} onVolumeChange={() => void 0} />
+                <PlayerVolume
+                  initialVolume={100}
+                  onVolumeChange={async (volume: number | number[]) => {
+                    return await player.setVolume((volume as number) / 100);
+                  }}
+                />
               </Stack>
             </Grid>
           </Grid>

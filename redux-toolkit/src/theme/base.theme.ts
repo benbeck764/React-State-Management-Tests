@@ -30,7 +30,7 @@ export const lineHeights: { [key in keyof TypographyVariants]: number } = {
   paragraphSmall: 16,
   paragraphSmallBold: 14,
   paragraphExtraSmall: 14,
-  paragraphExtraSmallBold: 16,
+  paragraphExtraSmallBold: 14,
 
   button: 18,
 
@@ -98,7 +98,7 @@ const paragraphSmallBold = {
 };
 
 const paragraphExtraSmall = {
-  fontSize: 12,
+  fontSize: 11,
   fontWeight: 400,
   lineHeight: lineHeights.paragraphExtraSmall + "px",
   letterSpacing: 0,

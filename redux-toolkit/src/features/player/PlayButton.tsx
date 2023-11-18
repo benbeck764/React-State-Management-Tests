@@ -69,18 +69,7 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
     } else {
       if (isCurrent) {
         // Currently item is the track/album/artist? Resume from where it's at.
-        startOrResumePlayback({
-          device_id: deviceId,
-          context_uri: dataUri,
-          position_ms: playbackState.position,
-          offset:
-            typeof playbackState.track_window.current_track !== "undefined" &&
-            type !== "artist"
-              ? {
-                  uri: playbackState.track_window.current_track.uri,
-                }
-              : undefined,
-        });
+        startOrResumePlayback({ device_id: deviceId });
       } else {
         // Otherwise start new track/album/artist.
         startOrResumePlayback({
