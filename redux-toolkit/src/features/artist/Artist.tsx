@@ -20,6 +20,7 @@ import { StyledTopTracksHeader } from "./Artist.styles";
 import { getAlbumUrl, getArtistDiscographyUrl } from "../../routing/common/url";
 import { AppLink } from "../common/AppLink";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
+import PlayButton from "../player/PlayButton";
 
 const Artist: FC = () => {
   const location = useLocation();
@@ -57,7 +58,19 @@ const Artist: FC = () => {
       {!artist ? (
         <TypographySkeleton variant="h1" charCount={15} charCountVariance={7} />
       ) : (
-        <Typography variant="h1">{artist.name}</Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="h1">{artist.name}</Typography>
+          <PlayButton
+            type="artist"
+            variant="action-button"
+            size="large"
+            dataUri={artist.uri}
+          />
+        </Stack>
       )}
       <Stack gap={2}>
         <Stack direction="row" gap={2}>
@@ -102,7 +115,11 @@ const Artist: FC = () => {
               <Typography variant="h4">Popular</Typography>
             </StyledTopTracksHeader>
             <Box maxHeight="250px" sx={{ overflowY: "scroll" }}>
-              <TracksGrid data={topTracksData} loading={isLoadingTopTracks} />
+              <TracksGrid
+                data={topTracksData}
+                loading={isLoadingTopTracks}
+                playType="track"
+              />
             </Box>
           </Box>
         </Stack>

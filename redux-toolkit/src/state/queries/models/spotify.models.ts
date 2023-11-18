@@ -337,7 +337,7 @@ export type StartOrResumePlaybackRequest = {
   device_id: string;
   context_uri?: string;
   uris?: string[];
-  offset?: { position?: string; uri?: string };
+  offset?: { position?: number; uri?: string };
   position_ms?: number;
 };
 

@@ -1,5 +1,7 @@
+import { FC, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -9,6 +11,9 @@ import {
 } from "@benbeck764/react-components/common";
 import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
 import { StyledCard } from "../common.styles";
+import { useHovered } from "../../../utilities/hooks/useHovered";
+import PlayButton from "../../player/PlayButton";
+import { useAppSelector, AppRootState } from "../../../state/store";
 
 type ArtistCardProps =
   | {
@@ -20,8 +25,13 @@ type ArtistCardProps =
       loadingPlaceholder: true;
     };
 
-const ArtistCard = (props: ArtistCardProps) => {
+const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
   const theme = useTheme();
+  const cardFocusRef = useRef<HTMLDivElement>();
+  const hovered = useHovered(cardFocusRef);
+  const playbackState = useAppSelector(
+    (s: AppRootState) => s.player.playbackState
+  );
 
   if (props.loadingPlaceholder) {
     return (
@@ -39,10 +49,31 @@ const ArtistCard = (props: ArtistCardProps) => {
     );
   } else {
     const { artist } = props;
+
+    const isCurrentArtist =
+      typeof playbackState !== "undefined" &&
+      artist.uri === playbackState.context.uri;
+
+    const artistPlaying = isCurrentArtist && playbackState.paused === false;
+
     return (
-      <StyledCard>
+      <StyledCard ref={cardFocusRef}>
         <Stack alignItems="center" gap={2}>
-          <Avatar sx={{ width: 150, height: 150 }} src={artist.images[0].url} />
+          <Box sx={{ position: "relative" }}>
+            <Avatar
+              sx={{ width: 150, height: 150 }}
+              src={artist.images[0].url}
+            />
+            {(hovered || artistPlaying) && (
+              <PlayButton
+                variant="action-button"
+                type="artist"
+                dataUri={artist.uri}
+                sx={{ position: "absolute", bottom: 0, right: 0 }}
+                stopPropagation
+              />
+            )}
+          </Box>
           <StyledEllipsingTextContainer
             lines={1}
             reserveHeight={

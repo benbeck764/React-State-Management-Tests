@@ -5,22 +5,24 @@ import Typography from "@mui/material/Typography";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import Box from "@mui/material/Box";
-import PlayButton from "../../player/PlayButton";
+import PlayButton, { PlayButtonPlayType } from "../../player/PlayButton";
 import Equalizer from "../Equalizer";
 import { useHovered } from "../../../utilities/hooks/useHovered";
 import { useRef } from "react";
-import { RootState, useAppSelector } from "../../../state/store";
+import { AppRootState, useAppSelector } from "../../../state/store";
 import { formatMilliseconds } from "../../../utilities/number";
 
 type TrackCardProps =
   | {
       track: SpotifyTrack;
       index: number;
+      playType: PlayButtonPlayType;
       loadingPlaceholder?: never;
     }
   | {
-      track?: SpotifyTrack;
+      track?: never;
       index?: never;
+      playType?: never;
       loadingPlaceholder: true;
     };
 
@@ -30,7 +32,7 @@ const TrackCard = (props: TrackCardProps) => {
   const hovered = useHovered(cardFocusRef);
 
   const playbackState = useAppSelector(
-    (s: RootState) => s.player.playbackState
+    (s: AppRootState) => s.player.playbackState
   );
 
   if (props.loadingPlaceholder) {
@@ -59,11 +61,10 @@ const TrackCard = (props: TrackCardProps) => {
       </Box>
     );
   } else {
-    const { track, index } = props;
+    const { track, index, playType } = props;
 
     const isCurrentTrack =
       typeof playbackState !== "undefined" &&
-      playbackState.context?.uri &&
       track.uri === playbackState.track_window.current_track.uri;
 
     const trackPlaying = isCurrentTrack && playbackState.paused === false;
@@ -87,12 +88,31 @@ const TrackCard = (props: TrackCardProps) => {
           <Stack direction="row" alignItems="center" gap={1.75}>
             <Stack justifyContent="center" width="14px">
               {hovered ? (
-                <PlayButton
-                  type="track"
-                  variant="button"
-                  albumDataUri={track.album.uri}
-                  trackDataUri={track.uri}
-                ></PlayButton>
+                <>
+                  {playType === "artist" && (
+                    <PlayButton
+                      type="artist"
+                      variant="button"
+                      dataUri={track.artists?.[0].uri}
+                      offsetUri={track.uri}
+                    ></PlayButton>
+                  )}
+                  {playType === "album" && (
+                    <PlayButton
+                      type="album"
+                      variant="button"
+                      dataUri={track.album.uri}
+                      offsetUri={track.uri}
+                    ></PlayButton>
+                  )}
+                  {playType === "track" && (
+                    <PlayButton
+                      type="track"
+                      variant="button"
+                      dataUri={track.uri}
+                    ></PlayButton>
+                  )}
+                </>
               ) : (
                 <>
                   {trackPlaying ? (
@@ -110,7 +130,17 @@ const TrackCard = (props: TrackCardProps) => {
               width={40}
               sx={{ borderRadius: "4px" }}
             ></Box>
-            <Typography variant="paragraphBold">{track.name}</Typography>
+            <Typography
+              variant="paragraphBold"
+              sx={{
+                color: (theme) =>
+                  isCurrentTrack
+                    ? theme.palette.primary.main
+                    : theme.palette.text.primary,
+              }}
+            >
+              {track.name}
+            </Typography>
           </Stack>
           <Stack>
             <Typography

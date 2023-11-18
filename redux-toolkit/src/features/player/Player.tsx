@@ -23,14 +23,14 @@ import {
 } from "../../state/queries/player.api";
 import { formatMilliseconds } from "../../utilities/number";
 import { debounce } from "@mui/material/utils";
-import { RootState, useAppSelector } from "../../state/store";
+import { AppRootState, useAppSelector } from "../../state/store";
 
 const Player: FC = () => {
   const player = useSpotifyWebPlayback();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
-  const playerState = useAppSelector((s: RootState) => s.player);
+  const playerState = useAppSelector((s: AppRootState) => s.player);
   const { playbackState, deviceId } = playerState;
 
   // [TODO]: Do this for now, implement Episodes later?

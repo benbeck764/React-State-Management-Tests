@@ -81,7 +81,7 @@ const Album: FC = () => {
           <PlayButton
             type="album"
             variant="action-button"
-            albumDataUri={album.uri}
+            dataUri={album.uri}
             size="large"
           />
           <TrackListing album={album} />

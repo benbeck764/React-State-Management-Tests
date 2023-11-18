@@ -100,7 +100,7 @@ const ArtistCard = (props: AlbumCardProps) => {
               <PlayButton
                 variant="action-button"
                 type="album"
-                albumDataUri={album.uri}
+                dataUri={album.uri}
               />
             </Box>
           </Stack>

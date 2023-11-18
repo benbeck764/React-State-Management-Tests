@@ -1,23 +1,26 @@
 import { FC } from "react";
+import AppGrid, {
+  AppGridProps,
+  AppGridData,
+  AppGridVirtualizedProps,
+} from "@benbeck764/react-components-grid/Grid";
+import Typography from "@mui/material/Typography";
+import { createCardViewDefinitions } from "./TracksGrid.card";
 import {
   GetArtistTopTracksResponse,
   SpotifyTrack,
 } from "../../../state/queries/models/spotify.models";
-import AppGrid, {
-  AppGridProps,
-  AppGridData,
-} from "@benbeck764/react-components-grid/Grid";
-import Typography from "@mui/material/Typography";
-import { createTableViewDefinitions } from "./TracksGrid.table";
-import { createCardViewDefinitions } from "./TracksGrid.card";
+import { PlayButtonPlayType } from "../../player/PlayButton";
 
 type TracksGridProps = {
   data: GetArtistTopTracksResponse | undefined;
   loading: boolean;
+  playType: PlayButtonPlayType;
+  virtualization?: AppGridVirtualizedProps;
 };
 
 const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
-  const { data: dataRequest, loading } = props;
+  const { data: dataRequest, loading, playType, virtualization } = props;
 
   const gridData: AppGridData<SpotifyTrack> = {
     pages:
@@ -45,8 +48,7 @@ const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
 
   const gridProps: AppGridProps<SpotifyTrack> = {
     data: gridData,
-    tableView: createTableViewDefinitions(),
-    cardView: createCardViewDefinitions(),
+    cardView: createCardViewDefinitions(playType, virtualization),
     displayMode: "card",
     cursorStyle: "pointer",
     noItemsMessage: (

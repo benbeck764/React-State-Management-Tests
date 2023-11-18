@@ -2,7 +2,7 @@ import Fab from "@mui/material/Fab";
 import { FC } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import { RootState, useAppSelector } from "../../state/store";
+import { AppRootState, useAppSelector } from "../../state/store";
 import {
   useStartOrResumePlaybackMutation,
   usePausePlaybackMutation,
@@ -11,40 +11,49 @@ import { debounce } from "@mui/material/utils";
 import IconButton from "@mui/material/IconButton";
 import { SxProps, Theme } from "@mui/material/styles";
 
+export type PlayButtonPlayType = "artist" | "album" | "track" | "playlist";
 type PlayButtonVariant = "action-button" | "button";
 type PlayButtonSize = "small" | "medium" | "large";
 
 type PlayButtonProps = {
+  type: PlayButtonPlayType;
   variant: PlayButtonVariant;
+  dataUri: string;
+  offsetUri?: string;
   size?: PlayButtonSize;
   sx?: SxProps<Theme>;
   stopPropagation?: boolean;
-} & (
-  | {
-      type: "album";
-      albumDataUri: string;
-    }
-  | {
-      type: "track";
-      albumDataUri: string;
-      trackDataUri: string;
-    }
-);
+};
 
 const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
-  const { variant, type, size = "medium", sx, stopPropagation } = props;
+  const {
+    type,
+    variant,
+    dataUri,
+    offsetUri,
+    size = "medium",
+    sx,
+    stopPropagation,
+  } = props;
 
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const [pausePlayback] = usePausePlaybackMutation();
 
-  const playerState = useAppSelector((s: RootState) => s.player);
+  const playerState = useAppSelector((s: AppRootState) => s.player);
   const { playbackState, deviceId } = playerState;
+
+  const currentTrack =
+    typeof playbackState !== "undefined" &&
+    type === "track" &&
+    ((!offsetUri && dataUri === playbackState.track_window.current_track.uri) ||
+      (offsetUri &&
+        offsetUri === playbackState.track_window.current_track.uri));
 
   const isCurrent =
     typeof playbackState !== "undefined" &&
-    ((type === "track" &&
-      props.trackDataUri === playbackState.track_window.current_track.uri) ||
-      (type === "album" && props.albumDataUri === playbackState.context.uri));
+    (currentTrack ||
+      (type === "album" && dataUri === playbackState.context.uri) ||
+      (type === "artist" && dataUri === playbackState.context.uri));
 
   const isPlaying =
     isCurrent &&
@@ -54,31 +63,37 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const handlePlayChange = (): void => {
     if (!deviceId) return;
 
-    // Pause
     if (isPlaying) {
+      // Pause
       pausePlayback(deviceId);
     } else {
-      // Currently item is the track or album? Resume  from where it's at
       if (isCurrent) {
+        // Currently item is the track/album/artist? Resume from where it's at.
         startOrResumePlayback({
           device_id: deviceId,
-          context_uri: props.albumDataUri,
+          context_uri: dataUri,
           position_ms: playbackState.position,
           offset:
-            typeof playbackState.track_window.current_track !== "undefined"
+            typeof playbackState.track_window.current_track !== "undefined" &&
+            type !== "artist"
               ? {
                   uri: playbackState.track_window.current_track.uri,
                 }
               : undefined,
         });
       } else {
+        // Otherwise start new track/album/artist.
         startOrResumePlayback({
           device_id: deviceId,
-          context_uri: props.albumDataUri,
+          context_uri:
+            type !== "track" || (type === "track" && offsetUri)
+              ? dataUri
+              : undefined,
+          uris: type === "track" && !offsetUri ? [dataUri] : undefined,
           offset:
-            type === "track"
+            typeof offsetUri !== "undefined" && type !== "artist"
               ? {
-                  uri: props.trackDataUri,
+                  uri: offsetUri,
                 }
               : undefined,
         });

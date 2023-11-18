@@ -4,6 +4,7 @@ import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 
 export const StyledPlayerWrapper = styled(Box)(({ theme }) => ({
+  zIndex: 1051,
   [theme.breakpoints.up("xs")]: {
     paddingTop: theme.playerHeights["xs"],
   },

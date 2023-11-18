@@ -9,7 +9,7 @@ import {
 import { AppLink } from "../AppLink";
 import { getArtistUrl } from "../../../routing/common/url";
 import { formatMilliseconds } from "../../../utilities/number";
-import { useAppSelector, RootState } from "../../../state/store";
+import { useAppSelector, AppRootState } from "../../../state/store";
 import Equalizer from "../Equalizer";
 import { useHovered } from "../../../utilities/hooks/useHovered";
 import PlayButton from "../../player/PlayButton";
@@ -27,12 +27,11 @@ const TrackListingRow: FC<TrackListingRowProps> = (
   const hovered = useHovered(rowRef);
 
   const playbackState = useAppSelector(
-    (s: RootState) => s.player.playbackState
+    (s: AppRootState) => s.player.playbackState
   );
 
   const isCurrentTrack =
     typeof playbackState !== "undefined" &&
-    playbackState.context?.uri &&
     track.uri === playbackState.track_window.current_track.uri;
 
   const trackPlaying = isCurrentTrack && playbackState.paused === false;
@@ -58,8 +57,8 @@ const TrackListingRow: FC<TrackListingRowProps> = (
             <PlayButton
               type="track"
               variant="button"
-              albumDataUri={album.uri}
-              trackDataUri={track.uri}
+              dataUri={album.uri}
+              offsetUri={track.uri}
             ></PlayButton>
           ) : (
             <>
