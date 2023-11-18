@@ -10,6 +10,10 @@ import {
 import { SpotifyAlbum } from "../../../state/queries/models/spotify.models";
 import { StyledCard } from "../common.styles";
 import { capitalize } from "@mui/material/utils";
+import PlayButton from "../../player/PlayButton";
+import Box from "@mui/material/Box";
+import { useRef } from "react";
+import { useHovered } from "../../../utilities/hooks/useHovered";
 
 type AlbumCardProps =
   | {
@@ -21,8 +25,10 @@ type AlbumCardProps =
       loadingPlaceholder: true;
     };
 
-const ArtistCard = (props: AlbumCardProps) => {
+const AlbumCard = (props: AlbumCardProps) => {
   const theme = useTheme();
+  const cardFocusRef = useRef<HTMLDivElement>();
+  const hovered = useHovered(cardFocusRef);
 
   if (props.loadingPlaceholder) {
     return (
@@ -42,13 +48,25 @@ const ArtistCard = (props: AlbumCardProps) => {
   } else {
     const { album } = props;
     return (
-      <StyledCard>
+      <StyledCard ref={cardFocusRef}>
         <Stack alignItems="center" gap={2}>
-          <Avatar
-            variant="rounded"
-            sx={{ width: 150, height: 150 }}
-            src={album.images[0].url}
-          />
+          <Box sx={{ position: "relative" }}>
+            <Avatar
+              variant="rounded"
+              sx={{ width: 150, height: 150, position: "relative" }}
+              src={album.images[0].url}
+            />
+            {hovered && (
+              <PlayButton
+                variant="action-button"
+                type="album"
+                albumDataUri={album.uri}
+                sx={{ position: "absolute", bottom: 8, right: 8 }}
+                stopPropagation
+              />
+            )}
+          </Box>
+
           <StyledEllipsingTextContainer
             lines={1}
             reserveHeight={
@@ -85,4 +103,4 @@ const ArtistCard = (props: AlbumCardProps) => {
   }
 };
 
-export default ArtistCard;
+export default AlbumCard;

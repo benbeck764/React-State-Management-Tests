@@ -114,7 +114,7 @@ const TrackListing: FC<TrackListingProps> = (props: TrackListingProps) => {
                   </>
                 )}
                 {tracks.map((t: SimplifiedSpotifyTrack) => (
-                  <TrackListingRow album={album} track={t} />
+                  <TrackListingRow key={t.id} album={album} track={t} />
                 ))}
               </Fragment>
             );

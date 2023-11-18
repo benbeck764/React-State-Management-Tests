@@ -14,6 +14,7 @@ import { StyledCard } from "../common.styles";
 import { AppLink } from "../AppLink";
 import TrackListing from "../TrackListing/TrackListing";
 import { getAlbumUrl } from "../../../routing/common/url";
+import PlayButton from "../../player/PlayButton";
 
 type AlbumCardProps =
   | {
@@ -35,7 +36,7 @@ const ArtistCard = (props: AlbumCardProps) => {
           <Stack gap={1.5}>
             <Skeleton variant="rectangular" width={125} height={125} />
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <TypographySkeleton
               variant="h2"
               charCount={22}
@@ -48,6 +49,12 @@ const ArtistCard = (props: AlbumCardProps) => {
               charCountVariance={5}
               lines={1}
             />
+            <Skeleton
+              variant="circular"
+              width={32}
+              height={32}
+              sx={{ mt: 1 }}
+            />
           </Stack>
         </Stack>
         <TrackListing loading={true} />
@@ -55,7 +62,6 @@ const ArtistCard = (props: AlbumCardProps) => {
     );
   } else {
     const { album } = props;
-
     return (
       <Box sx={{ padding: (theme) => theme.spacing(2), borderRadius: "16px" }}>
         <Stack direction="row" gap={2}>
@@ -66,7 +72,7 @@ const ArtistCard = (props: AlbumCardProps) => {
               src={album.images[0].url}
             />
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <StyledEllipsingTextContainer
               lines={1}
               reserveHeight={
@@ -90,6 +96,13 @@ const ArtistCard = (props: AlbumCardProps) => {
                 album.total_tracks > 1 ? "s" : ""
               }`}
             </Typography>
+            <Box sx={{ mt: 1 }}>
+              <PlayButton
+                variant="action-button"
+                type="album"
+                albumDataUri={album.uri}
+              />
+            </Box>
           </Stack>
         </Stack>
         <TrackListing album={album} />

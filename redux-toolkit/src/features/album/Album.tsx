@@ -82,6 +82,7 @@ const Album: FC = () => {
             type="album"
             variant="action-button"
             albumDataUri={album.uri}
+            size="large"
           />
           <TrackListing album={album} />
         </AppCard>

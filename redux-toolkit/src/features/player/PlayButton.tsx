@@ -9,10 +9,17 @@ import {
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
 import IconButton from "@mui/material/IconButton";
+import { SxProps, Theme } from "@mui/material/styles";
 
 type PlayButtonVariant = "action-button" | "button";
+type PlayButtonSize = "small" | "medium" | "large";
 
-type PlayButtonProps = { variant: PlayButtonVariant } & (
+type PlayButtonProps = {
+  variant: PlayButtonVariant;
+  size?: PlayButtonSize;
+  sx?: SxProps<Theme>;
+  stopPropagation?: boolean;
+} & (
   | {
       type: "album";
       albumDataUri: string;
@@ -25,7 +32,7 @@ type PlayButtonProps = { variant: PlayButtonVariant } & (
 );
 
 const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
-  const { variant, type } = props;
+  const { variant, type, size = "medium", sx, stopPropagation } = props;
 
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const [pausePlayback] = usePausePlaybackMutation();
@@ -81,8 +88,21 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
 
   const debouncedHandlePlayChange = debounce(handlePlayChange, 200);
 
+  let buttonSize = "32px";
+  switch (size) {
+    case "small":
+      buttonSize = "32px";
+      break;
+    case "medium":
+      buttonSize = "40px";
+      break;
+    case "large":
+      buttonSize = "48px";
+      break;
+  }
+
   return variant === "button" ? (
-    <IconButton onClick={debouncedHandlePlayChange} sx={{ p: 0 }}>
+    <IconButton onClick={debouncedHandlePlayChange} sx={{ p: 0, ...sx }}>
       {isPlaying ? (
         <PauseIcon
           sx={{
@@ -106,8 +126,17 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
         "&:hover": {
           transform: "scale(1.05)",
         },
+        width: buttonSize,
+        height: buttonSize,
+        ...sx,
       }}
-      onClick={debouncedHandlePlayChange}
+      onClick={(e) => {
+        if (stopPropagation) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        debouncedHandlePlayChange();
+      }}
     >
       {isPlaying ? (
         <PauseIcon
