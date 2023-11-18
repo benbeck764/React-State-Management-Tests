@@ -12,7 +12,7 @@ import {
 import { SpotifyAlbum } from "../../../state/queries/models/spotify.models";
 import { StyledCard } from "../common.styles";
 import { AppLink } from "../AppLink";
-import TrackListing from "../TrackListing";
+import TrackListing from "../TrackListing/TrackListing";
 import { getAlbumUrl } from "../../../routing/common/url";
 
 type AlbumCardProps =

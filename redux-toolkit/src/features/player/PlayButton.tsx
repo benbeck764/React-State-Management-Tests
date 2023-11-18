@@ -8,13 +8,24 @@ import {
   usePausePlaybackMutation,
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
+import IconButton from "@mui/material/IconButton";
 
-type PlayButtonProps = {
-  dataUri: string;
-};
+type PlayButtonVariant = "action-button" | "button";
+
+type PlayButtonProps = { variant: PlayButtonVariant } & (
+  | {
+      type: "album";
+      albumDataUri: string;
+    }
+  | {
+      type: "track";
+      albumDataUri: string;
+      trackDataUri: string;
+    }
+);
 
 const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
-  const { dataUri } = props;
+  const { variant, type } = props;
 
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const [pausePlayback] = usePausePlaybackMutation();
@@ -22,24 +33,29 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const playerState = useAppSelector((s: RootState) => s.player);
   const { playbackState, deviceId } = playerState;
 
-  const isPlaying =
+  const isCurrent =
     typeof playbackState !== "undefined" &&
-    playbackState.paused === false &&
-    playbackState.context?.uri &&
-    dataUri === playbackState.context.uri;
+    ((type === "track" &&
+      props.trackDataUri === playbackState.track_window.current_track.uri) ||
+      (type === "album" && props.albumDataUri === playbackState.context.uri));
+
+  const isPlaying =
+    isCurrent &&
+    typeof playbackState !== "undefined" &&
+    playbackState.paused === false;
 
   const handlePlayChange = (): void => {
     if (!deviceId) return;
+
+    // Pause
     if (isPlaying) {
       pausePlayback(deviceId);
     } else {
-      if (
-        playbackState?.context?.uri &&
-        dataUri === playbackState.context.uri
-      ) {
+      // Currently item is the track or album? Resume  from where it's at
+      if (isCurrent) {
         startOrResumePlayback({
           device_id: deviceId,
-          context_uri: dataUri,
+          context_uri: props.albumDataUri,
           position_ms: playbackState.position,
           offset:
             typeof playbackState.track_window.current_track !== "undefined"
@@ -51,7 +67,13 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
       } else {
         startOrResumePlayback({
           device_id: deviceId,
-          context_uri: dataUri,
+          context_uri: props.albumDataUri,
+          offset:
+            type === "track"
+              ? {
+                  uri: props.trackDataUri,
+                }
+              : undefined,
         });
       }
     }
@@ -59,7 +81,25 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
 
   const debouncedHandlePlayChange = debounce(handlePlayChange, 200);
 
-  return (
+  return variant === "button" ? (
+    <IconButton onClick={debouncedHandlePlayChange} sx={{ p: 0 }}>
+      {isPlaying ? (
+        <PauseIcon
+          sx={{
+            fontSize: "20px",
+            color: (theme) => theme.palette.common.white,
+          }}
+        />
+      ) : (
+        <PlayArrowIcon
+          sx={{
+            fontSize: "20px",
+            color: (theme) => theme.palette.common.white,
+          }}
+        />
+      )}
+    </IconButton>
+  ) : (
     <Fab
       color="primary"
       sx={{

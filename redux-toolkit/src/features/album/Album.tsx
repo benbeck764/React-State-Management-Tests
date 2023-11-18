@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useGetAlbumQuery } from "../../state/queries/album.api";
-import TrackListing from "../common/TrackListing";
+import TrackListing from "../common/TrackListing/TrackListing";
 import AppCard from "@benbeck764/react-components/Card";
 import Box from "@mui/material/Box";
 import { capitalize } from "@mui/material/utils";
@@ -78,7 +78,11 @@ const Album: FC = () => {
         </Stack>
 
         <AppCard paperSx={{ p: 2, borderRadius: "16px" }}>
-          <PlayButton dataUri={album.uri} />
+          <PlayButton
+            type="album"
+            variant="action-button"
+            albumDataUri={album.uri}
+          />
           <TrackListing album={album} />
         </AppCard>
       </Stack>
