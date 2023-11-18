@@ -10,6 +10,8 @@ export const endpoints = {
       player: "me/player",
       play: "me/player/play",
       pause: "me/player/pause",
+      shuffle: "me/player/shuffle",
+      repeat: "me/player/repeat",
       currentlyPlaying: "me/player/currently-playing",
       recentlyPlayed: "me/player/recently-played",
     },

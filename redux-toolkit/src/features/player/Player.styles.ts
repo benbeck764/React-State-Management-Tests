@@ -60,7 +60,7 @@ export const StyledPlayerButton = styled(IconButton)(() => ({
   padding: 0,
 }));
 
-export const StyledTrackTimeSlider = styled(Slider)(({ theme }) => ({
+export const StyledSlider = styled(Slider)(({ theme }) => ({
   color: theme.palette.common.white,
   height: 4,
   paddingTop: theme.spacing(1),

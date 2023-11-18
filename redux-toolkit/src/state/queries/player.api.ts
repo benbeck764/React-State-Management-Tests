@@ -47,6 +47,28 @@ const playerApi = spotifyApi.injectEndpoints({
         params: { device_id: deviceId },
       }),
     }),
+    toggleShuffle: builder.mutation<void, { state: boolean; deviceId: string }>(
+      {
+        query: (request: { state: boolean; deviceId: string }) => ({
+          url: endpoints.spotify.me.shuffle,
+          method: "PUT",
+          params: { device_id: request.deviceId, state: request.state },
+        }),
+      }
+    ),
+    setRepeatMode: builder.mutation<
+      void,
+      { state: "track" | "context" | "off"; deviceId: string }
+    >({
+      query: (request: {
+        state: "track" | "context" | "off";
+        deviceId: string;
+      }) => ({
+        url: endpoints.spotify.me.repeat,
+        method: "PUT",
+        params: { device_id: request.deviceId, state: request.state },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -57,4 +79,6 @@ export const {
   useGetRecentlyPlayedQuery,
   useStartOrResumePlaybackMutation,
   usePausePlaybackMutation,
+  useToggleShuffleMutation,
+  useSetRepeatModeMutation,
 } = playerApi;

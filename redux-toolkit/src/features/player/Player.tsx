@@ -3,7 +3,6 @@ import {
   StyledPlayerContainer,
   StyledPlayerWrapper,
   StyledPlayerButton,
-  StyledTrackTimeSlider,
 } from "./Player.styles";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -11,25 +10,35 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { AppLink } from "../common/AppLink";
 import { getAlbumUrl, getArtistUrl } from "../../routing/common/url";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import useSpotifyWebPlayback from "./useSpotifyWebPlayback";
 import {
   useGetCurrentPlayingStateQuery,
   useGetRecentlyPlayedQuery,
   useStartOrResumePlaybackMutation,
+  useToggleShuffleMutation,
+  useSetRepeatModeMutation,
 } from "../../state/queries/player.api";
-import { formatMilliseconds } from "../../utilities/number";
 import { debounce } from "@mui/material/utils";
 import { AppRootState, useAppSelector } from "../../state/store";
+import PlayerTrackPosition from "./components/PlayerTrackPosition";
+import PlayerVolume from "./components/PlayerVolume";
 
 const Player: FC = () => {
   const player = useSpotifyWebPlayback();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
+  const [toggleShuffe] = useToggleShuffleMutation();
+  const [toggleRepeatMode] = useSetRepeatModeMutation();
+
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
+
   const playerState = useAppSelector((s: AppRootState) => s.player);
   const { playbackState, deviceId } = playerState;
 
@@ -81,6 +90,23 @@ const Player: FC = () => {
 
   const handleSeek = debounce(async (ms: number | number[]): Promise<void> => {
     if (player) await player.seek(ms as number);
+  }, 200);
+
+  const handleToggleShuffle = debounce(async (): Promise<void> => {
+    if (deviceId && playbackState)
+      await toggleShuffe({ deviceId, state: !playbackState.shuffle });
+  }, 200);
+
+  const handleToggleRepeatMode = debounce(async (): Promise<void> => {
+    if (deviceId && playbackState) {
+      if (playbackState.repeat_mode === 0) {
+        await toggleRepeatMode({ deviceId, state: "context" });
+      } else if (playbackState.repeat_mode === 1) {
+        await toggleRepeatMode({ deviceId, state: "track" });
+      } else if (playbackState.repeat_mode === 2) {
+        await toggleRepeatMode({ deviceId, state: "off" });
+      }
+    }
   }, 200);
 
   return (
@@ -140,11 +166,32 @@ const Player: FC = () => {
                   height="100%"
                   gap={1.5}
                 >
+                  <StyledPlayerButton onClick={handleToggleShuffle}>
+                    <ShuffleIcon
+                      sx={{
+                        fontSize: "20px",
+                        color: (theme) =>
+                          playbackState?.shuffle === true
+                            ? theme.palette.primary.main
+                            : theme.palette.grey[300],
+                        "&:hover": {
+                          color: (theme) =>
+                            playbackState?.shuffle === true
+                              ? theme.palette.primary.dark
+                              : theme.palette.text.primary,
+                        },
+                      }}
+                    />
+                  </StyledPlayerButton>
+
                   <StyledPlayerButton onClick={handlePrevious}>
                     <SkipPreviousIcon
                       sx={{
                         fontSize: "26px",
-                        color: (theme) => theme.palette.text.primary,
+                        color: (theme) => theme.palette.grey[300],
+                        "&:hover": {
+                          color: (theme) => theme.palette.text.primary,
+                        },
                       }}
                     />
                   </StyledPlayerButton>
@@ -168,44 +215,70 @@ const Player: FC = () => {
                       />
                     </StyledPlayerButton>
                   )}
+
                   <StyledPlayerButton onClick={handleNext}>
                     <SkipNextIcon
                       sx={{
                         fontSize: "26px",
-                        color: (theme) => theme.palette.text.primary,
+                        color: (theme) => theme.palette.grey[300],
+                        "&:hover": {
+                          color: (theme) => theme.palette.text.primary,
+                        },
                       }}
                     />
                   </StyledPlayerButton>
+
+                  <StyledPlayerButton onClick={handleToggleRepeatMode}>
+                    {(playbackState?.repeat_mode === 0 ||
+                      playbackState?.repeat_mode === 1) && (
+                      <RepeatIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: (theme) =>
+                            playbackState?.repeat_mode === 0
+                              ? theme.palette.grey[300]
+                              : theme.palette.primary.main,
+                          "&:hover": {
+                            color: (theme) =>
+                              playbackState?.repeat_mode === 0
+                                ? theme.palette.text.primary
+                                : theme.palette.primary.dark,
+                          },
+                        }}
+                      />
+                    )}
+                    {playbackState?.repeat_mode === 2 && (
+                      <RepeatOneIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: (theme) => theme.palette.primary.main,
+                          "&:hover": {
+                            color: (theme) => theme.palette.primary.dark,
+                          },
+                        }}
+                      />
+                    )}
+                  </StyledPlayerButton>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap={2}>
-                  <Typography
-                    variant="paragraphExtraSmall"
-                    sx={{ color: (theme) => theme.palette.grey[400] }}
-                  >
-                    {formatMilliseconds(playbackState?.position ?? 0)}
-                  </Typography>
-                  <StyledTrackTimeSlider
-                    aria-label="Track Position"
-                    defaultValue={0}
-                    value={playbackState?.position ?? 0}
-                    min={0}
-                    max={item.duration_ms}
-                    step={1000}
-                    onChangeCommitted={(_, val: number | number[]) =>
-                      handleSeek(val)
-                    }
-                  />
-                  <Typography
-                    variant="paragraphExtraSmall"
-                    sx={{ color: (theme) => theme.palette.grey[400] }}
-                  >
-                    {formatMilliseconds(item.duration_ms)}
-                  </Typography>
-                </Stack>
+                <PlayerTrackPosition
+                  playbackState={playbackState}
+                  track={item}
+                  onSeek={handleSeek}
+                />
               </Stack>
             </Grid>
 
-            <Grid item xs={4}></Grid>
+            <Grid item xs={4}>
+              <Stack
+                mt={2}
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                height="100%"
+              >
+                <PlayerVolume volume={100} onVolumeChange={() => void 0} />
+              </Stack>
+            </Grid>
           </Grid>
         )}
       </StyledPlayerContainer>
