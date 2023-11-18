@@ -3,8 +3,12 @@ import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Skeleton } from "@mui/material";
 import { formatMilliseconds } from "../../../utilities/number";
+import PlayButton from "../../player/PlayButton";
+import Equalizer from "../Equalizer";
+import Stack from "@mui/material/Stack";
+import { Skeleton } from "@mui/material";
+import { useAppSelector, RootState } from "../../../state/store";
 
 type TracksGridColunnProps =
   | {
@@ -18,17 +22,42 @@ type TracksGridColunnProps =
 export const TracksGridIndex: FC<TracksGridColunnProps & { index?: number }> = (
   props: TracksGridColunnProps & { index?: number }
 ) => {
+  const playbackState = useAppSelector(
+    (s: RootState) => s.player.playbackState
+  );
+
   if (props.loadingPlaceholder) {
     return <TypographySkeleton variant="paragraph" charCount={1} />;
   } else {
     const { index } = props;
+    const hovered = false;
+    const track = props.item;
+
+    const isCurrentTrack =
+      typeof playbackState !== "undefined" &&
+      playbackState.context?.uri &&
+      track.uri === playbackState.track_window.current_track.uri;
+
+    const trackPlaying = isCurrentTrack && playbackState.paused === false;
     return (
-      <Typography
-        variant="paragraph"
-        sx={{ color: (theme) => theme.palette.grey[400] }}
-      >
-        {(index ?? 0) + 1}
-      </Typography>
+      <Stack justifyContent="center" width="14px">
+        {hovered ? (
+          <PlayButton
+            type="track"
+            variant="button"
+            albumDataUri={track.album.uri}
+            trackDataUri={track.uri}
+          ></PlayButton>
+        ) : (
+          <>
+            {trackPlaying ? (
+              <Equalizer />
+            ) : (
+              <Typography>{(index ?? 0) + 1}</Typography>
+            )}
+          </>
+        )}
+      </Stack>
     );
   }
 };
@@ -46,6 +75,7 @@ export const TracksGridAlbumCover: FC<TracksGridColunnProps> = (
         src={track.album.images[0].url}
         height={40}
         width={40}
+        sx={{ borderRadius: "4px" }}
       ></Box>
     );
   }

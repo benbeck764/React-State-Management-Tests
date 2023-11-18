@@ -104,7 +104,7 @@ const getXlColumns = (): AppGridColumnDefinition<SpotifyTrack>[] => {
   return [
     {
       title: "",
-      width: "2.5%",
+      width: "3.5%",
       value: (props: AppGridValueGetterProps<SpotifyTrack>) => {
         return <TracksGridIndex item={props.item} index={props.itemIndex} />;
       },
@@ -112,7 +112,7 @@ const getXlColumns = (): AppGridColumnDefinition<SpotifyTrack>[] => {
     },
     {
       title: "",
-      width: "7.5%",
+      width: "6.5%",
       value: (props: AppGridValueGetterProps<SpotifyTrack>) => {
         return <TracksGridAlbumCover item={props.item} />;
       },
@@ -172,6 +172,8 @@ export const createTableViewDefinitions =
       tableProps: {
         sx: {
           tableLayout: "fixed",
+          px: 1,
+          backgroundColor: (theme) => theme.palette.coolGrey[900],
         },
       },
       bodyTableRowProps: {

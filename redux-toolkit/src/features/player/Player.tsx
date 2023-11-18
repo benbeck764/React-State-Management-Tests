@@ -107,17 +107,26 @@ const Player: FC = () => {
                   >
                     <Typography variant="paragraph">{item.name}</Typography>
                   </AppLink>
-                  <AppLink
-                    to={getArtistUrl(item.artists[0].uri.split(":")[2])}
-                    state={item.artists[0]}
-                  >
-                    <Typography
-                      variant="paragraphExtraSmall"
-                      sx={{ color: (theme) => theme.palette.grey[400] }}
-                    >
-                      {item.artists[0].name}
-                    </Typography>
-                  </AppLink>
+                  <Stack direction="row" gap={0.5}>
+                    {item.artists.map((artist, artistIndex: number) => (
+                      <AppLink
+                        key={artist.uri}
+                        to={getArtistUrl(artist.uri.split(":")[2])}
+                        state={artist}
+                        sx={{ display: "inline-block" }}
+                      >
+                        <Typography
+                          variant="paragraph"
+                          sx={{
+                            color: (theme) => theme.palette.grey[400],
+                          }}
+                        >
+                          {artist.name}
+                          {artistIndex < item.artists.length - 1 && ","}
+                        </Typography>
+                      </AppLink>
+                    ))}
+                  </Stack>
                 </Stack>
               </Stack>
             </Grid>
