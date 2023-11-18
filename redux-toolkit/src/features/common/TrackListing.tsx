@@ -14,6 +14,8 @@ import { groupBy } from "../../utilities/array";
 import { AppLink } from "./AppLink";
 import { getArtistUrl } from "../../routing/common/url";
 import { formatMilliseconds } from "../../utilities/number";
+import { useAppSelector, RootState } from "../../state/store";
+import Equalizer from "./Equalizer";
 
 type TrackListingProps =
   | {
@@ -26,6 +28,10 @@ type TrackListingProps =
     };
 
 const TrackListing: FC<TrackListingProps> = (props: TrackListingProps) => {
+  const playbackState = useAppSelector(
+    (s: RootState) => s.player.playbackState
+  );
+
   if (props.loading) {
     return (
       <Stack mt={5.5}>
@@ -116,60 +122,81 @@ const TrackListing: FC<TrackListingProps> = (props: TrackListingProps) => {
                     </Stack>
                   </>
                 )}
-                {tracks.map((t) => (
-                  <Stack
-                    direction="row"
-                    key={t.track_number}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    p={1}
-                    sx={{
-                      borderRadius: "4px",
-                      "&:hover": {
-                        backgroundColor: (theme) => theme.palette.coolGrey[800],
-                      },
-                    }}
-                  >
-                    <Stack direction="row" alignItems="center" gap={2}>
-                      <Typography variant="paragraph">
-                        {t.track_number}
-                      </Typography>
-                      <Stack>
-                        <Typography variant="paragraphBold">
-                          {t.name}
-                        </Typography>
-                        <Stack direction="row" gap={0.5}>
-                          {t.artists.map(
-                            (artist: SpotifyArtist, artistIndex: number) => (
-                              <AppLink
-                                key={artist.id}
-                                to={getArtistUrl(artist.id)}
-                                state={artist}
-                                sx={{ display: "inline-block" }}
-                              >
-                                <Typography
-                                  variant="paragraph"
-                                  sx={{
-                                    color: (theme) => theme.palette.grey[400],
-                                  }}
+                {tracks.map((t: SimplifiedSpotifyTrack) => {
+                  const trackPlaying =
+                    typeof playbackState !== "undefined" &&
+                    playbackState.paused === false &&
+                    playbackState.context?.uri &&
+                    t.uri === playbackState.track_window.current_track.uri;
+
+                  return (
+                    <Stack
+                      direction="row"
+                      key={t.track_number}
+                      alignItems="center"
+                      justifyContent="space-between"
+                      p={1}
+                      sx={{
+                        borderRadius: "4px",
+                        "&:hover": {
+                          backgroundColor: (theme) =>
+                            theme.palette.coolGrey[800],
+                        },
+                      }}
+                    >
+                      <Stack direction="row" alignItems="center" gap={2}>
+                        {trackPlaying ? (
+                          <Equalizer />
+                        ) : (
+                          <Typography variant="paragraph">
+                            {t.track_number}{" "}
+                          </Typography>
+                        )}
+                        <Stack>
+                          <Typography
+                            variant="paragraphBold"
+                            sx={{
+                              color: (theme) =>
+                                trackPlaying
+                                  ? theme.palette.primary.main
+                                  : theme.palette.text.primary,
+                            }}
+                          >
+                            {t.name}
+                          </Typography>
+                          <Stack direction="row" gap={0.5}>
+                            {t.artists.map(
+                              (artist: SpotifyArtist, artistIndex: number) => (
+                                <AppLink
+                                  key={artist.id}
+                                  to={getArtistUrl(artist.id)}
+                                  state={artist}
+                                  sx={{ display: "inline-block" }}
                                 >
-                                  {artist.name}
-                                  {artistIndex < t.artists.length - 1 && ","}
-                                </Typography>
-                              </AppLink>
-                            )
-                          )}
+                                  <Typography
+                                    variant="paragraph"
+                                    sx={{
+                                      color: (theme) => theme.palette.grey[400],
+                                    }}
+                                  >
+                                    {artist.name}
+                                    {artistIndex < t.artists.length - 1 && ","}
+                                  </Typography>
+                                </AppLink>
+                              )
+                            )}
+                          </Stack>
                         </Stack>
                       </Stack>
+                      <Typography
+                        variant="paragraph"
+                        sx={{ color: (theme) => theme.palette.grey[400] }}
+                      >
+                        {formatMilliseconds(t.duration_ms)}
+                      </Typography>
                     </Stack>
-                    <Typography
-                      variant="paragraph"
-                      sx={{ color: (theme) => theme.palette.grey[400] }}
-                    >
-                      {formatMilliseconds(t.duration_ms)}
-                    </Typography>
-                  </Stack>
-                ))}
+                  );
+                })}
               </Fragment>
             );
           }
