@@ -9,23 +9,13 @@ import {
   StyledEllipsingTextContainer,
   TypographySkeleton,
 } from "@benbeck764/react-components/common";
-import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
-import { StyledCard } from "../common.styles";
-import { useHovered } from "../../../utilities/hooks/useHovered";
-import PlayButton from "../../player/PlayButton";
-import { useAppSelector, AppRootState } from "../../../state/store";
+import { StyledCard } from "../../common.styles";
+import { useHovered } from "../../../../utilities/hooks/useHovered";
+import PlayButton from "../../../player/PlayButton";
+import { useAppSelector, AppRootState } from "../../../../state/store";
+import { ArtistCardProps } from "./ArtistCard";
 
-type ArtistCardProps =
-  | {
-      artist: SpotifyArtist;
-      loadingPlaceholder?: never;
-    }
-  | {
-      artist?: SpotifyArtist;
-      loadingPlaceholder: true;
-    };
-
-const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
+const ArtistCardLarge: FC<ArtistCardProps> = (props: ArtistCardProps) => {
   const theme = useTheme();
   const cardFocusRef = useRef<HTMLDivElement>();
   const hovered = useHovered(cardFocusRef);
@@ -39,7 +29,7 @@ const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
         <Stack alignItems="center" gap={2}>
           <Skeleton variant="circular" width={150} height={150} />
           <TypographySkeleton
-            variant="h6"
+            variant="paragraphLarge"
             charCount={12}
             charCountVariance={6}
             lines={1}
@@ -78,7 +68,7 @@ const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
             lines={1}
             reserveHeight={
               +(
-                theme.typography.paragraphBold.lineHeight
+                theme.typography.paragraphLarge.lineHeight
                   ?.toString()
                   .replace("px", "") || 0
               )
@@ -92,4 +82,4 @@ const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
   }
 };
 
-export default ArtistCard;
+export default ArtistCardLarge;

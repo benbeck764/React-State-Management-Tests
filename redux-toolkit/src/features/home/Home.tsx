@@ -8,13 +8,15 @@ import { getArtistUrl } from "../../routing/common/url";
 import { AppGridDataRequest } from "@benbeck764/react-components-grid/Grid";
 import { useDebounce } from "../../utilities/hooks/useDebounce";
 import Greeting from "./Greeting";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const Home: FC = () => {
   const navigate = useNavigate();
 
   const [dataRequest, setDataRequest] = useState<AppGridDataRequest>({
     pageNumber: 0,
-    pageSize: 25,
+    pageSize: 16,
   });
 
   const debouncedDataRequest = useDebounce(dataRequest, 300);
@@ -33,15 +35,18 @@ const Home: FC = () => {
   };
 
   return (
-    <Stack>
+    <Stack gap={5}>
       <Greeting />
-      <ArtistsGrid
-        data={data}
-        loading={isFetching}
-        pagination
-        onArtistSelected={handleArtistSelected}
-        onDataRequested={handleDataRequested}
-      />
+      <Box>
+        <Typography variant="h4">Favorite Artists</Typography>
+        <ArtistsGrid
+          data={data}
+          loading={isFetching}
+          onArtistSelected={handleArtistSelected}
+          onDataRequested={handleDataRequested}
+          cardVariant="small"
+        />
+      </Box>
     </Stack>
   );
 };

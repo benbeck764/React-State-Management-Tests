@@ -4,7 +4,6 @@ import { keyframes, styled } from "@mui/material/styles";
 import { FC } from "react";
 
 const Equalizer: FC = () => {
-  //
   return (
     <Box sx={{ width: "14px", height: "14px", transform: "rotate(180deg)" }}>
       <Stack direction="row" gap="2px">

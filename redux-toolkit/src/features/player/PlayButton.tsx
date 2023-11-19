@@ -93,15 +93,19 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const debouncedHandlePlayChange = debounce(handlePlayChange, 200);
 
   let buttonSize = "32px";
+  let fabFontSize = "24px";
   switch (size) {
     case "small":
       buttonSize = "32px";
+      fabFontSize = "24px";
       break;
     case "medium":
       buttonSize = "40px";
+      fabFontSize = "32px";
       break;
     case "large":
       buttonSize = "48px";
+      fabFontSize = "40px";
       break;
   }
 
@@ -145,14 +149,14 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
       {isPlaying ? (
         <PauseIcon
           sx={{
-            fontSize: "32px",
+            fontSize: fabFontSize,
             color: (theme) => theme.palette.common.black,
           }}
         />
       ) : (
         <PlayArrowIcon
           sx={{
-            fontSize: "32px",
+            fontSize: fabFontSize,
             color: (theme) => theme.palette.common.black,
           }}
         />

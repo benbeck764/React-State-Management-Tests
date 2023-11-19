@@ -12,10 +12,12 @@ import AppGrid, {
 import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./ArtistsGrid.card";
 
+export type ArtistCardVariant = "small" | "large";
 type ArtistsGridProps = {
   data: GetUserTopArtistsResponse | undefined;
   loading: boolean;
   pagination?: boolean;
+  cardVariant: ArtistCardVariant;
   onArtistSelected: (artist: SpotifyArtist) => void;
   onDataRequested: (dataRequest: AppGridDataRequest) => void;
 };
@@ -25,6 +27,7 @@ const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
     data: dataRequest,
     loading,
     pagination,
+    cardVariant,
     onArtistSelected,
     onDataRequested,
   } = props;
@@ -36,7 +39,7 @@ const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
             {
               items: [],
               pageIndex: 0,
-              pageSize: 24,
+              pageSize: 16,
               isLoading: true,
             },
           ]
@@ -57,7 +60,7 @@ const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
 
   const gridProps: AppGridProps<SpotifyArtist> = {
     data: gridData,
-    cardView: createCardViewDefinitions(),
+    cardView: createCardViewDefinitions(cardVariant),
     displayMode: "card",
     cursorStyle: "pointer",
     onDataRequested: onDataRequested,
