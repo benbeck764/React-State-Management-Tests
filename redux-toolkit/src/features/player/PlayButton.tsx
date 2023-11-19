@@ -45,14 +45,14 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const currentTrack =
     playbackState !== null &&
     type === "track" &&
-    ((!offsetUri && dataUri === playbackState.context.uri) ||
+    ((!offsetUri && dataUri === playbackState.context?.uri) ||
       (offsetUri && offsetUri === playbackState.item.uri));
 
   const isCurrent =
     playbackState !== null &&
     (currentTrack ||
-      (type === "album" && dataUri === playbackState.context.uri) ||
-      (type === "artist" && dataUri === playbackState.context.uri));
+      (type === "album" && dataUri === playbackState.context?.uri) ||
+      (type === "artist" && dataUri === playbackState.context?.uri));
 
   const isPlaying =
     isCurrent && playbackState !== null && playbackState.is_playing;

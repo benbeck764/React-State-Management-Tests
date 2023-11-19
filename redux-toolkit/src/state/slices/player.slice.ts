@@ -3,7 +3,6 @@ import { SpotifyPlaybackState } from "../queries/models/spotify.models";
 import { AppRootState } from "../store";
 
 export interface PlayerState {
-  //playbackState?: Spotify.PlaybackState;
   playbackState: SpotifyPlaybackState | null;
   deviceId: string | null;
   ready: boolean;
@@ -19,12 +18,6 @@ export const playerSlice = createSlice({
   name: "spotify-player",
   initialState,
   reducers: {
-    // playbackStateChanged: (
-    //   state: PlayerState,
-    //   action: PayloadAction<Spotify.PlaybackState>
-    // ) => {
-    //   state.playbackState = action.payload;
-    // },
     playbackStateChanged: (
       state: PlayerState,
       action: PayloadAction<SpotifyPlaybackState>

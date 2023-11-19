@@ -54,7 +54,7 @@ const AlbumCard = (props: AlbumCardProps) => {
     const { album } = props;
 
     const isCurrentAlbum =
-      playbackState !== null && album.uri === playbackState.context.uri;
+      playbackState !== null && album.uri === playbackState.context?.uri;
 
     const albumPlaying = isCurrentAlbum && playbackState.is_playing;
 

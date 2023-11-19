@@ -27,6 +27,8 @@ import {
   usePausePlaybackMutation,
   useSeekMutation,
   useSetPlaybackVolumeMutation,
+  useNextMutation,
+  usePreviousMutation,
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
 import { AppRootState, useAppSelector } from "../../state/store";
@@ -35,7 +37,11 @@ import PlayerVolume from "./components/PlayerVolume";
 import { SpotifyTrack } from "../../state/queries/models/spotify.models";
 
 const Player: FC = () => {
-  const player = useSpotifyWebPlayback();
+  // [NB]: No longer using returned Player, rather use Web API for everything...
+  useSpotifyWebPlayback();
+
+  const [previous] = usePreviousMutation();
+  const [next] = useNextMutation();
   const [seek] = useSeekMutation();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
   const [pausePlayback] = usePausePlaybackMutation();
@@ -80,11 +86,11 @@ const Player: FC = () => {
   }, [recentlyPlayedRes, currentlyPlayingRes, deviceId, startOrResumePlayback]);
 
   const handlePrevious = async (): Promise<void> => {
-    if (player) await player.previousTrack();
+    if (deviceId) await previous({ deviceId });
   };
 
   const handleNext = async (): Promise<void> => {
-    if (player) await player.nextTrack();
+    if (deviceId) await next({ deviceId });
   };
 
   const handleResume = debounce(async (): Promise<void> => {

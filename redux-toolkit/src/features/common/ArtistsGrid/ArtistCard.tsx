@@ -51,7 +51,7 @@ const ArtistCard: FC<ArtistCardProps> = (props: ArtistCardProps) => {
     const { artist } = props;
 
     const isCurrentArtist =
-      playbackState !== null && artist.uri === playbackState.context.uri;
+      playbackState !== null && artist.uri === playbackState.context?.uri;
 
     const artistPlaying = isCurrentArtist && playbackState.is_playing;
 

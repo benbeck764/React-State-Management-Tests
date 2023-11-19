@@ -32,6 +32,22 @@ const playerApi = spotifyApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    previous: builder.mutation<void, { deviceId?: string }>({
+      query: (request: { deviceId?: string }) => ({
+        url: endpoints.spotify.me.previous,
+        method: "POST",
+        params: { device_id: request.deviceId },
+        data: request,
+      }),
+    }),
+    next: builder.mutation<void, { deviceId?: string }>({
+      query: (request: { deviceId?: string }) => ({
+        url: endpoints.spotify.me.next,
+        method: "POST",
+        params: { device_id: request.deviceId },
+        data: request,
+      }),
+    }),
     seek: builder.mutation<void, { position: number; deviceId?: string }>({
       query: (request: { position: number; deviceId?: string }) => ({
         url: endpoints.spotify.me.seek,
@@ -151,6 +167,8 @@ export const {
   useGetPlaybackStateQuery,
   useGetCurrentPlayingStateQuery,
   useGetRecentlyPlayedQuery,
+  useNextMutation,
+  usePreviousMutation,
   useSeekMutation,
   useStartOrResumePlaybackMutation,
   usePausePlaybackMutation,
