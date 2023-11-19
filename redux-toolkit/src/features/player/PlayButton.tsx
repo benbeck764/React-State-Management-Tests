@@ -43,22 +43,19 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const { playbackState, deviceId } = playerState;
 
   const currentTrack =
-    typeof playbackState !== "undefined" &&
+    playbackState !== null &&
     type === "track" &&
-    ((!offsetUri && dataUri === playbackState.track_window.current_track.uri) ||
-      (offsetUri &&
-        offsetUri === playbackState.track_window.current_track.uri));
+    ((!offsetUri && dataUri === playbackState.context?.uri) ||
+      (offsetUri && offsetUri === playbackState.item.uri));
 
   const isCurrent =
-    typeof playbackState !== "undefined" &&
+    playbackState !== null &&
     (currentTrack ||
       (type === "album" && dataUri === playbackState.context?.uri) ||
       (type === "artist" && dataUri === playbackState.context?.uri));
 
   const isPlaying =
-    isCurrent &&
-    typeof playbackState !== "undefined" &&
-    playbackState.paused === false;
+    isCurrent && playbackState !== null && playbackState.is_playing;
 
   const handlePlayChange = (): void => {
     if (!deviceId) return;

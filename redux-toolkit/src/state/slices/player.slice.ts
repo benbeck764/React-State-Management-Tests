@@ -1,14 +1,16 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { SpotifyPlaybackState } from "../queries/models/spotify.models";
+import { AppRootState } from "../store";
 
 export interface PlayerState {
-  playbackState?: Spotify.PlaybackState;
-  deviceId?: string;
+  playbackState: SpotifyPlaybackState | null;
+  deviceId: string | null;
   ready: boolean;
 }
 
 const initialState: PlayerState = {
-  playbackState: undefined,
-  deviceId: undefined,
+  playbackState: null,
+  deviceId: null,
   ready: false,
 };
 
@@ -18,9 +20,10 @@ export const playerSlice = createSlice({
   reducers: {
     playbackStateChanged: (
       state: PlayerState,
-      action: PayloadAction<Spotify.PlaybackState>
+      action: PayloadAction<SpotifyPlaybackState>
     ) => {
       state.playbackState = action.payload;
+      state.deviceId = action.payload.device.id;
     },
     playerReady: (state: PlayerState, action: PayloadAction<string>) => {
       state.deviceId = action.payload;
@@ -30,11 +33,27 @@ export const playerSlice = createSlice({
       state.deviceId = initialState.deviceId;
       state.ready = false;
     },
+    playing: (state: PlayerState, action: PayloadAction<boolean>) => {
+      if (state.playbackState != null)
+        state.playbackState.is_playing = action.payload;
+    },
+    seek: (state: PlayerState, action: PayloadAction<number>) => {
+      if (state.playbackState != null)
+        state.playbackState.progress_ms = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { playbackStateChanged, playerReady, playerNotReady } =
-  playerSlice.actions;
+export const {
+  playbackStateChanged,
+  playerReady,
+  playerNotReady,
+  playing,
+  seek,
+} = playerSlice.actions;
+
+export const selectPlaybackState = (state: AppRootState) =>
+  state.player.playbackState;
 
 export default playerSlice.reducer;

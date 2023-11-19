@@ -54,10 +54,9 @@ const AlbumCard = (props: AlbumCardProps) => {
     const { album } = props;
 
     const isCurrentAlbum =
-      typeof playbackState !== "undefined" &&
-      album.uri === playbackState.context?.uri;
+      playbackState !== null && album.uri === playbackState.context?.uri;
 
-    const albumPlaying = isCurrentAlbum && playbackState.paused === false;
+    const albumPlaying = isCurrentAlbum && playbackState.is_playing;
 
     return (
       <StyledCard ref={cardFocusRef}>

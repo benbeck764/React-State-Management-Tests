@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { StyledPlayerButton, StyledSlider } from "../Player.styles";
 import Stack from "@mui/material/Stack";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
@@ -7,15 +7,19 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { debounce } from "@mui/material/utils";
 
 type PlayerVolumeProps = {
-  initialVolume: number;
+  playerVolume: number;
   onVolumeChange: (volume: number | number[]) => void;
 };
 
 const PlayerVolume: FC<PlayerVolumeProps> = (props: PlayerVolumeProps) => {
-  const { initialVolume, onVolumeChange } = props;
-  const [prevVolume, setPrevVolume] = useState<number>(initialVolume);
-  const [volume, setVolume] = useState<number>(initialVolume);
+  const { playerVolume, onVolumeChange } = props;
+  const [prevVolume, setPrevVolume] = useState<number>(playerVolume);
+  const [volume, setVolume] = useState<number>(playerVolume);
   const [muted, setMuted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setVolume(playerVolume);
+  }, [playerVolume]);
 
   const toggleMute = debounce(() => {
     setPrevVolume(volume);
@@ -24,7 +28,7 @@ const PlayerVolume: FC<PlayerVolumeProps> = (props: PlayerVolumeProps) => {
     onVolumeChange(muted ? prevVolume ?? 100 : 0);
   }, 200);
 
-  const handleVolumeChange = (newVolume: number) => {
+  const volumeChange = (newVolume: number) => {
     setVolume(newVolume);
     setMuted(newVolume === 0);
     onVolumeChange(newVolume);
@@ -74,14 +78,12 @@ const PlayerVolume: FC<PlayerVolumeProps> = (props: PlayerVolumeProps) => {
       </StyledPlayerButton>
       <StyledSlider
         aria-label="Track Position"
-        defaultValue={initialVolume}
+        defaultValue={volume}
         value={volume}
         min={0}
         max={100}
         step={1}
-        onChange={(_, val: number | number[]) =>
-          handleVolumeChange(val as number)
-        }
+        onChange={(_, val: number | number[]) => volumeChange(val as number)}
         sx={{ width: 100 }}
       />
     </Stack>

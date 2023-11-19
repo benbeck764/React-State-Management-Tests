@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
   StyledPlayerContainer,
   StyledPlayerWrapper,
@@ -24,80 +24,92 @@ import {
   useStartOrResumePlaybackMutation,
   useToggleShuffleMutation,
   useSetRepeatModeMutation,
-  useGetPlaybackStateQuery,
+  usePausePlaybackMutation,
+  useSeekMutation,
+  useSetPlaybackVolumeMutation,
+  useNextMutation,
+  usePreviousMutation,
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
 import { AppRootState, useAppSelector } from "../../state/store";
 import PlayerTrackPosition from "./components/PlayerTrackPosition";
 import PlayerVolume from "./components/PlayerVolume";
+import { SpotifyTrack } from "../../state/queries/models/spotify.models";
 
 const Player: FC = () => {
-  const player = useSpotifyWebPlayback();
+  // [NB]: No longer using returned Player, rather use Web API for everything...
+  useSpotifyWebPlayback();
+
+  const [previous] = usePreviousMutation();
+  const [next] = useNextMutation();
+  const [seek] = useSeekMutation();
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
+  const [pausePlayback] = usePausePlaybackMutation();
   const [toggleShuffe] = useToggleShuffleMutation();
   const [toggleRepeatMode] = useSetRepeatModeMutation();
+  const [setVolume] = useSetPlaybackVolumeMutation();
 
-  const { data: initialPlaybackState } = useGetPlaybackStateQuery();
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
 
   const playerState = useAppSelector((s: AppRootState) => s.player);
   const { playbackState, deviceId } = playerState;
 
-  // [TODO]: Do this for now, implement Episodes later?
+  // [TODO]: Do this for now, implement Episodes laer?t
   const item =
-    (initialPlaybackState?.item as unknown as Spotify.Track) ??
-    playbackState?.track_window.current_track ??
+    (playbackState?.item as SpotifyTrack) ??
     (((currentlyPlayingRes?.item as unknown) ??
-      recentlyPlayedRes?.items?.[0]?.track) as Spotify.Track);
-
-  useEffect(() => {
-    if (initialPlaybackState && deviceId) {
-      startOrResumePlayback({
-        //device_id: deviceId,
-        device_id: initialPlaybackState.device.id!,
-        context_uri: initialPlaybackState.context?.uri,
-        position_ms: initialPlaybackState.progress_ms,
-      });
-    }
-  }, [initialPlaybackState, deviceId, startOrResumePlayback]);
+      recentlyPlayedRes?.items?.[0]?.track) as SpotifyTrack);
 
   const handlePrevious = async (): Promise<void> => {
-    if (player) await player.previousTrack();
+    if (deviceId) await previous({ deviceId });
   };
 
   const handleNext = async (): Promise<void> => {
-    if (player) await player.nextTrack();
+    if (deviceId) await next({ deviceId });
   };
 
   const handleResume = debounce(async (): Promise<void> => {
-    if (player) await player.resume();
+    if (playbackState && deviceId) {
+      startOrResumePlayback({
+        device_id: deviceId,
+      });
+    }
   }, 150);
 
   const handlePause = debounce(async (): Promise<void> => {
-    if (player) await player.pause();
+    if (deviceId) await pausePlayback(deviceId);
   }, 150);
 
   const handleSeek = debounce(async (ms: number | number[]): Promise<void> => {
-    if (player) await player.seek(ms as number);
-  }, 200);
+    if (playbackState && deviceId) {
+      seek({
+        deviceId,
+        position: ms as number,
+      });
+    }
+  }, 150);
 
   const handleToggleShuffle = debounce(async (): Promise<void> => {
     if (deviceId && playbackState)
-      await toggleShuffe({ deviceId, state: !playbackState.shuffle });
-  }, 200);
+      await toggleShuffe({ deviceId, state: !playbackState.shuffle_state });
+  }, 150);
 
   const handleToggleRepeatMode = debounce(async (): Promise<void> => {
     if (deviceId && playbackState) {
-      if (playbackState.repeat_mode === 0) {
+      if (playbackState.repeat_state === "off") {
         await toggleRepeatMode({ deviceId, state: "context" });
-      } else if (playbackState.repeat_mode === 1) {
+      } else if (playbackState.repeat_state === "context") {
         await toggleRepeatMode({ deviceId, state: "track" });
-      } else if (playbackState.repeat_mode === 2) {
+      } else if (playbackState.repeat_state === "track") {
         await toggleRepeatMode({ deviceId, state: "off" });
       }
     }
-  }, 200);
+  }, 150);
+
+  const handleVolumeChange = debounce(async (volume: number): Promise<void> => {
+    if (deviceId) await setVolume({ volumePercent: volume, deviceId });
+  }, 100);
 
   return (
     <StyledPlayerWrapper>
@@ -161,12 +173,12 @@ const Player: FC = () => {
                       sx={{
                         fontSize: "20px",
                         color: (theme) =>
-                          playbackState?.shuffle === true
+                          playbackState?.shuffle_state === true
                             ? theme.palette.primary.main
                             : theme.palette.grey[300],
                         "&:hover": {
                           color: (theme) =>
-                            playbackState?.shuffle === true
+                            playbackState?.shuffle_state === true
                               ? theme.palette.primary.dark
                               : theme.palette.text.primary,
                         },
@@ -186,7 +198,7 @@ const Player: FC = () => {
                     />
                   </StyledPlayerButton>
 
-                  {!playbackState?.paused ? (
+                  {playbackState?.is_playing ? (
                     <StyledPlayerButton onClick={handlePause}>
                       <PauseCircleIcon
                         sx={{
@@ -219,25 +231,25 @@ const Player: FC = () => {
                   </StyledPlayerButton>
 
                   <StyledPlayerButton onClick={handleToggleRepeatMode}>
-                    {(playbackState?.repeat_mode === 0 ||
-                      playbackState?.repeat_mode === 1) && (
+                    {(playbackState?.repeat_state === "off" ||
+                      playbackState?.repeat_state === "context") && (
                       <RepeatIcon
                         sx={{
                           fontSize: "20px",
                           color: (theme) =>
-                            playbackState?.repeat_mode === 0
+                            playbackState?.repeat_state === "off"
                               ? theme.palette.grey[300]
                               : theme.palette.primary.main,
                           "&:hover": {
                             color: (theme) =>
-                              playbackState?.repeat_mode === 0
+                              playbackState?.repeat_state === "off"
                                 ? theme.palette.text.primary
                                 : theme.palette.primary.dark,
                           },
                         }}
                       />
                     )}
-                    {playbackState?.repeat_mode === 2 && (
+                    {playbackState?.repeat_state === "track" && (
                       <RepeatOneIcon
                         sx={{
                           fontSize: "20px",
@@ -267,10 +279,10 @@ const Player: FC = () => {
                 height="100%"
               >
                 <PlayerVolume
-                  initialVolume={100}
-                  onVolumeChange={async (volume: number | number[]) => {
-                    return await player.setVolume((volume as number) / 100);
-                  }}
+                  playerVolume={playbackState?.device?.volume_percent ?? 100}
+                  onVolumeChange={async (volume: number | number[]) =>
+                    handleVolumeChange(volume as number)
+                  }
                 />
               </Stack>
             </Grid>
