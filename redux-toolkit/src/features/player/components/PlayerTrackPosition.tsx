@@ -3,10 +3,15 @@ import { StyledSlider } from "../Player.styles";
 import { formatMilliseconds } from "../../../utilities/number";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import {
+  SpotifyPlaybackState,
+  SpotifyTrack,
+} from "../../../state/queries/models/spotify.models";
 
 type PlayerTrackPositionProps = {
-  playbackState: Spotify.PlaybackState | undefined;
-  track: Spotify.Track;
+  //playbackState: Spotify.PlaybackState | undefined;
+  playbackState: SpotifyPlaybackState | null;
+  track: SpotifyTrack;
   onSeek: (position: number | number[]) => void;
 };
 
@@ -16,14 +21,14 @@ const PlayerTrackPosition: FC<PlayerTrackPositionProps> = (
   const { playbackState, track, onSeek } = props;
   const [seeking, setSeeking] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(
-    playbackState?.position ?? 0
+    playbackState?.progress_ms ?? 0
   );
 
   useEffect(() => {
-    if (playbackState?.position && !seeking)
-      setPosition(playbackState.position);
+    if (playbackState?.progress_ms && !seeking)
+      setPosition(playbackState.progress_ms);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playbackState?.position]);
+  }, [playbackState?.progress_ms]);
 
   const seek = (ms: number): void => {
     setSeeking(true);

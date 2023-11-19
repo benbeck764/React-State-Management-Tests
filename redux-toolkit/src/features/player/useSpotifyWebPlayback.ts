@@ -9,9 +9,11 @@ import {
   playerReady,
 } from "../../state/slices/player.slice";
 import { useAppDispatch } from "../../state/store";
+import { useGetPlaybackStateQuery } from "../../state/queries/player.api";
 
 const useSpotifyWebPlayback = (): Spotify.Player => {
   const [player, setPlayer] = useState<Spotify.Player | undefined>(undefined);
+  const playerStateQuery = useGetPlaybackStateQuery();
 
   const dispatch = useAppDispatch();
 
@@ -39,8 +41,11 @@ const useSpotifyWebPlayback = (): Spotify.Player => {
       player.addListener("ready", (instance: Spotify.WebPlaybackInstance) => {
         dispatch(playerReady(instance.device_id));
 
-        setPlayerCurrentState(player); // Immediately, then every 1s
-        intervalId = setInterval(() => setPlayerCurrentState(player), 1000);
+        setPlayerCurrentState(); // Immediately, then every 1s
+        intervalId = setInterval(
+          async () => await setPlayerCurrentState(),
+          1000
+        );
       });
 
       player.addListener("not_ready", () => {
@@ -65,23 +70,24 @@ const useSpotifyWebPlayback = (): Spotify.Player => {
         console.error(`Playback error: ${message}`);
       });
 
-      player.addListener("player_state_changed", (state) => {
-        dispatch(playbackStateChanged(state));
-      });
+      // player.addListener("player_state_changed", (state) => {
+      //   dispatch(playbackStateChanged(state));
+      // });
 
       player.connect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const setPlayerCurrentState = (spotifyPlayer: Spotify.Player) => {
-    spotifyPlayer
-      .getCurrentState()
-      .then((state: Spotify.PlaybackState | null) => {
-        if (state) {
-          dispatch(playbackStateChanged(state));
-        }
-      });
+  const setPlayerCurrentState = async (): Promise<void> => {
+    const { data: test } = await playerStateQuery.refetch();
+    //const state = await spotifyPlayer.getCurrentState();
+
+    if (test) {
+      //if (state) {
+      //dispatch(playbackStateChanged(state));
+      dispatch(playbackStateChanged(test));
+    }
   };
 
   return player!;

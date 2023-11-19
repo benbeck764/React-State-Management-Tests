@@ -64,10 +64,9 @@ const TrackCard = (props: TrackCardProps) => {
     const { track, index, playType } = props;
 
     const isCurrentTrack =
-      typeof playbackState !== "undefined" &&
-      track.uri === playbackState.track_window.current_track.uri;
+      playbackState !== null && track.uri === playbackState.item.uri;
 
-    const trackPlaying = isCurrentTrack && playbackState.paused === false;
+    const trackPlaying = isCurrentTrack && playbackState.is_playing;
 
     return (
       <Box
