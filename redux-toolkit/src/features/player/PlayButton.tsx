@@ -52,8 +52,8 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
   const isCurrent =
     typeof playbackState !== "undefined" &&
     (currentTrack ||
-      (type === "album" && dataUri === playbackState.context.uri) ||
-      (type === "artist" && dataUri === playbackState.context.uri));
+      (type === "album" && dataUri === playbackState.context?.uri) ||
+      (type === "artist" && dataUri === playbackState.context?.uri));
 
   const isPlaying =
     isCurrent &&

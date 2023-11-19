@@ -54,7 +54,7 @@ const ArtistCardSmall: FC<ArtistCardProps> = (props: ArtistCardProps) => {
 
     const isCurrentArtist =
       typeof playbackState !== "undefined" &&
-      artist.uri === playbackState.context.uri;
+      artist.uri === playbackState.context?.uri;
 
     const artistPlaying = isCurrentArtist && playbackState.paused === false;
 

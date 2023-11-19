@@ -24,6 +24,7 @@ import {
   useStartOrResumePlaybackMutation,
   useToggleShuffleMutation,
   useSetRepeatModeMutation,
+  useGetPlaybackStateQuery,
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
 import { AppRootState, useAppSelector } from "../../state/store";
@@ -36,6 +37,7 @@ const Player: FC = () => {
   const [toggleShuffe] = useToggleShuffleMutation();
   const [toggleRepeatMode] = useSetRepeatModeMutation();
 
+  const { data: initialPlaybackState } = useGetPlaybackStateQuery();
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
 
@@ -44,33 +46,21 @@ const Player: FC = () => {
 
   // [TODO]: Do this for now, implement Episodes later?
   const item =
+    (initialPlaybackState?.item as unknown as Spotify.Track) ??
     playbackState?.track_window.current_track ??
     (((currentlyPlayingRes?.item as unknown) ??
       recentlyPlayedRes?.items?.[0]?.track) as Spotify.Track);
 
   useEffect(() => {
-    if (currentlyPlayingRes && deviceId) {
+    if (initialPlaybackState && deviceId) {
       startOrResumePlayback({
-        device_id: deviceId,
-        context_uri: currentlyPlayingRes.context.uri,
-        position_ms: currentlyPlayingRes.progress_ms,
-        offset:
-          currentlyPlayingRes.currently_playing_type === "track"
-            ? {
-                uri: currentlyPlayingRes.item.uri,
-              }
-            : undefined,
+        //device_id: deviceId,
+        device_id: initialPlaybackState.device.id!,
+        context_uri: initialPlaybackState.context?.uri,
+        position_ms: initialPlaybackState.progress_ms,
       });
-    } else if (recentlyPlayedRes?.items?.[0] && deviceId) {
-      const history = recentlyPlayedRes.items[0];
-      if (history && history.context) {
-        startOrResumePlayback({
-          device_id: deviceId,
-          context_uri: history.context.uri,
-        });
-      }
     }
-  }, [recentlyPlayedRes, currentlyPlayingRes, deviceId, startOrResumePlayback]);
+  }, [initialPlaybackState, deviceId, startOrResumePlayback]);
 
   const handlePrevious = async (): Promise<void> => {
     if (player) await player.previousTrack();
