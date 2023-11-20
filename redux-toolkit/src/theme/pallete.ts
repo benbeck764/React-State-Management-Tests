@@ -45,7 +45,7 @@ export const getPalette = (): PaletteOptions => {
     primary: {
       main: "#1DB954",
       light: "#3FAF51",
-      dark: "#1fdf64",
+      dark: "#1FDF64",
     },
     secondary: {
       main: "#DDE1E6",
@@ -54,7 +54,7 @@ export const getPalette = (): PaletteOptions => {
     },
     action: {
       disabled: "#C1C7CD",
-      focus: "#004B66",
+      focus: "#1FDF64",
       hover: "#FFFFFF",
     },
     text: {

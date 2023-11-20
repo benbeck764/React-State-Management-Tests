@@ -5,6 +5,7 @@ import { AppRootState } from "../store";
 export interface PlayerState {
   playbackState: SpotifyPlaybackState | null;
   deviceId: string | null;
+  currentDeviceId: string | null;
   ready: boolean;
   updating: boolean;
 }
@@ -12,6 +13,7 @@ export interface PlayerState {
 const initialState: PlayerState = {
   playbackState: null,
   deviceId: null,
+  currentDeviceId: null,
   ready: false,
   updating: false,
 };
@@ -31,6 +33,7 @@ export const playerSlice = createSlice({
     },
     playerReady: (state: PlayerState, action: PayloadAction<string>) => {
       state.deviceId = action.payload;
+      state.currentDeviceId = action.payload;
       state.ready = true;
     },
     playerNotReady: (state: PlayerState) => {

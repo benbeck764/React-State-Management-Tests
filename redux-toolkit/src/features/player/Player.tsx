@@ -35,6 +35,7 @@ import { AppRootState, useAppSelector } from "../../state/store";
 import PlayerTrackPosition from "./components/PlayerTrackPosition";
 import PlayerVolume from "./components/PlayerVolume";
 import { SpotifyTrack } from "../../state/queries/models/spotify.models";
+import DeviceMenu from "./components/DeviceMenu";
 
 const Player: FC = () => {
   // [NB]: No longer using returned Player, rather use Web API for everything...
@@ -279,6 +280,7 @@ const Player: FC = () => {
                 justifyContent="flex-end"
                 height="100%"
               >
+                <DeviceMenu />
                 <PlayerVolume
                   playerVolume={playbackState?.device?.volume_percent ?? 100}
                   onVolumeChange={async (volume: number | number[]) =>

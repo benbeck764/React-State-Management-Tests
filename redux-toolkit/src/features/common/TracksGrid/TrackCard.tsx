@@ -64,7 +64,7 @@ const TrackCard = (props: TrackCardProps) => {
     const { track, index, playType } = props;
 
     const isCurrentTrack =
-      playbackState !== null && track.uri === playbackState.item.uri;
+      playbackState !== null && track.uri === playbackState.item?.uri;
 
     const trackPlaying = isCurrentTrack && playbackState.is_playing;
 

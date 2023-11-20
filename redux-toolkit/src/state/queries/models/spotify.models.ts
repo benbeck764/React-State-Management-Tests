@@ -71,6 +71,10 @@ export type GetDiscographyResponse = GetAlbumsResponse & {
 export type GetAlbumTracksResponse =
   GetItemsBaseResponse<SimplifiedSpotifyTrack>;
 
+export type GetDevicesResponse = {
+  devices: SpotifyDevice[];
+};
+
 //#endregion
 
 //#region Models
@@ -220,7 +224,7 @@ export type SpotifyUser = {
 
 //#region Player Models
 
-type SpotifyDevice = {
+export type SpotifyDevice = {
   id: string | null;
   is_active: boolean;
   is_private_session: boolean;

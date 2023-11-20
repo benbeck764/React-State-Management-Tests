@@ -243,7 +243,7 @@ export function getThemeBase(palette: PaletteOptions): ThemeOptions {
       },
     },
     shape: {
-      borderRadius: 8,
+      borderRadius: 2,
     },
     breakpoints: breakPointsOptions,
   };

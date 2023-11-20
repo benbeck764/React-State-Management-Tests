@@ -12,6 +12,7 @@ import { endpoints } from "./common/endpoints";
 import {
   GetRecentlyPlayedTracksRequest,
   GetRecentlyPlayedTracksResponse,
+  GetDevicesResponse,
   SpotifyPlaybackState,
   StartOrResumePlaybackRequest,
 } from "./models/spotify.models";
@@ -19,6 +20,12 @@ import { spotifyApi } from "./spotify.api";
 
 const playerApi = spotifyApi.injectEndpoints({
   endpoints: (builder) => ({
+    getDevices: builder.query<GetDevicesResponse, void>({
+      query: () => ({
+        url: endpoints.spotify.me.devices,
+        method: "GET",
+      }),
+    }),
     getPlaybackState: builder.query<SpotifyPlaybackState, void>({
       query: () => ({
         url: endpoints.spotify.me.player,
@@ -38,6 +45,16 @@ const playerApi = spotifyApi.injectEndpoints({
       query: () => ({
         url: endpoints.spotify.me.recentlyPlayed,
         method: "GET",
+      }),
+    }),
+    transferPlayback: builder.mutation<
+      void,
+      { deviceIds: string[]; play: boolean }
+    >({
+      query: (request: { deviceIds: string[]; play: boolean }) => ({
+        url: endpoints.spotify.me.player,
+        method: "PUT",
+        data: { device_ids: request.deviceIds, play: request.play },
       }),
     }),
     previous: builder.mutation<void, { deviceId?: string }>({
@@ -84,6 +101,7 @@ const playerApi = spotifyApi.injectEndpoints({
     }),
     startOrResumePlayback: builder.mutation<void, StartOrResumePlaybackRequest>(
       {
+        // If not playing, use current device device id
         query: (request: StartOrResumePlaybackRequest) => ({
           url: endpoints.spotify.me.play,
           method: "PUT",
@@ -229,9 +247,11 @@ const playerApi = spotifyApi.injectEndpoints({
 });
 
 export const {
+  useGetDevicesQuery,
   useGetPlaybackStateQuery,
   useGetCurrentPlayingStateQuery,
   useGetRecentlyPlayedQuery,
+  useTransferPlaybackMutation,
   useNextMutation,
   usePreviousMutation,
   useSeekMutation,

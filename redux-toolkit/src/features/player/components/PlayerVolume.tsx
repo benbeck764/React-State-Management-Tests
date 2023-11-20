@@ -38,12 +38,12 @@ const PlayerVolume: FC<PlayerVolumeProps> = (props: PlayerVolumeProps) => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
       <Stack direction="row" alignItems="center" justifyContent="center">
-        <Typography
+        {/* <Typography
           variant="paragraphExtraSmall"
           sx={{ color: (theme) => theme.palette.grey[300] }}
         >
           {volume}
-        </Typography>
+        </Typography> */}
         <StyledPlayerButton onClick={toggleMute}>
           {muted && (
             <VolumeOffIcon

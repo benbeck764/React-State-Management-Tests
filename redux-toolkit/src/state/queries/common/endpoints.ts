@@ -7,6 +7,7 @@ export const endpoints = {
       profile: "me",
       topArtists: "me/top/artists",
       topTracks: "me/top/tracks",
+      devices: "me/player/devices",
       pause: "me/player/pause",
       play: "me/player/play",
       player: "me/player",
