@@ -73,7 +73,7 @@ const Player: FC = () => {
   const playingOnOtherDevice =
     typeof hasActiveDevice !== "undefined" && !isActiveDevice;
 
-  // [TODO]: Do this for now, implement Episodes laer?t
+  // [TODO]: Do this for now, implement Episodes later?
   const item =
     (playbackState?.item as SpotifyTrack) ??
     (((currentlyPlayingRes?.item as unknown) ??

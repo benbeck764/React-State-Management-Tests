@@ -15,6 +15,7 @@ import { AppLink } from "../AppLink";
 import TrackListing from "../TrackListing/TrackListing";
 import { getAlbumUrl } from "../../../routing/common/url";
 import PlayButton from "../../player/PlayButton";
+import FavoriteButton from "../FavoriteButton";
 
 type AlbumCardProps =
   | {
@@ -49,12 +50,10 @@ const ArtistCard = (props: AlbumCardProps) => {
               charCountVariance={5}
               lines={1}
             />
-            <Skeleton
-              variant="circular"
-              width={32}
-              height={32}
-              sx={{ mt: 1 }}
-            />
+            <Stack direction="row" alignItems="center" mt={1} gap={1.5}>
+              <Skeleton variant="circular" width={32} height={32} />
+              <Skeleton variant="circular" width={32} height={32} />
+            </Stack>
           </Stack>
         </Stack>
         <TrackListing loading={true} />
@@ -96,13 +95,14 @@ const ArtistCard = (props: AlbumCardProps) => {
                 album.total_tracks > 1 ? "s" : ""
               }`}
             </Typography>
-            <Box sx={{ mt: 1 }}>
+            <Stack direction="row" alignItems="center" mt={1} gap={1.5}>
               <PlayButton
                 variant="action-button"
                 type="album"
                 dataUri={album.uri}
               />
-            </Box>
+              <FavoriteButton type="album" itemId={album.id} size="medium" />
+            </Stack>
           </Stack>
         </Stack>
         <TrackListing album={album} />
