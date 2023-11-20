@@ -3,6 +3,7 @@ import {
   StyledPlayerContainer,
   StyledPlayerWrapper,
   StyledPlayerButton,
+  StyledPlayingOnOtherDeviceWrapper,
 } from "./Player.styles";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -17,6 +18,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import useSpotifyWebPlayback from "./useSpotifyWebPlayback";
 import {
   useGetCurrentPlayingStateQuery,
@@ -29,12 +31,16 @@ import {
   useSetPlaybackVolumeMutation,
   useNextMutation,
   usePreviousMutation,
+  useGetDevicesQuery,
 } from "../../state/queries/player.api";
 import { debounce } from "@mui/material/utils";
 import { AppRootState, useAppSelector } from "../../state/store";
 import PlayerTrackPosition from "./components/PlayerTrackPosition";
 import PlayerVolume from "./components/PlayerVolume";
-import { SpotifyTrack } from "../../state/queries/models/spotify.models";
+import {
+  SpotifyDevice,
+  SpotifyTrack,
+} from "../../state/queries/models/spotify.models";
 import DeviceMenu from "./components/DeviceMenu/DeviceMenu";
 
 const Player: FC = () => {
@@ -51,11 +57,20 @@ const Player: FC = () => {
   const [toggleRepeatMode] = useSetRepeatModeMutation();
   const [setVolume] = useSetPlaybackVolumeMutation();
 
+  const { data: devicesResponse } = useGetDevicesQuery();
   const { data: currentlyPlayingRes } = useGetCurrentPlayingStateQuery();
   const { data: recentlyPlayedRes } = useGetRecentlyPlayedQuery({ limit: 1 });
 
   const playerState = useAppSelector((s: AppRootState) => s.player);
-  const { playbackState, deviceId } = playerState;
+  const { playbackState, deviceId, currentDeviceId } = playerState;
+
+  const devices = devicesResponse?.devices;
+  const currentDevice = playbackState?.device;
+  const hasActiveDevice =
+    currentDevice ?? devices?.find((d: SpotifyDevice) => d.is_active);
+  const isActiveDevice = currentDevice?.id === currentDeviceId;
+  const playingOnOtherDevice =
+    typeof hasActiveDevice !== "undefined" && !isActiveDevice;
 
   // [TODO]: Do this for now, implement Episodes laer?t
   const item =
@@ -114,8 +129,8 @@ const Player: FC = () => {
   }, 200);
 
   return (
-    <StyledPlayerWrapper>
-      <StyledPlayerContainer>
+    <StyledPlayerWrapper playingOnOtherDevice={playingOnOtherDevice}>
+      <StyledPlayerContainer playingOnOtherDevice={playingOnOtherDevice}>
         {item && (
           <Grid container height="100%" alignItems="center">
             <Grid item xs={4}>
@@ -292,6 +307,22 @@ const Player: FC = () => {
           </Grid>
         )}
       </StyledPlayerContainer>
+      {playingOnOtherDevice && (
+        <StyledPlayingOnOtherDeviceWrapper>
+          <VolumeUpIcon
+            sx={{
+              fontSize: (theme) => theme.typography.paragraph.fontSize,
+              color: (theme) => theme.palette.text.secondary,
+            }}
+          />
+          <Typography
+            variant="paragraph"
+            sx={{ color: (theme) => theme.palette.text.secondary }}
+          >
+            {`Listening on ${currentDevice?.name}`}
+          </Typography>
+        </StyledPlayingOnOtherDeviceWrapper>
+      )}
     </StyledPlayerWrapper>
   );
 };
