@@ -43,8 +43,36 @@ export const spotifyApi = createApi({
         params: request,
       }),
     }),
+    checkedSavedTracks: builder.query<boolean[], { ids: string }>({
+      query: (request: { ids: string }) => ({
+        url: endpoints.spotify.me.checkSavedTracks,
+        method: "GET",
+        params: request,
+      }),
+    }),
+    saveTracks: builder.mutation<void, { ids: string[] }>({
+      query: (request: { ids: string[] }) => ({
+        url: endpoints.spotify.me.saveTrack,
+        method: "PUT",
+        params: { ids: request.ids.join(",") },
+        data: { ids: request.ids },
+      }),
+    }),
+    deleteSavedTracks: builder.mutation<void, { ids: string[] }>({
+      query: (request: { ids: string[] }) => ({
+        url: endpoints.spotify.me.saveTrack,
+        method: "DELETE",
+        params: { ids: request.ids.join(",") },
+        data: { ids: request.ids },
+      }),
+    }),
   }),
 });
 
-// Export auto-generated named hooks for usage in functional components
-export const { useGetTopArtistsQuery, useGetTopTracksQuery } = spotifyApi;
+export const {
+  useGetTopArtistsQuery,
+  useGetTopTracksQuery,
+  useCheckedSavedTracksQuery,
+  useSaveTracksMutation,
+  useDeleteSavedTracksMutation,
+} = spotifyApi;

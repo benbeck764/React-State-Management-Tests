@@ -54,13 +54,24 @@ export const useSpotifyAuth = (): SpotifyAuthContext => {
     const codeChallenge = base64encode(hashed);
     localStorage.setItem(SPOTIFY_VERIFIER_CODE, codeVerifier);
 
-    const scope = `user-read-private user-read-email user-top-read user-read-recently-played user-read-playback-state user-modify-playback-state streaming`;
+    const scopes = [
+      "user-read-private",
+      "user-read-email",
+      "user-read-recently-played",
+      "user-read-playback-state",
+      "user-top-read",
+      "user-library-read",
+      "user-library-modify",
+      "user-modify-playback-state",
+      "streaming",
+    ];
+
     const authUrl = new URL(endpoints.spotify.auth);
 
     const params: Record<string, string> = {
       response_type: "code",
       client_id: clientId,
-      scope,
+      scope: scopes.join(" "),
       code_challenge_method: "S256",
       code_challenge: codeChallenge,
       redirect_uri: window.location.origin,

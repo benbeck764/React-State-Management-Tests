@@ -17,6 +17,8 @@ export const endpoints = {
       seek: "me/player/seek",
       shuffle: "me/player/shuffle",
       volume: "me/player/volume",
+      saveTrack: "me/tracks",
+      checkSavedTracks: "me/tracks/contains",
       currentlyPlaying: "me/player/currently-playing",
       recentlyPlayed: "me/player/recently-played",
     },

@@ -72,6 +72,7 @@ const DeviceMenu: FC = () => {
       toolTipTitle="Connect to a device"
       popperSx={{
         backgroundColor: (theme) => theme.palette.coolGrey[900],
+        opacity: 0.85,
         border: "none",
         p: 2,
       }}

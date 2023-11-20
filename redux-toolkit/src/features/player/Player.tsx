@@ -42,6 +42,7 @@ import {
   SpotifyTrack,
 } from "../../state/queries/models/spotify.models";
 import DeviceMenu from "./components/DeviceMenu/DeviceMenu";
+import FavoriteButton from "../common/FavoriteButton";
 
 const Player: FC = () => {
   // [NB]: No longer using returned Player, rather use Web API for everything...
@@ -173,6 +174,7 @@ const Player: FC = () => {
                     ))}
                   </Stack>
                 </Stack>
+                <FavoriteButton type="track" size="medium" />
               </Stack>
             </Grid>
 
