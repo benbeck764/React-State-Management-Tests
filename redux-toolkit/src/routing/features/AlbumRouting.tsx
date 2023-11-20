@@ -2,7 +2,7 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Outlet, Route, RouteProps } from "react-router-dom";
 import { AppRoutes, RouteName } from "../common/routes";
-import { AppPageLoader } from "@benbeck764/react-components";
+import AppPageLoader from "@benbeck764/react-components/PageLoader";
 
 const Album = lazy(() => import("../../features/album/Album"));
 

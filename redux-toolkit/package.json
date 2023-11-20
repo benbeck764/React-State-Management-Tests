@@ -7,11 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rimraf node_modules"
   },
   "dependencies": {
-    "@benbeck764/react-components": "1.4.0-beta.18",
-    "@benbeck764/react-components-grid": "1.4.0-beta.18",
+    "@benbeck764/react-components": "1.4.0-beta.20",
+    "@benbeck764/react-components-grid": "1.4.0-beta.20",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.12",

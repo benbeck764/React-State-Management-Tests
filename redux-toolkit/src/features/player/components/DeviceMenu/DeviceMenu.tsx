@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import AppMenu from "@benbeck764/react-components/Menu";
 import DevicesIcon from "@mui/icons-material/Devices";
 import ComputerIcon from "@mui/icons-material/Computer";
@@ -6,21 +6,29 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Equalizer from "../../common/Equalizer";
+import Equalizer from "../../../common/Equalizer";
 import {
   useGetDevicesQuery,
   useTransferPlaybackMutation,
-} from "../../../state/queries/player.api";
-import { SpotifyDevice } from "../../../state/queries/models/spotify.models";
-import { useAppSelector, AppRootState } from "../../../state/store";
+} from "../../../../state/queries/player.api";
+import { SpotifyDevice } from "../../../../state/queries/models/spotify.models";
+import { useAppSelector, AppRootState } from "../../../../state/store";
 import { debounce } from "@mui/material/utils";
-import IconButton from "@mui/material/IconButton";
+import {
+  StyledDeviceRefreshButton,
+  StyledDeviceRow,
+} from "./DeviceMenu.styles";
 
 const DeviceMenu: FC = () => {
-  const { data: devicesResponse, refetch: refetchDevices } =
-    useGetDevicesQuery();
+  const {
+    data: devicesResponse,
+    refetch: refetchDevices,
+    isFetching: fetchingDevices,
+  } = useGetDevicesQuery();
   const playerState = useAppSelector((s: AppRootState) => s.player);
   const [transferPlayback] = useTransferPlaybackMutation();
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const { playbackState, currentDeviceId } = playerState;
 
@@ -38,21 +46,29 @@ const DeviceMenu: FC = () => {
 
   const handleOnDeviceChange = debounce(
     async (deviceId: string): Promise<void> => {
+      setOpen(false); // why u no work!?
       await transferPlayback({ deviceIds: [deviceId], play: true });
       await refetchDevices();
     },
     200
   );
 
+  const handleDeviceRefresh = debounce(async (): Promise<void> => {
+    await refetchDevices();
+  }, 200);
+
   return (
     <AppMenu
+      onMenuOpen={() => setOpen(true)}
+      onMenuClose={() => setOpen(false)}
+      forcedToggleState={open}
+      mode="panel"
+      menuWidth={320}
       buttonProps={{
         children: (
           <DevicesIcon sx={{ color: (theme) => theme.palette.text.primary }} />
         ),
       }}
-      mode="panel"
-      menuWidth={320}
       toolTipTitle="Connect to a device"
       popperSx={{
         backgroundColor: (theme) => theme.palette.coolGrey[900],
@@ -84,68 +100,46 @@ const DeviceMenu: FC = () => {
                 sx={{ color: (theme) => theme.palette.primary.dark }}
               >
                 {activeDevice?.id !== currentDeviceId
-                  ? `${activeDevice?.name}`
+                  ? `${activeDevice?.name ?? ""}`
                   : "This web browser"}
               </Typography>
             </Box>
           </Stack>
-          <IconButton>
-            <RefreshIcon />
-          </IconButton>
+          <StyledDeviceRefreshButton
+            onClick={handleDeviceRefresh}
+            disabled={fetchingDevices}
+            fetching={fetchingDevices}
+          >
+            <RefreshIcon
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+              }}
+            />
+          </StyledDeviceRefreshButton>
         </Stack>
         <Typography variant="paragraphBold">Select another device</Typography>
         <Stack>
           {activeDevice?.id !== currentDeviceId && (
-            <Stack
+            <StyledDeviceRow
               onClick={() => {
                 if (currentDeviceId) handleOnDeviceChange(currentDeviceId);
-              }}
-              direction="row"
-              alignItems="center"
-              gap={2}
-              sx={{
-                padding: "16px 16px",
-                cursor: "pointer",
-                borderRadius: (theme) => theme.shape.borderRadius,
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.coolGrey[800],
-                },
-                "&:focus": {
-                  backgroundColor: (theme) => theme.palette.coolGrey[800],
-                  outline: "none",
-                },
               }}
             >
               <ComputerIcon />
               <Typography variant="paragraphBold">This web browser</Typography>
-            </Stack>
+            </StyledDeviceRow>
           )}
           {inactiveDevices?.map((device: SpotifyDevice) => {
             return (
-              <Stack
+              <StyledDeviceRow
                 key={device.id}
                 onClick={() => {
                   if (device.id) handleOnDeviceChange(device.id);
                 }}
-                direction="row"
-                alignItems="center"
-                gap={2}
-                sx={{
-                  padding: "16px 16px",
-                  cursor: "pointer",
-                  borderRadius: (theme) => theme.shape.borderRadius,
-                  "&:hover": {
-                    backgroundColor: (theme) => theme.palette.coolGrey[800],
-                  },
-                  "&:focus": {
-                    backgroundColor: (theme) => theme.palette.coolGrey[800],
-                    outline: "none",
-                  },
-                }}
               >
                 <ComputerIcon />
                 <Typography variant="paragraphBold">{device.name}</Typography>
-              </Stack>
+              </StyledDeviceRow>
             );
           })}
         </Stack>

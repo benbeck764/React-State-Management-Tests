@@ -35,7 +35,7 @@ import { AppRootState, useAppSelector } from "../../state/store";
 import PlayerTrackPosition from "./components/PlayerTrackPosition";
 import PlayerVolume from "./components/PlayerVolume";
 import { SpotifyTrack } from "../../state/queries/models/spotify.models";
-import DeviceMenu from "./components/DeviceMenu";
+import DeviceMenu from "./components/DeviceMenu/DeviceMenu";
 
 const Player: FC = () => {
   // [NB]: No longer using returned Player, rather use Web API for everything...

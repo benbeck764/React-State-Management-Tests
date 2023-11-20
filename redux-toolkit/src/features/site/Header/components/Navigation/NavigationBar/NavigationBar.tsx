@@ -9,7 +9,7 @@ import {
   StyledNavigationButton,
   StyledNavigationLink,
 } from "./NavigationBar.styles";
-import { AppMenu, AppMenuItem } from "@benbeck764/react-components";
+import AppMenu, { AppMenuItem } from "@benbeck764/react-components/Menu";
 import { ButtonProps } from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
