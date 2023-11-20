@@ -174,7 +174,7 @@ const Player: FC = () => {
                     ))}
                   </Stack>
                 </Stack>
-                <FavoriteButton type="track" size="medium" />
+                <FavoriteButton type="track" itemId={item.id} size="small" />
               </Stack>
             </Grid>
 

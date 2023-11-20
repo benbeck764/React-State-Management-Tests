@@ -52,7 +52,7 @@ export const spotifyApi = createApi({
     }),
     saveTracks: builder.mutation<void, { ids: string[] }>({
       query: (request: { ids: string[] }) => ({
-        url: endpoints.spotify.me.saveTrack,
+        url: endpoints.spotify.me.tracks,
         method: "PUT",
         params: { ids: request.ids.join(",") },
         data: { ids: request.ids },
@@ -60,7 +60,30 @@ export const spotifyApi = createApi({
     }),
     deleteSavedTracks: builder.mutation<void, { ids: string[] }>({
       query: (request: { ids: string[] }) => ({
-        url: endpoints.spotify.me.saveTrack,
+        url: endpoints.spotify.me.tracks,
+        method: "DELETE",
+        params: { ids: request.ids.join(",") },
+        data: { ids: request.ids },
+      }),
+    }),
+    checkedSavedAlbums: builder.query<boolean[], { ids: string }>({
+      query: (request: { ids: string }) => ({
+        url: endpoints.spotify.me.checkSavedAlbums,
+        method: "GET",
+        params: request,
+      }),
+    }),
+    saveAlbums: builder.mutation<void, { ids: string[] }>({
+      query: (request: { ids: string[] }) => ({
+        url: endpoints.spotify.me.albums,
+        method: "PUT",
+        params: { ids: request.ids.join(",") },
+        data: { ids: request.ids },
+      }),
+    }),
+    deleteSavedAlbums: builder.mutation<void, { ids: string[] }>({
+      query: (request: { ids: string[] }) => ({
+        url: endpoints.spotify.me.albums,
         method: "DELETE",
         params: { ids: request.ids.join(",") },
         data: { ids: request.ids },
@@ -75,4 +98,7 @@ export const {
   useCheckedSavedTracksQuery,
   useSaveTracksMutation,
   useDeleteSavedTracksMutation,
+  useCheckedSavedAlbumsQuery,
+  useSaveAlbumsMutation,
+  useDeleteSavedAlbumsMutation,
 } = spotifyApi;

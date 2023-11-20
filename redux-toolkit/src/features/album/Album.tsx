@@ -14,6 +14,7 @@ import {
 import { AppLink } from "../common/AppLink";
 import { getArtistUrl } from "../../routing/common/url";
 import PlayButton from "../player/PlayButton";
+import FavoriteButton from "../common/FavoriteButton";
 
 const Album: FC = () => {
   const location = useLocation();
@@ -78,12 +79,15 @@ const Album: FC = () => {
         </Stack>
 
         <AppCard paperSx={{ p: 2, borderRadius: "16px" }}>
-          <PlayButton
-            type="album"
-            variant="action-button"
-            dataUri={album.uri}
-            size="large"
-          />
+          <Stack direction="row" gap={2} alignItems="center">
+            <PlayButton
+              type="album"
+              variant="action-button"
+              dataUri={album.uri}
+              size="large"
+            />
+            <FavoriteButton type="album" itemId={album.id} size="large" />
+          </Stack>
           <TrackListing album={album} />
         </AppCard>
       </Stack>

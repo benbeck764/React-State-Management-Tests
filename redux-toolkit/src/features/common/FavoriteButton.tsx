@@ -2,63 +2,77 @@ import { FC } from "react";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useAppSelector, AppRootState } from "../../state/store";
-import { SpotifyTrack } from "../../state/queries/models/spotify.models";
 import {
+  useCheckedSavedAlbumsQuery,
   useCheckedSavedTracksQuery,
+  useDeleteSavedAlbumsMutation,
   useDeleteSavedTracksMutation,
+  useSaveAlbumsMutation,
   useSaveTracksMutation,
 } from "../../state/queries/spotify.api";
 import { debounce } from "@mui/material/utils";
 
 type FavoriteButtonProps = {
   type: "track" | "album";
+  itemId: string;
   size?: "small" | "medium" | "large";
 };
 
 const FavoriteButton: FC<FavoriteButtonProps> = (
   props: FavoriteButtonProps
 ) => {
-  const { type, size = "medium" } = props;
-  const playbackState = useAppSelector(
-    (s: AppRootState) => s.player.playbackState
-  );
-
-  const item = playbackState?.item as SpotifyTrack | null | undefined;
-  const itemId = type === "track" ? item?.id : item?.album?.id;
+  const { type, itemId, size = "medium" } = props;
 
   const [favoriteTracks] = useSaveTracksMutation();
   const [unfavoriteTracks] = useDeleteSavedTracksMutation();
-  const { data: favoritedRes, refetch: refetchFavorited } =
+  const { data: trackFavorited, refetch: refetchFavoritedTracks } =
     useCheckedSavedTracksQuery(
       { ids: itemId! },
       {
-        skip: !itemId,
+        skip: type !== "track" || !itemId,
       }
     );
-  const favorited = favoritedRes?.[0];
+
+  const [favoriteAlbums] = useSaveAlbumsMutation();
+  const [unfavoriteAlbums] = useDeleteSavedAlbumsMutation();
+  const { data: albumFavorited, refetch: refetchFavoritedAlbums } =
+    useCheckedSavedAlbumsQuery(
+      { ids: itemId! },
+      {
+        skip: type !== "album" || !itemId,
+      }
+    );
+  const favorited =
+    type === "track"
+      ? trackFavorited?.[0]
+      : type === "album"
+      ? albumFavorited?.[0]
+      : undefined;
 
   let fontSize = "32px";
   switch (size) {
     case "small":
-      fontSize = "14px";
-      break;
-    case "medium":
       fontSize = "22px";
       break;
+    case "medium":
+      fontSize = "30px";
+      break;
     case "large":
-      fontSize = "28px";
+      fontSize = "38px";
       break;
   }
 
   const handleFavoriteChange = debounce(async (): Promise<void> => {
     if (itemId) {
       if (favorited) {
-        await unfavoriteTracks({ ids: [itemId] });
+        if (type === "track") await unfavoriteTracks({ ids: [itemId] });
+        if (type === "album") await unfavoriteAlbums({ ids: [itemId] });
       } else {
-        await favoriteTracks({ ids: [itemId] });
+        if (type === "track") await favoriteTracks({ ids: [itemId] });
+        if (type === "album") await favoriteAlbums({ ids: [itemId] });
       }
-      await refetchFavorited();
+      if (type === "track") await refetchFavoritedTracks();
+      if (type === "album") await refetchFavoritedAlbums();
     }
   }, 200);
 
