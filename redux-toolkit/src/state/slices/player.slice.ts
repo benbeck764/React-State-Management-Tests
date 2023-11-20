@@ -38,7 +38,7 @@ export const playerSlice = createSlice({
       state.ready = false;
     },
     playing: (state: PlayerState, action: PayloadAction<boolean>) => {
-      if (state.playbackState != null) {
+      if (state.playbackState !== null) {
         state.playbackState.is_playing = action.payload;
         state.updating = true;
       }
@@ -47,19 +47,19 @@ export const playerSlice = createSlice({
       state: PlayerState,
       action: PayloadAction<"off" | "track" | "context">
     ) => {
-      if (state.playbackState != null) {
+      if (state.playbackState !== null) {
         state.playbackState.repeat_state = action.payload;
         state.updating = true;
       }
     },
     seek: (state: PlayerState, action: PayloadAction<number>) => {
-      if (state.playbackState != null) {
+      if (state.playbackState !== null) {
         state.playbackState.progress_ms = action.payload;
         state.updating = true;
       }
     },
     shuffle: (state: PlayerState, action: PayloadAction<boolean>) => {
-      if (state.playbackState != null) {
+      if (state.playbackState !== null) {
         state.playbackState.shuffle_state = action.payload;
         state.updating = true;
       }
@@ -68,7 +68,7 @@ export const playerSlice = createSlice({
       state.updating = action.payload;
     },
     volume: (state: PlayerState, action: PayloadAction<number>) => {
-      if (state.playbackState != null) {
+      if (state.playbackState?.device) {
         state.playbackState.device.volume_percent = action.payload;
         state.updating = true;
       }

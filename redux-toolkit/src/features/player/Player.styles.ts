@@ -71,8 +71,8 @@ export const StyledSlider = styled(Slider)(({ theme }) => ({
     },
   },
   "& .MuiSlider-thumb": {
-    width: 12,
-    height: 12,
+    width: 8,
+    height: 8,
   },
   "& .MuiSlider-rail": {
     color: theme.palette.grey[300],

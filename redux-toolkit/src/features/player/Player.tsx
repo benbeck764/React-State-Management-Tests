@@ -38,6 +38,7 @@ import { SpotifyTrack } from "../../state/queries/models/spotify.models";
 
 const Player: FC = () => {
   // [NB]: No longer using returned Player, rather use Web API for everything...
+  //const device = useSpotifyWebPlayback();
   useSpotifyWebPlayback();
 
   const [previous] = usePreviousMutation();
@@ -109,7 +110,7 @@ const Player: FC = () => {
 
   const handleVolumeChange = debounce(async (volume: number): Promise<void> => {
     if (deviceId) await setVolume({ volumePercent: volume, deviceId });
-  }, 100);
+  }, 200);
 
   return (
     <StyledPlayerWrapper>

@@ -5,6 +5,7 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { debounce } from "@mui/material/utils";
+import { Typography } from "@mui/material";
 
 type PlayerVolumeProps = {
   playerVolume: number;
@@ -35,47 +36,50 @@ const PlayerVolume: FC<PlayerVolumeProps> = (props: PlayerVolumeProps) => {
   };
 
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="center"
-      gap={1.5}
-    >
-      <StyledPlayerButton onClick={toggleMute}>
-        {muted && (
-          <VolumeOffIcon
-            sx={{
-              fontSize: "26px",
-              color: (theme) => theme.palette.grey[300],
-              "&:hover": {
-                color: (theme) => theme.palette.text.primary,
-              },
-            }}
-          />
-        )}
-        {!muted && volume > 0 && volume < 50 && (
-          <VolumeDownIcon
-            sx={{
-              fontSize: "26px",
-              color: (theme) => theme.palette.grey[300],
-              "&:hover": {
-                color: (theme) => theme.palette.text.primary,
-              },
-            }}
-          />
-        )}
-        {!muted && volume >= 50 && (
-          <VolumeUpIcon
-            sx={{
-              fontSize: "26px",
-              color: (theme) => theme.palette.grey[300],
-              "&:hover": {
-                color: (theme) => theme.palette.text.primary,
-              },
-            }}
-          />
-        )}
-      </StyledPlayerButton>
+    <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
+      <Stack direction="row" alignItems="center" justifyContent="center">
+        <Typography
+          variant="paragraphExtraSmall"
+          sx={{ color: (theme) => theme.palette.grey[300] }}
+        >
+          {volume}
+        </Typography>
+        <StyledPlayerButton onClick={toggleMute}>
+          {muted && (
+            <VolumeOffIcon
+              sx={{
+                fontSize: "22px",
+                color: (theme) => theme.palette.grey[300],
+                "&:hover": {
+                  color: (theme) => theme.palette.text.primary,
+                },
+              }}
+            />
+          )}
+          {!muted && volume > 0 && volume < 50 && (
+            <VolumeDownIcon
+              sx={{
+                fontSize: "22px",
+                color: (theme) => theme.palette.grey[300],
+                "&:hover": {
+                  color: (theme) => theme.palette.text.primary,
+                },
+              }}
+            />
+          )}
+          {!muted && volume >= 50 && (
+            <VolumeUpIcon
+              sx={{
+                fontSize: "22px",
+                color: (theme) => theme.palette.grey[300],
+                "&:hover": {
+                  color: (theme) => theme.palette.text.primary,
+                },
+              }}
+            />
+          )}
+        </StyledPlayerButton>
+      </Stack>
       <StyledSlider
         aria-label="Track Position"
         defaultValue={volume}

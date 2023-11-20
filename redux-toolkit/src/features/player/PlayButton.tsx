@@ -98,11 +98,11 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
       break;
     case "medium":
       buttonSize = "40px";
-      fabFontSize = "32px";
+      fabFontSize = "30px";
       break;
     case "large":
       buttonSize = "48px";
-      fabFontSize = "40px";
+      fabFontSize = "36px";
       break;
   }
 
