@@ -75,11 +75,11 @@ const Player: FC = () => {
         device_id: deviceId,
       });
     }
-  }, 150);
+  }, 200);
 
   const handlePause = debounce(async (): Promise<void> => {
     if (deviceId) await pausePlayback(deviceId);
-  }, 150);
+  }, 200);
 
   const handleSeek = debounce(async (ms: number | number[]): Promise<void> => {
     if (playbackState && deviceId) {
@@ -88,12 +88,12 @@ const Player: FC = () => {
         position: ms as number,
       });
     }
-  }, 150);
+  }, 200);
 
   const handleToggleShuffle = debounce(async (): Promise<void> => {
     if (deviceId && playbackState)
       await toggleShuffe({ deviceId, state: !playbackState.shuffle_state });
-  }, 150);
+  }, 200);
 
   const handleToggleRepeatMode = debounce(async (): Promise<void> => {
     if (deviceId && playbackState) {
@@ -105,7 +105,7 @@ const Player: FC = () => {
         await toggleRepeatMode({ deviceId, state: "off" });
       }
     }
-  }, 150);
+  }, 200);
 
   const handleVolumeChange = debounce(async (volume: number): Promise<void> => {
     if (deviceId) await setVolume({ volumePercent: volume, deviceId });

@@ -1,4 +1,12 @@
-import { playing, seek, selectPlaybackState } from "../slices/player.slice";
+import {
+  playing,
+  repeat,
+  seek,
+  selectPlaybackState,
+  shuffle,
+  updating,
+  volume,
+} from "../slices/player.slice";
 import { AppRootState } from "../store";
 import { endpoints } from "./common/endpoints";
 import {
@@ -59,23 +67,18 @@ const playerApi = spotifyApi.injectEndpoints({
         arg: { position: number; deviceId?: string },
         { dispatch, queryFulfilled, getState }
       ) {
-        // const currentPlaybackQuery = dispatch(
-        //   playerApi.util.getRunningQueryThunk("getPlaybackState", void 0)
-        // );
-        // if (currentPlaybackQuery) currentPlaybackQuery.abort();
-
+        const playbackState = selectPlaybackState(getState() as AppRootState);
+        const progressMs = playbackState?.progress_ms;
         dispatch(seek(arg.position));
 
-        const playbackState = selectPlaybackState(getState() as AppRootState);
         try {
           await queryFulfilled;
-          //dispatch(seek(arg.position));
-          //dispatch(playerApi.endpoints.getPlaybackState.initiate());
-          //if (currentPlaybackQuery) await currentPlaybackQuery.refetch();
         } catch {
-          if (playbackState?.progress_ms) {
-            dispatch(seek(playbackState.progress_ms));
+          if (typeof progressMs !== "undefined") {
+            dispatch(seek(progressMs));
           }
+        } finally {
+          dispatch(updating(false));
         }
       },
     }),
@@ -92,13 +95,17 @@ const playerApi = spotifyApi.injectEndpoints({
           { dispatch, queryFulfilled, getState }
         ) {
           const playbackState = selectPlaybackState(getState() as AppRootState);
+          const isPlaying = playbackState?.is_playing;
           dispatch(playing(true));
+
           try {
             await queryFulfilled;
           } catch {
-            if (playbackState?.is_playing) {
-              dispatch(playing(playbackState.is_playing));
+            if (typeof isPlaying !== "undefined") {
+              dispatch(playing(isPlaying));
             }
+          } finally {
+            dispatch(updating(false));
           }
         },
       }
@@ -114,13 +121,17 @@ const playerApi = spotifyApi.injectEndpoints({
         { dispatch, queryFulfilled, getState }
       ) {
         const playbackState = selectPlaybackState(getState() as AppRootState);
+        const isPlaying = playbackState?.is_playing;
         dispatch(playing(false));
+
         try {
           await queryFulfilled;
         } catch {
-          if (playbackState?.is_playing) {
-            dispatch(playing(playbackState.is_playing));
+          if (typeof isPlaying !== "undefined") {
+            dispatch(playing(isPlaying));
           }
+        } finally {
+          dispatch(updating(false));
         }
       },
     }),
@@ -131,6 +142,24 @@ const playerApi = spotifyApi.injectEndpoints({
           method: "PUT",
           params: { device_id: request.deviceId, state: request.state },
         }),
+        async onQueryStarted(
+          arg: { state: boolean; deviceId: string },
+          { dispatch, queryFulfilled, getState }
+        ) {
+          const playbackState = selectPlaybackState(getState() as AppRootState);
+          const shuffleState = playbackState?.shuffle_state;
+          dispatch(shuffle(arg.state));
+
+          try {
+            await queryFulfilled;
+          } catch {
+            if (typeof shuffleState !== "undefined") {
+              dispatch(shuffle(shuffleState));
+            }
+          } finally {
+            dispatch(updating(false));
+          }
+        },
       }
     ),
     setRepeatMode: builder.mutation<
@@ -145,6 +174,24 @@ const playerApi = spotifyApi.injectEndpoints({
         method: "PUT",
         params: { device_id: request.deviceId, state: request.state },
       }),
+      async onQueryStarted(
+        arg: { state: "track" | "context" | "off"; deviceId: string },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const playbackState = selectPlaybackState(getState() as AppRootState);
+        const repeatState = playbackState?.repeat_state;
+        dispatch(repeat(arg.state));
+
+        try {
+          await queryFulfilled;
+        } catch {
+          if (typeof repeatState !== "undefined") {
+            dispatch(repeat(repeatState));
+          }
+        } finally {
+          dispatch(updating(false));
+        }
+      },
     }),
     setPlaybackVolume: builder.mutation<
       void,
@@ -158,6 +205,24 @@ const playerApi = spotifyApi.injectEndpoints({
           volume_percent: request.volumePercent,
         },
       }),
+      async onQueryStarted(
+        arg: { volumePercent: number; deviceId: string },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const playbackState = selectPlaybackState(getState() as AppRootState);
+        const volumeState = playbackState?.device?.volume_percent;
+        dispatch(volume(arg.volumePercent));
+
+        try {
+          await queryFulfilled;
+        } catch {
+          if (typeof volumeState !== "undefined") {
+            dispatch(volume(volumeState));
+          }
+        } finally {
+          dispatch(updating(false));
+        }
+      },
     }),
   }),
   overrideExisting: true,

@@ -6,12 +6,14 @@ export interface PlayerState {
   playbackState: SpotifyPlaybackState | null;
   deviceId: string | null;
   ready: boolean;
+  updating: boolean;
 }
 
 const initialState: PlayerState = {
   playbackState: null,
   deviceId: null,
   ready: false,
+  updating: false,
 };
 
 export const playerSlice = createSlice({
@@ -22,8 +24,10 @@ export const playerSlice = createSlice({
       state: PlayerState,
       action: PayloadAction<SpotifyPlaybackState>
     ) => {
-      state.playbackState = action.payload;
-      state.deviceId = action.payload.device.id;
+      if (!state.updating) {
+        state.playbackState = action.payload;
+        state.deviceId = action.payload.device.id;
+      }
     },
     playerReady: (state: PlayerState, action: PayloadAction<string>) => {
       state.deviceId = action.payload;
@@ -34,12 +38,40 @@ export const playerSlice = createSlice({
       state.ready = false;
     },
     playing: (state: PlayerState, action: PayloadAction<boolean>) => {
-      if (state.playbackState != null)
+      if (state.playbackState != null) {
         state.playbackState.is_playing = action.payload;
+        state.updating = true;
+      }
+    },
+    repeat: (
+      state: PlayerState,
+      action: PayloadAction<"off" | "track" | "context">
+    ) => {
+      if (state.playbackState != null) {
+        state.playbackState.repeat_state = action.payload;
+        state.updating = true;
+      }
     },
     seek: (state: PlayerState, action: PayloadAction<number>) => {
-      if (state.playbackState != null)
+      if (state.playbackState != null) {
         state.playbackState.progress_ms = action.payload;
+        state.updating = true;
+      }
+    },
+    shuffle: (state: PlayerState, action: PayloadAction<boolean>) => {
+      if (state.playbackState != null) {
+        state.playbackState.shuffle_state = action.payload;
+        state.updating = true;
+      }
+    },
+    updating: (state: PlayerState, action: PayloadAction<boolean>) => {
+      state.updating = action.payload;
+    },
+    volume: (state: PlayerState, action: PayloadAction<number>) => {
+      if (state.playbackState != null) {
+        state.playbackState.device.volume_percent = action.payload;
+        state.updating = true;
+      }
     },
   },
 });
@@ -50,7 +82,11 @@ export const {
   playerReady,
   playerNotReady,
   playing,
+  repeat,
   seek,
+  shuffle,
+  updating,
+  volume,
 } = playerSlice.actions;
 
 export const selectPlaybackState = (state: AppRootState) =>
