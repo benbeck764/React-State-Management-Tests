@@ -7,16 +7,24 @@ import AppGrid, {
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./AlbumsGrid.card";
+import { AlbumCardType } from "./AlbumCard";
 
 type AlbumsGridProps = {
   data: SpotifyAlbum[] | undefined;
+  cardType?: AlbumCardType;
   loading: boolean;
   pageSize?: number;
   onAlbumSelected?: (album: SpotifyAlbum) => void;
 };
 
 const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
-  const { data, loading, pageSize, onAlbumSelected } = props;
+  const {
+    data,
+    cardType = "minimal",
+    loading,
+    pageSize,
+    onAlbumSelected,
+  } = props;
 
   const gridData: AppGridData<SpotifyAlbum> = {
     pages:
@@ -44,7 +52,7 @@ const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
 
   const gridProps: AppGridProps<SpotifyAlbum> = {
     data: gridData,
-    cardView: createCardViewDefinitions(),
+    cardView: createCardViewDefinitions(cardType),
     displayMode: "card",
     cursorStyle: "pointer",
     onItemClicked: onAlbumSelected,

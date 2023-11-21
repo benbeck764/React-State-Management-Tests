@@ -121,6 +121,7 @@ const Search: FC = () => {
               <Typography variant="h5">Albums</Typography>
               <AlbumsGrid
                 data={topAlbums}
+                cardType="detailed"
                 pageSize={6}
                 loading={fetching}
                 onAlbumSelected={handleAlbumSelected}

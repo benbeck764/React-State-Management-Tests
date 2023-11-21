@@ -16,14 +16,19 @@ import { useRef } from "react";
 import { useHovered } from "../../../utilities/hooks/useHovered";
 import { useAppSelector, AppRootState } from "../../../state/store";
 import Equalizer from "../Equalizer";
+import { AppLink } from "../AppLink";
+import { getArtistUrl } from "../../../routing/common/url";
 
+export type AlbumCardType = "minimal" | "detailed";
 type AlbumCardProps =
   | {
       album: SpotifyAlbum;
+      type: AlbumCardType;
       loadingPlaceholder?: never;
     }
   | {
-      album?: SpotifyAlbum;
+      album?: never;
+      type?: never;
       loadingPlaceholder: true;
     };
 
@@ -51,7 +56,7 @@ const AlbumCard = (props: AlbumCardProps) => {
       </StyledCard>
     );
   } else {
-    const { album } = props;
+    const { album, type } = props;
 
     const isCurrentAlbum =
       playbackState !== null && album.uri === playbackState.context?.uri;
@@ -98,16 +103,63 @@ const AlbumCard = (props: AlbumCardProps) => {
             justifyContent="space-between"
             width="100%"
           >
-            <Typography
-              variant="paragraph"
-              align="center"
-              sx={{ color: (theme) => theme.palette.grey[400] }}
-            >
-              {`${new Date(album.release_date).getFullYear()} • ${capitalize(
-                album.album_type
-              )}`}
-            </Typography>
-            {albumPlaying && <Equalizer />}
+            {type === "minimal" && (
+              <>
+                <Typography
+                  variant="paragraph"
+                  align="center"
+                  sx={{ color: (theme) => theme.palette.grey[400] }}
+                >
+                  {`${new Date(
+                    album.release_date
+                  ).getFullYear()} • ${capitalize(album.album_type)}`}
+                </Typography>
+                {albumPlaying && <Equalizer />}
+              </>
+            )}
+            {type === "detailed" && (
+              <StyledEllipsingTextContainer
+                lines={2}
+                reserveHeight={
+                  +(
+                    theme.typography.paragraph.lineHeight
+                      ?.toString()
+                      .replace("px", "") || 0
+                  )
+                }
+              >
+                <Typography
+                  variant="paragraph"
+                  sx={{ color: (theme) => theme.palette.grey[400] }}
+                >
+                  {`${new Date(album.release_date).getFullYear()} • `}
+                  {album.artists.map((artist, artistIndex: number) => (
+                    <AppLink
+                      key={artist.uri}
+                      to={getArtistUrl(artist.uri.split(":")[2])}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                      }}
+                      state={artist}
+                      sx={{
+                        display: "inline-block",
+                        whiteSpace: "break-spaces",
+                      }}
+                    >
+                      <Typography
+                        variant="paragraphSmall"
+                        sx={{
+                          color: (theme) => theme.palette.grey[400],
+                        }}
+                      >
+                        {artist.name}
+                        {artistIndex < album.artists.length - 1 && `, `}
+                      </Typography>
+                    </AppLink>
+                  ))}
+                </Typography>
+              </StyledEllipsingTextContainer>
+            )}
           </Stack>
         </Stack>
       </StyledCard>
