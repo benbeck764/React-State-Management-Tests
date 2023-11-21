@@ -1,61 +1,47 @@
 import { FC } from "react";
-import {
-  GetUserTopArtistsResponse,
-  SpotifyArtist,
-} from "../../../state/queries/models/spotify.models";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import AppGrid, {
   AppGridProps,
   AppGridData,
-  AppGridDataRequest,
 } from "@benbeck764/react-components-grid/Grid";
-import Typography from "@mui/material/Typography";
+import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
 import { createCardViewDefinitions } from "./ArtistsGrid.card";
 
 export type ArtistCardVariant = "small" | "large";
 type ArtistsGridProps = {
-  data: GetUserTopArtistsResponse | undefined;
+  data: SpotifyArtist[] | undefined;
   loading: boolean;
-  pagination?: boolean;
+  pageSize?: number;
   cardVariant: ArtistCardVariant;
-  onArtistSelected: (artist: SpotifyArtist) => void;
-  onDataRequested: (dataRequest: AppGridDataRequest) => void;
+  onArtistSelected?: (artist: SpotifyArtist) => void;
 };
 
 const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
-  const {
-    data: dataRequest,
-    loading,
-    pagination,
-    cardVariant,
-    onArtistSelected,
-    onDataRequested,
-  } = props;
+  const { data, loading, pageSize, cardVariant, onArtistSelected } = props;
 
   const gridData: AppGridData<SpotifyArtist> = {
     pages:
-      !dataRequest || loading
+      !data || loading
         ? [
             {
               items: [],
               pageIndex: 0,
-              pageSize: 16,
+              pageSize: pageSize ?? 16,
               isLoading: true,
             },
           ]
         : [
             {
-              items: dataRequest.items,
-              pageIndex: Math.floor(dataRequest.offset / dataRequest.limit),
-              pageSize: dataRequest.limit,
+              items: data,
+              pageIndex: 0,
+              pageSize: data.length,
               isLoading: false,
             },
           ],
-    totalItemCount: dataRequest?.total ?? 0,
-    totalPageCount: dataRequest
-      ? Math.floor(dataRequest.total / dataRequest.limit)
-      : 0,
-    pagingMode: pagination ? "pagination" : "none",
+    totalItemCount: data?.length ?? pageSize ?? 16,
+    totalPageCount: 1,
+    pagingMode: "none",
   };
 
   const gridProps: AppGridProps<SpotifyArtist> = {
@@ -63,7 +49,6 @@ const ArtistsGrid: FC<ArtistsGridProps> = (props: ArtistsGridProps) => {
     cardView: createCardViewDefinitions(cardVariant),
     displayMode: "card",
     cursorStyle: "pointer",
-    onDataRequested: onDataRequested,
     onItemClicked: onArtistSelected,
     noItemsMessage: (
       <Typography variant="paragraph">No artists found.</Typography>

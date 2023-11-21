@@ -1,26 +1,22 @@
 import { FC } from "react";
-import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
-import { useTheme } from "@mui/material/styles";
-import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import {
-  StyledEllipsingTextContainer,
-  TypographySkeleton,
-} from "@benbeck764/react-components/common";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSearchForItemQuery } from "../../state/queries/spotify.api";
-import { StyledCard } from "../common/common.styles";
 import TracksGrid from "../common/TracksGrid/TracksGrid";
-import { getArtistUrl } from "../../routing/common/url";
-import { AppLink } from "../common/AppLink";
-import Box from "@mui/material/Box";
+import { getAlbumUrl, getArtistUrl } from "../../routing/common/url";
 import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
+import {
+  SpotifyAlbum,
+  SpotifyArtist,
+} from "../../state/queries/models/spotify.models";
+import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
+import TopResultCard from "./components/TopResultCard";
 
 const Search: FC = () => {
+  const navigate = useNavigate();
   const params = useParams();
-  const theme = useTheme();
   const searchQuery = params["query"];
 
   const { data: searchResult, isFetching: fetching } = useSearchForItemQuery(
@@ -35,25 +31,25 @@ const Search: FC = () => {
   const topArtists = searchResult
     ? [...searchResult.artists.items].splice(0, 6)
     : [];
+  const topAlbums = searchResult
+    ? [...searchResult.albums.items].splice(0, 6)
+    : [];
+
+  const handleArtistSelected = (artist: SpotifyArtist) => {
+    navigate(getArtistUrl(artist.id), { state: artist });
+  };
+
+  const handleAlbumSelected = (album: SpotifyAlbum): void => {
+    navigate(getAlbumUrl(album.id), { state: album });
+  };
 
   if (fetching || !searchResult) {
     return (
-      <Stack>
-        <Grid container>
+      <Stack gap={6}>
+        <Grid container columnSpacing={2}>
           <Grid item xs={3}>
-            <Stack gap={2}>
-              <Typography variant="h5">Top result</Typography>
-              <StyledCard>
-                <Stack gap={2}>
-                  <Skeleton variant="circular" width={100} height={100} />
-                  <TypographySkeleton
-                    variant="h4"
-                    charCount={12}
-                    charCountVariance={6}
-                    lines={1}
-                  />
-                </Stack>
-              </StyledCard>
+            <Stack gap={2} height="100%">
+              <TopResultCard loading={true} />
             </Stack>
           </Grid>
           <Grid item xs={9}>
@@ -68,39 +64,28 @@ const Search: FC = () => {
             </Stack>
           </Grid>
         </Grid>
+        <Stack>
+          <Typography variant="h5">Artists</Typography>
+          <ArtistsGrid
+            data={undefined}
+            cardVariant="large"
+            pageSize={6}
+            loading={true}
+          />
+        </Stack>
+        <Stack>
+          <Typography variant="h5">Albums</Typography>
+          <AlbumsGrid data={undefined} pageSize={6} loading={true} />
+        </Stack>
       </Stack>
     );
   } else {
     return (
-      <Stack>
+      <Stack gap={6}>
         <Grid container columnSpacing={2}>
           <Grid item xs={3}>
-            <Stack gap={2}>
-              <Typography variant="h5">Top result</Typography>
-              {topArtist && (
-                <AppLink to={getArtistUrl(topArtist.id)}>
-                  <StyledCard>
-                    <Stack gap={2}>
-                      <Avatar
-                        sx={{ width: 100, height: 100 }}
-                        src={topArtist.images?.[0]?.url}
-                      />
-                      <StyledEllipsingTextContainer
-                        lines={1}
-                        reserveHeight={
-                          +(
-                            theme.typography.h4.lineHeight
-                              ?.toString()
-                              .replace("px", "") || 0
-                          )
-                        }
-                      >
-                        <Typography variant="h4">{topArtist.name}</Typography>
-                      </StyledEllipsingTextContainer>
-                    </Stack>
-                  </StyledCard>
-                </AppLink>
-              )}
+            <Stack gap={2} height="100%">
+              <TopResultCard artist={topArtist} loading={fetching} />
             </Stack>
           </Grid>
           <Grid item xs={9}>
@@ -116,9 +101,33 @@ const Search: FC = () => {
             </Stack>
           </Grid>
         </Grid>
-        <Box>
-          <ArtistsGrid />
-        </Box>
+        <Stack>
+          {topArtists.length > 0 && (
+            <>
+              <Typography variant="h5">Artists</Typography>
+              <ArtistsGrid
+                data={topArtists}
+                cardVariant="large"
+                pageSize={6}
+                loading={fetching}
+                onArtistSelected={handleArtistSelected}
+              />
+            </>
+          )}
+        </Stack>
+        <Stack>
+          {topAlbums.length > 0 && (
+            <>
+              <Typography variant="h5">Albums</Typography>
+              <AlbumsGrid
+                data={topAlbums}
+                pageSize={6}
+                loading={fetching}
+                onAlbumSelected={handleAlbumSelected}
+              />
+            </>
+          )}
+        </Stack>
       </Stack>
     );
   }

@@ -1,8 +1,5 @@
 import { FC } from "react";
-import {
-  GetArtistAlbumsResponse,
-  SpotifyAlbum,
-} from "../../../state/queries/models/spotify.models";
+import { SpotifyAlbum } from "../../../state/queries/models/spotify.models";
 import Box from "@mui/material/Box";
 import AppGrid, {
   AppGridProps,
@@ -12,37 +9,36 @@ import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./AlbumsGrid.card";
 
 type AlbumsGridProps = {
-  data: GetArtistAlbumsResponse | undefined;
+  data: SpotifyAlbum[] | undefined;
   loading: boolean;
-  onAlbumSelected: (album: SpotifyAlbum) => void;
+  pageSize?: number;
+  onAlbumSelected?: (album: SpotifyAlbum) => void;
 };
 
 const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
-  const { data: dataRequest, loading, onAlbumSelected } = props;
+  const { data, loading, pageSize, onAlbumSelected } = props;
 
   const gridData: AppGridData<SpotifyAlbum> = {
     pages:
-      !dataRequest || loading
+      !data || loading
         ? [
             {
               items: [],
               pageIndex: 0,
-              pageSize: 12,
+              pageSize: pageSize ?? 12,
               isLoading: true,
             },
           ]
         : [
             {
-              items: dataRequest.items,
-              pageIndex: Math.floor(dataRequest.offset / dataRequest.limit),
-              pageSize: dataRequest.limit,
+              items: data,
+              pageIndex: 0,
+              pageSize: data.length,
               isLoading: false,
             },
           ],
-    totalItemCount: dataRequest?.total ?? 0,
-    totalPageCount: dataRequest
-      ? Math.floor(dataRequest.total / dataRequest.limit)
-      : 0,
+    totalItemCount: data?.length ?? pageSize ?? 16,
+    totalPageCount: 1,
     pagingMode: "none",
   };
 

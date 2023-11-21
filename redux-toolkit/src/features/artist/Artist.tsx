@@ -142,7 +142,7 @@ const Artist: FC = () => {
             )}
           </Stack>
           <AlbumsGrid
-            data={albumsData}
+            data={albumsData?.items}
             loading={isLoadingAlbums}
             onAlbumSelected={handleAlbumSelected}
           />

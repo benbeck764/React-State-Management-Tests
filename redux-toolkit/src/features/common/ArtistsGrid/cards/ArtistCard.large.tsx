@@ -51,7 +51,7 @@ const ArtistCardLarge: FC<ArtistCardProps> = (props: ArtistCardProps) => {
           <Box sx={{ position: "relative" }}>
             <Avatar
               sx={{ width: 150, height: 150 }}
-              src={artist.images[0].url}
+              src={artist.images[0]?.url}
             />
             {(hovered || artistPlaying) && (
               <PlayButton
