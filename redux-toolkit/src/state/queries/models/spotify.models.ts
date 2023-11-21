@@ -39,6 +39,23 @@ export type GetAlbumTracksRequest = {
   offset?: number;
 };
 
+export type SearchItemRequest = {
+  q: string;
+  type: (
+    | "album"
+    | "artist"
+    | "playlist"
+    | "track"
+    | "show"
+    | "episode"
+    | "audiobook"
+  )[];
+  market?: string;
+  limit?: number;
+  offset?: number;
+  include_external?: "audio";
+};
+
 //#endregion
 
 //#region Response Types
@@ -73,6 +90,17 @@ export type GetAlbumTracksResponse =
 
 export type GetDevicesResponse = {
   devices: SpotifyDevice[];
+};
+
+export type SearchItemResponse = {
+  tracks: SpotifyTrack[];
+  artist: SpotifyArtist[];
+  albums: SpotifyAlbum[];
+  // [TODO]: Implement these in the future if necessary
+  playlists: never;
+  shows: never;
+  episodes: never;
+  audiobooks: never;
 };
 
 //#endregion

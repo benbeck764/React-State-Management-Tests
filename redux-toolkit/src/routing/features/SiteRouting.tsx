@@ -5,6 +5,7 @@ import { AppRoutes, RouteName } from "../common/routes";
 import AppPageLoader from "@benbeck764/react-components/PageLoader";
 
 const Home = lazy(() => import("../../features/home/Home"));
+const Search = lazy(() => import("../../features/search/Search"));
 
 export const getSiteRoutes = (): RouteProps[] => [
   {
@@ -20,6 +21,11 @@ export const getSiteRoutes = (): RouteProps[] => [
           index
           path={AppRoutes[RouteName.Site].path}
           element={<Home />}
+        ></Route>
+        <Route
+          index
+          path={AppRoutes[RouteName.Search].path}
+          element={<Search />}
         ></Route>
         <Route
           index

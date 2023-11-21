@@ -3,6 +3,8 @@ import { endpoints } from "./common/endpoints";
 import {
   GetUserTopArtistsResponse,
   GetUserTopItemsRequest,
+  SearchItemRequest,
+  SearchItemResponse,
 } from "./models/spotify.models";
 import { axiosBaseQuery } from "./common/axios-api-helpers";
 import { Optional } from "../../utilities/types";
@@ -23,6 +25,13 @@ export const spotifyApi = createApi({
   // Testing with Axios, utilizing for Axios interceptors:
   baseQuery: retryAxiosBaseQuery,
   endpoints: (builder) => ({
+    searchForItem: builder.query<SearchItemResponse, SearchItemRequest>({
+      query: (request: SearchItemRequest) => ({
+        url: endpoints.spotify.search,
+        method: "GET",
+        params: request,
+      }),
+    }),
     getTopArtists: builder.query<
       GetUserTopArtistsResponse,
       Optional<GetUserTopItemsRequest>
@@ -93,6 +102,7 @@ export const spotifyApi = createApi({
 });
 
 export const {
+  useSearchForItemQuery,
   useGetTopArtistsQuery,
   useGetTopTracksQuery,
   useCheckedSavedTracksQuery,

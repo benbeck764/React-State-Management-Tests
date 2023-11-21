@@ -2,7 +2,6 @@ import { FC } from "react";
 import { StyledHeaderContainer } from "./Header.styles";
 import { AppRoutes, RouteName } from "../../../routing/common/routes";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Navigation } from "./components/Navigation/Navigation";
 import { useBreakpoint } from "@benbeck764/react-components";
 import AppButton from "@benbeck764/react-components/Button";
 import AppBar from "@mui/material/AppBar";
@@ -46,11 +45,6 @@ export const Header: FC = () => {
                 justifyContent="flex-start"
               >
                 <Stack direction="row" alignItems="center" gap={2}>
-                  {breakpoint !== "xl" && (
-                    <Box>
-                      <Navigation variant="drawer" />
-                    </Box>
-                  )}
                   <AppButton>
                     <Box
                       component="img"
@@ -66,12 +60,6 @@ export const Header: FC = () => {
                       }}
                     ></Box>
                   </AppButton>
-
-                  {breakpoint === "xl" && (
-                    <Box ml={4}>
-                      <Navigation variant="bar" />
-                    </Box>
-                  )}
                 </Stack>
               </Grid>
               <Grid
