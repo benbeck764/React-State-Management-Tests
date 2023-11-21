@@ -11,6 +11,7 @@ import {
   useSaveTracksMutation,
 } from "../../state/queries/spotify.api";
 import { debounce } from "@mui/material/utils";
+import Tooltip from "@mui/material/Tooltip";
 
 type FavoriteButtonProps = {
   type: "track" | "album";
@@ -77,23 +78,33 @@ const FavoriteButton: FC<FavoriteButtonProps> = (
   }, 200);
 
   return (
-    <IconButton
-      sx={{
-        width: fontSize,
-        height: fontSize,
-      }}
-      onClick={handleFavoriteChange}
+    <Tooltip
+      title={favorited ? "Remove from Your Library" : "Save to Your Library"}
     >
-      {favorited ? (
-        <FavoriteIcon
-          sx={{ fontSize, color: (theme) => theme.palette.primary.dark }}
-        />
-      ) : (
-        <FavoriteBorderIcon
-          sx={{ fontSize, color: (theme) => theme.palette.text.primary }}
-        />
-      )}
-    </IconButton>
+      <IconButton
+        sx={{
+          width: fontSize,
+          height: fontSize,
+        }}
+        onClick={handleFavoriteChange}
+      >
+        {favorited ? (
+          <FavoriteIcon
+            sx={{ fontSize, color: (theme) => theme.palette.primary.dark }}
+          />
+        ) : (
+          <FavoriteBorderIcon
+            sx={{
+              fontSize,
+              color: (theme) => theme.palette.grey[300],
+              "&:hover": {
+                color: (theme) => theme.palette.text.primary,
+              },
+            }}
+          />
+        )}
+      </IconButton>
+    </Tooltip>
   );
 };
 
