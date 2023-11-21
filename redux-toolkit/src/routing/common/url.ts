@@ -12,3 +12,7 @@ export const getArtistDiscographyUrl = (artistId: string): string => {
 export const getAlbumUrl = (albumId: string): string => {
   return replaceParams(RouteName.Album, [albumId]);
 };
+
+export const getSearchUrl = (searchTerm: string): string => {
+  return replaceParams(RouteName.Search, [searchTerm]);
+};

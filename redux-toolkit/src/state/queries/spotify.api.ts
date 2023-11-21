@@ -29,7 +29,7 @@ export const spotifyApi = createApi({
       query: (request: SearchItemRequest) => ({
         url: endpoints.spotify.search,
         method: "GET",
-        params: request,
+        params: { ...request, type: request.type.join(",") },
       }),
     }),
     getTopArtists: builder.query<

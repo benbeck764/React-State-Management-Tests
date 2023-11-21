@@ -6,42 +6,40 @@ import AppGrid, {
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./TracksGrid.card";
-import {
-  GetArtistTopTracksResponse,
-  SpotifyTrack,
-} from "../../../state/queries/models/spotify.models";
+import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import { PlayButtonPlayType } from "../../player/PlayButton";
 
 type TracksGridProps = {
-  data: GetArtistTopTracksResponse | undefined;
+  data: SpotifyTrack[];
   loading: boolean;
   playType: PlayButtonPlayType;
   virtualization?: AppGridVirtualizedProps;
+  pageSize?: number;
 };
 
 const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
-  const { data: dataRequest, loading, playType, virtualization } = props;
+  const { data, loading, playType, virtualization, pageSize } = props;
 
   const gridData: AppGridData<SpotifyTrack> = {
     pages:
-      !dataRequest || loading
+      !data || loading
         ? [
             {
               items: [],
               pageIndex: 0,
-              pageSize: 10,
+              pageSize: pageSize ?? 10,
               isLoading: true,
             },
           ]
         : [
             {
-              items: dataRequest.tracks,
+              items: data,
               pageIndex: 0,
-              pageSize: dataRequest?.tracks?.length,
+              pageSize: data.length,
               isLoading: false,
             },
           ],
-    totalItemCount: dataRequest?.tracks?.length ?? 10,
+    totalItemCount: data.length ?? pageSize ?? 10,
     totalPageCount: 1,
     pagingMode: "none",
   };

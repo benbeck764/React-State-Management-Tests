@@ -30,13 +30,7 @@ const AppContent: FC = () => {
         <Header />
       </StyledStickyHeaderContainer>
 
-      <StyledPageContainer
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        wrap="nowrap"
-      >
+      <StyledPageContainer container direction="column">
         <StyledPageContent>
           <AppRouting />
         </StyledPageContent>

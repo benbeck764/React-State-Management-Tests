@@ -6,6 +6,9 @@ export const StyledPageContainer = styled(Grid)(
   ({ theme }: { theme: Theme }) => ({
     backgroundColor: theme.palette.background.default,
     width: "100vw",
+    justifyContent: "center",
+    alignItems: "center",
+    wrap: "nowrap",
     [theme.breakpoints.up("xl")]: {
       maxWidth: "100%",
     },

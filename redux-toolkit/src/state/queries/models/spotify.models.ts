@@ -93,9 +93,9 @@ export type GetDevicesResponse = {
 };
 
 export type SearchItemResponse = {
-  tracks: SpotifyTrack[];
-  artist: SpotifyArtist[];
-  albums: SpotifyAlbum[];
+  tracks: GetItemsBaseResponse<SpotifyTrack>;
+  artists: GetItemsBaseResponse<SpotifyArtist>;
+  albums: GetItemsBaseResponse<SpotifyAlbum>;
   // [TODO]: Implement these in the future if necessary
   playlists: never;
   shows: never;

@@ -116,7 +116,7 @@ const Artist: FC = () => {
             </StyledTopTracksHeader>
             <Box maxHeight="250px" sx={{ overflowY: "scroll" }}>
               <TracksGrid
-                data={topTracksData}
+                data={topTracksData?.tracks ?? []}
                 loading={isLoadingTopTracks}
                 playType="track"
               />

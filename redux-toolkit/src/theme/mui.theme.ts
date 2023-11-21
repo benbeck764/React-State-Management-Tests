@@ -1,56 +1,7 @@
-import { Theme, ThemeOptions, TypographyVariants } from "@mui/material/styles";
-import { lineHeights } from "./base.theme";
+import { Theme, ThemeOptions } from "@mui/material/styles";
 
 export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
   const themeBase = themeBaseOptions as Theme;
-  const spacing = themeBaseOptions.spacing as number;
-
-  function generateInputRules(options: {
-    typographyVariant: keyof TypographyVariants;
-    paddingX: number;
-    paddingY: number;
-    borderWidthNormal: number;
-    borderWidthFocus: number;
-  }) {
-    const lineHeight = lineHeights[options.typographyVariant];
-    return {
-      backgroundColor: themeBase.palette.common.white,
-      borderRadius: themeBase.shape.borderRadius,
-      height: lineHeight + options.paddingY * 2,
-      input: {
-        height: lineHeight,
-      },
-      "&:not(.MuiInputBase-formControl)": {
-        input: {
-          ...(themeBase.typography[
-            options.typographyVariant
-          ] as React.CSSProperties),
-          paddingTop: options.paddingY - options.borderWidthNormal,
-          paddingBottom: options.paddingY - options.borderWidthNormal,
-          paddingLeft: options.paddingX - options.borderWidthNormal,
-          paddingRight: options.paddingX - options.borderWidthNormal,
-
-          borderWidth: options.borderWidthNormal,
-          borderStyle: "solid",
-          borderColor: themeBase.palette.coolGrey[300],
-          borderRadius: themeBase.shape.borderRadius,
-
-          "&:focus": {
-            borderColor: themeBase.palette.primary.main,
-            borderWidth: options.borderWidthFocus,
-
-            paddingTop: options.paddingY - options.borderWidthFocus,
-            paddingBottom: options.paddingY - options.borderWidthFocus,
-            paddingLeft: options.paddingX - options.borderWidthFocus,
-            paddingRight: options.paddingX - options.borderWidthFocus,
-          },
-          "&:disabled": {
-            borderColor: themeBase.palette.coolGrey[300],
-          },
-        },
-      },
-    };
-  }
 
   return {
     ...themeBaseOptions,
@@ -89,41 +40,16 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
         },
         styleOverrides: {
           root: {
-            "&.MuiInputBase-sizeExtraSmall": {
-              ...generateInputRules({
-                typographyVariant: "paragraphSmall",
-                paddingX: spacing,
-                paddingY: spacing * 0.5,
-                borderWidthNormal: 1.5,
-                borderWidthFocus: 2,
-              }),
+            "&.MuiInput-root": {
+              border: "none !important",
+              borderRadius: `500px !important`,
+              backgroundColor: `${themeBase.palette.grey[800]} !important`,
             },
-            "&.MuiInputBase-sizeSmall": {
-              ...generateInputRules({
-                typographyVariant: "paragraph",
-                paddingX: spacing,
-                paddingY: spacing * 0.5,
-                borderWidthNormal: 1.5,
-                borderWidthFocus: 2,
-              }),
+            "&:hover": {
+              border: `1px solid ${themeBase.palette.grey[600]} !important`,
             },
-            "&.MuiInputBase-sizeMedium": {
-              ...generateInputRules({
-                typographyVariant: "paragraph",
-                paddingX: spacing * 2,
-                paddingY: spacing,
-                borderWidthNormal: 1.5,
-                borderWidthFocus: 2,
-              }),
-            },
-            "&.MuiInputBase-sizeLarge": {
-              ...generateInputRules({
-                typographyVariant: "paragraph",
-                paddingX: spacing * 1.5,
-                paddingY: spacing * 1.25,
-                borderWidthNormal: 1.5,
-                borderWidthFocus: 2,
-              }),
+            "&.Mui-focused": {
+              border: `2px solid ${themeBase.palette.common.white} !important`,
             },
             "&.Mui-disabled": {
               backgroundColor: themeBase.palette.coolGrey[100],
@@ -132,7 +58,8 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
           },
           input: {
             "&::placeholder": {
-              color: themeBase.palette.coolGrey[700],
+              color: themeBase.palette.grey[600],
+              opacity: 0.7,
             },
           },
         },
