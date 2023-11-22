@@ -80,6 +80,7 @@ const FavoriteButton: FC<FavoriteButtonProps> = (
   return (
     <Tooltip
       title={favorited ? "Remove from Your Library" : "Save to Your Library"}
+      placement="top"
     >
       <IconButton
         sx={{

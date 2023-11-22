@@ -43,6 +43,7 @@ import {
 } from "../../state/queries/models/spotify.models";
 import DeviceMenu from "./components/DeviceMenu/DeviceMenu";
 import FavoriteButton from "../common/FavoriteButton";
+import ScrollingContainer from "../common/ScrollingContainer";
 
 const Player: FC = () => {
   // [NB]: No longer using returned Player, rather use Web API for everything...
@@ -146,33 +147,43 @@ const Player: FC = () => {
                   src={item.album.images[0].url}
                   sx={{ width: 57.5, height: 57.5 }}
                 />
-                <Stack>
-                  <AppLink
-                    to={getAlbumUrl(item.album.uri.split(":")[2])}
-                    state={item.album}
-                  >
-                    <Typography variant="paragraph">{item.name}</Typography>
-                  </AppLink>
-                  <Stack direction="row" gap={0.5}>
-                    {item.artists.map((artist, artistIndex: number) => (
-                      <AppLink
-                        key={artist.uri}
-                        to={getArtistUrl(artist.uri.split(":")[2])}
-                        state={artist}
-                        sx={{ display: "inline-block" }}
+                <Stack maxWidth={370} sx={{ overflow: "hidden" }}>
+                  <ScrollingContainer>
+                    <AppLink
+                      to={getAlbumUrl(item.album.uri.split(":")[2])}
+                      state={item.album}
+                    >
+                      <Typography
+                        variant="paragraph"
+                        sx={{ textWrap: "nowrap" }}
                       >
-                        <Typography
-                          variant="paragraphExtraSmall"
-                          sx={{
-                            color: (theme) => theme.palette.grey[400],
-                          }}
+                        {item.name}
+                      </Typography>
+                    </AppLink>
+                  </ScrollingContainer>
+
+                  <ScrollingContainer>
+                    <Stack direction="row" gap={0.5}>
+                      {item.artists.map((artist, artistIndex: number) => (
+                        <AppLink
+                          key={artist.uri}
+                          to={getArtistUrl(artist.uri.split(":")[2])}
+                          state={artist}
+                          sx={{ display: "inline-block" }}
                         >
-                          {artist.name}
-                          {artistIndex < item.artists.length - 1 && ","}
-                        </Typography>
-                      </AppLink>
-                    ))}
-                  </Stack>
+                          <Typography
+                            variant="paragraphExtraSmall"
+                            sx={{
+                              color: (theme) => theme.palette.grey[400],
+                            }}
+                          >
+                            {artist.name}
+                            {artistIndex < item.artists.length - 1 && ","}
+                          </Typography>
+                        </AppLink>
+                      ))}
+                    </Stack>
+                  </ScrollingContainer>
                 </Stack>
                 <FavoriteButton type="track" itemId={item.id} size="small" />
               </Stack>
