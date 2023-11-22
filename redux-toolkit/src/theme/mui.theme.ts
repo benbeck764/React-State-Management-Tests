@@ -44,6 +44,7 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
               border: "none !important",
               borderRadius: `500px !important`,
               backgroundColor: `${themeBase.palette.grey[800]} !important`,
+              height: "40px !important",
             },
             "&:hover": {
               border: `1px solid ${themeBase.palette.grey[600]} !important`,
@@ -57,6 +58,8 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
             },
           },
           input: {
+            ...themeBase.typography.paragraphLarge,
+
             "&::placeholder": {
               color: themeBase.palette.grey[600],
               opacity: 0.7,
