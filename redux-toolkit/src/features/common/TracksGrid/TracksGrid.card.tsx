@@ -23,7 +23,7 @@ export const createCardViewDefinitions = (
         />
       );
     },
-    loadingPlaceholder: <TrackCard loadingPlaceholder />,
+    loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
     cardSx: { borderRadius: "16px" },
   },
@@ -39,7 +39,7 @@ export const createCardViewDefinitions = (
         />
       );
     },
-    loadingPlaceholder: <TrackCard loadingPlaceholder />,
+    loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
     cardSx: { borderRadius: "16px" },
   },
@@ -55,7 +55,7 @@ export const createCardViewDefinitions = (
         />
       );
     },
-    loadingPlaceholder: <TrackCard loadingPlaceholder />,
+    loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
     rowSpacing: 0,
     cardSx: { borderRadius: "0px" },

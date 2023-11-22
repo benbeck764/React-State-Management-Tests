@@ -97,6 +97,7 @@ const Search: FC = () => {
                   data={topTracks}
                   cardType="search"
                   loading={fetching}
+                  pageSize={4}
                   playType="track"
                 />
               )}

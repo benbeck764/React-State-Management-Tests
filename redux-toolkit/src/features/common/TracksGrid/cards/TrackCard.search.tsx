@@ -34,13 +34,19 @@ const TrackCardSearch = (props: TrackCardProps) => {
           py={1}
         >
           <Stack direction="row" alignItems="center" gap={1.75}>
-            <TypographySkeleton variant="paragraph" charCount={1} />
             <Skeleton variant="rectangular" height={40} width={40} />
-            <TypographySkeleton
-              variant="paragraphBold"
-              charCount={15}
-              charCountVariance={8}
-            />
+            <Stack>
+              <TypographySkeleton
+                variant="paragraphBold"
+                charCount={15}
+                charCountVariance={8}
+              />
+              <TypographySkeleton
+                variant="paragraphSmall"
+                charCount={15}
+                charCountVariance={8}
+              />
+            </Stack>
           </Stack>
           <Stack>
             <TypographySkeleton variant="paragraph" charCount={5} />

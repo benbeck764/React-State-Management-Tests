@@ -4,21 +4,21 @@ import TrackCardTopTracks from "./TrackCard.top";
 import TrackCardSearch from "./TrackCard.search";
 
 export type TrackCardType = "top-track" | "search";
-export type TrackCardProps =
+export type TrackCardProps = { type: TrackCardType } & (
   | {
       track: SpotifyTrack;
-      type: TrackCardType;
+
       index: number;
       playType: PlayButtonPlayType;
       loadingPlaceholder?: never;
     }
   | {
       track?: never;
-      type?: never;
       index?: never;
       playType?: never;
       loadingPlaceholder: true;
-    };
+    }
+);
 
 const TrackCard = (props: TrackCardProps) => {
   const { type } = props;
