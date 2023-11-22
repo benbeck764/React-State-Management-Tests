@@ -1,32 +1,18 @@
-import { useTheme } from "@mui/material/styles";
+import { useRef } from "react";
+import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
-import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
-import Box from "@mui/material/Box";
-import PlayButton, { PlayButtonPlayType } from "../../player/PlayButton";
-import Equalizer from "../Equalizer";
-import { useHovered } from "../../../utilities/hooks/useHovered";
-import { useRef } from "react";
-import { AppRootState, useAppSelector } from "../../../state/store";
-import { formatMilliseconds } from "../../../utilities/number";
+import PlayButton from "../../../player/PlayButton";
+import Equalizer from "../../Equalizer";
+import { useHovered } from "../../../../utilities/hooks/useHovered";
+import { AppRootState, useAppSelector } from "../../../../state/store";
+import { formatMilliseconds } from "../../../../utilities/number";
+import { TrackCardProps } from "./TrackCard";
 
-type TrackCardProps =
-  | {
-      track: SpotifyTrack;
-      index: number;
-      playType: PlayButtonPlayType;
-      loadingPlaceholder?: never;
-    }
-  | {
-      track?: never;
-      index?: never;
-      playType?: never;
-      loadingPlaceholder: true;
-    };
-
-const TrackCard = (props: TrackCardProps) => {
+const TrackCardTopTracks = (props: TrackCardProps) => {
   const theme = useTheme();
   const cardFocusRef = useRef<HTMLDivElement>();
   const hovered = useHovered(cardFocusRef);
@@ -155,4 +141,4 @@ const TrackCard = (props: TrackCardProps) => {
   }
 };
 
-export default TrackCard;
+export default TrackCardTopTracks;

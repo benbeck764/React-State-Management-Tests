@@ -65,8 +65,8 @@ const AlbumCard = (props: AlbumCardProps) => {
 
     return (
       <StyledCard ref={cardFocusRef}>
-        <Stack alignItems="center" gap={2}>
-          <Box sx={{ position: "relative" }}>
+        <Stack gap={2}>
+          <Box sx={{ position: "relative", alignSelf: "center" }}>
             <Avatar
               variant="rounded"
               sx={{ width: 150, height: 150, position: "relative" }}
@@ -93,9 +93,7 @@ const AlbumCard = (props: AlbumCardProps) => {
               )
             }
           >
-            <Typography variant="paragraphLarge" align="center">
-              {album.name}
-            </Typography>
+            <Typography variant="paragraphLarge">{album.name}</Typography>
           </StyledEllipsingTextContainer>
           <Stack
             direction="row"
@@ -147,6 +145,7 @@ const AlbumCard = (props: AlbumCardProps) => {
                       }}
                     >
                       <Typography
+                        component="span"
                         variant="paragraphSmall"
                         sx={{
                           color: (theme) => theme.palette.grey[400],

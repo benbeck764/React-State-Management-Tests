@@ -8,9 +8,11 @@ import Typography from "@mui/material/Typography";
 import { createCardViewDefinitions } from "./TracksGrid.card";
 import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import { PlayButtonPlayType } from "../../player/PlayButton";
+import { TrackCardType } from "./cards/TrackCard";
 
 type TracksGridProps = {
-  data: SpotifyTrack[];
+  data: SpotifyTrack[] | undefined;
+  cardType: TrackCardType;
   loading: boolean;
   playType: PlayButtonPlayType;
   virtualization?: AppGridVirtualizedProps;
@@ -18,7 +20,7 @@ type TracksGridProps = {
 };
 
 const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
-  const { data, loading, playType, virtualization, pageSize } = props;
+  const { data, cardType, playType, loading, virtualization, pageSize } = props;
 
   const gridData: AppGridData<SpotifyTrack> = {
     pages:
@@ -39,14 +41,14 @@ const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
               isLoading: false,
             },
           ],
-    totalItemCount: data.length ?? pageSize ?? 10,
+    totalItemCount: data?.length ?? pageSize ?? 10,
     totalPageCount: 1,
     pagingMode: "none",
   };
 
   const gridProps: AppGridProps<SpotifyTrack> = {
     data: gridData,
-    cardView: createCardViewDefinitions(playType, virtualization),
+    cardView: createCardViewDefinitions(cardType, playType, virtualization),
     displayMode: "card",
     cursorStyle: "pointer",
     noItemsMessage: (

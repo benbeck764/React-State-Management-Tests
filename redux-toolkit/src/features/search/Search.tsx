@@ -56,7 +56,8 @@ const Search: FC = () => {
             <Stack gap={2}>
               <Typography variant="h5">Songs</Typography>
               <TracksGrid
-                data={[]}
+                data={undefined}
+                cardType="search"
                 loading={true}
                 pageSize={4}
                 playType="track"
@@ -94,6 +95,7 @@ const Search: FC = () => {
               {topTracks && (
                 <TracksGrid
                   data={topTracks}
+                  cardType="search"
                   loading={fetching}
                   playType="track"
                 />

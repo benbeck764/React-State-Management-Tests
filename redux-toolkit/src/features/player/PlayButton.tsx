@@ -10,6 +10,7 @@ import {
 import { debounce } from "@mui/material/utils";
 import IconButton from "@mui/material/IconButton";
 import { SxProps, Theme } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 
 export type PlayButtonPlayType = "artist" | "album" | "track" | "playlist";
 type PlayButtonVariant = "action-button" | "button";
@@ -23,6 +24,7 @@ type PlayButtonProps = {
   size?: PlayButtonSize;
   sx?: SxProps<Theme>;
   stopPropagation?: boolean;
+  tooltipText?: string;
 };
 
 const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
@@ -34,6 +36,7 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
     size = "medium",
     sx,
     stopPropagation,
+    tooltipText,
   } = props;
 
   const [startOrResumePlayback] = useStartOrResumePlaybackMutation();
@@ -89,76 +92,84 @@ const PlayButton: FC<PlayButtonProps> = (props: PlayButtonProps) => {
 
   const debouncedHandlePlayChange = debounce(handlePlayChange, 200);
 
-  let buttonSize = "32px";
+  let fabSize = "32px";
   let fabFontSize = "24px";
+  let iconButtonFontSize = "16px";
   switch (size) {
     case "small":
-      buttonSize = "32px";
+      fabSize = "32px";
       fabFontSize = "24px";
+      iconButtonFontSize = "16px";
       break;
     case "medium":
-      buttonSize = "40px";
+      fabSize = "40px";
       fabFontSize = "30px";
+      iconButtonFontSize = "20px";
       break;
     case "large":
-      buttonSize = "48px";
+      fabSize = "48px";
       fabFontSize = "36px";
+      iconButtonFontSize = "28px";
       break;
   }
 
-  return variant === "button" ? (
-    <IconButton onClick={debouncedHandlePlayChange} sx={{ p: 0, ...sx }}>
-      {isPlaying ? (
-        <PauseIcon
-          sx={{
-            fontSize: "20px",
-            color: (theme) => theme.palette.common.white,
-          }}
-        />
+  return (
+    <Tooltip title={tooltipText} placement="top">
+      {variant === "button" ? (
+        <IconButton onClick={debouncedHandlePlayChange} sx={{ p: 0, ...sx }}>
+          {isPlaying ? (
+            <PauseIcon
+              sx={{
+                fontSize: iconButtonFontSize,
+                color: (theme) => theme.palette.common.white,
+              }}
+            />
+          ) : (
+            <PlayArrowIcon
+              sx={{
+                fontSize: iconButtonFontSize,
+                color: (theme) => theme.palette.common.white,
+              }}
+            />
+          )}
+        </IconButton>
       ) : (
-        <PlayArrowIcon
+        <Fab
+          color="primary"
           sx={{
-            fontSize: "20px",
-            color: (theme) => theme.palette.common.white,
+            "&:hover": {
+              transform: "scale(1.05)",
+            },
+            width: fabSize,
+            height: fabSize,
+            ...sx,
           }}
-        />
+          onClick={(e) => {
+            if (stopPropagation) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            debouncedHandlePlayChange();
+          }}
+        >
+          {isPlaying ? (
+            <PauseIcon
+              sx={{
+                fontSize: fabFontSize,
+                color: (theme) => theme.palette.common.black,
+              }}
+            />
+          ) : (
+            <PlayArrowIcon
+              sx={{
+                fontSize: fabFontSize,
+                color: (theme) => theme.palette.common.black,
+              }}
+            />
+          )}
+        </Fab>
       )}
-    </IconButton>
-  ) : (
-    <Fab
-      color="primary"
-      sx={{
-        "&:hover": {
-          transform: "scale(1.05)",
-        },
-        width: buttonSize,
-        height: buttonSize,
-        ...sx,
-      }}
-      onClick={(e) => {
-        if (stopPropagation) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        debouncedHandlePlayChange();
-      }}
-    >
-      {isPlaying ? (
-        <PauseIcon
-          sx={{
-            fontSize: fabFontSize,
-            color: (theme) => theme.palette.common.black,
-          }}
-        />
-      ) : (
-        <PlayArrowIcon
-          sx={{
-            fontSize: fabFontSize,
-            color: (theme) => theme.palette.common.black,
-          }}
-        />
-      )}
-    </Fab>
+    </Tooltip>
   );
 };
 
