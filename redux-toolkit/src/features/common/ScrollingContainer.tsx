@@ -23,7 +23,6 @@ const ScrollingContainer: FC<PropsWithChildren<unknown>> = (
         }, 20000 - (Date.now() - startTimeRef.current));
         setAnimating(true);
       } else {
-        // Pause the timer when the div is no longer hovered
         clearTimeout(timerRef.current);
         setAnimating(false);
       }

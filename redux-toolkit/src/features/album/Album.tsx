@@ -55,7 +55,7 @@ const Album: FC = () => {
               <Typography variant="paragraphBold">
                 {capitalize(album.album_type)}
               </Typography>
-              <Typography variant="h2">{album.name}</Typography>
+              <Typography variant="h3">{album.name}</Typography>
 
               <Stack direction="row" gap={1}>
                 {album.artists.map(
