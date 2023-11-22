@@ -1,14 +1,16 @@
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import { spotifyApi } from "./queries/spotify.api";
-import player from "./slices/player.slice";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import playerReducer from "./slices/player.slice";
+import searchReducer from "./slices/search.slice";
 
 export const store = configureStore({
   reducer: {
     // Add the generated reducer as a specific top-level slice
     [spotifyApi.reducerPath]: spotifyApi.reducer,
-    player,
+    player: playerReducer,
+    search: searchReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

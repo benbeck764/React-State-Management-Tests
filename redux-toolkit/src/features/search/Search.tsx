@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -13,10 +13,13 @@ import {
 } from "../../state/queries/models/spotify.models";
 import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
 import TopResultCard from "./components/TopResultCard";
+import { useAppDispatch } from "../../state/store";
+import { search } from "../../state/slices/search.slice";
 
 const Search: FC = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useAppDispatch();
   const searchQuery = params["query"];
 
   const { data: searchResult, isFetching: fetching } = useSearchForItemQuery(
@@ -42,6 +45,11 @@ const Search: FC = () => {
   const handleAlbumSelected = (album: SpotifyAlbum): void => {
     navigate(getAlbumUrl(album.id), { state: album });
   };
+
+  useEffect(() => {
+    if (searchQuery) dispatch(search(searchQuery));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
 
   if (fetching || !searchResult) {
     return (

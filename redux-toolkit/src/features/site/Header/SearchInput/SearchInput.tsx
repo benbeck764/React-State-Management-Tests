@@ -3,11 +3,18 @@ import AppTextField from "@benbeck764/react-components/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getSearchUrl } from "../../../../routing/common/url";
+import { AppRoutes, RouteName } from "../../../../routing/common/routes";
+import { useAppSelector, AppRootState } from "../../../../state/store";
 
 const SearchInput: FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  const searchTermState = useAppSelector(
+    (s: AppRootState) => s.search.searchTerm
+  );
+
+  const [searchTerm, setSearchTerm] = useState<string>(searchTermState);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event) setSearchTerm(event.target.value);
@@ -15,6 +22,7 @@ const SearchInput: FC = () => {
 
   const handleOnClear = () => {
     setSearchTerm("");
+    navigate(AppRoutes[RouteName.Site].path);
   };
 
   const handleOnSubmit = useCallback(
@@ -28,8 +36,12 @@ const SearchInput: FC = () => {
     // Navigating away from search page should clear search input
     const originalString = /^\/search\/([^/]+)$/;
     const isMatch = originalString.test(location.pathname);
-    if (!isMatch) handleOnClear();
-  }, [location]);
+    if (!isMatch) {
+      setSearchTerm("");
+    } else {
+      setSearchTerm(searchTermState);
+    }
+  }, [location, searchTermState]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

@@ -128,7 +128,10 @@ const AlbumCard = (props: AlbumCardProps) => {
               >
                 <Typography
                   variant="paragraph"
-                  sx={{ color: (theme) => theme.palette.grey[400] }}
+                  sx={{
+                    color: (theme) => theme.palette.grey[400],
+                    whiteSpace: "break-spaces",
+                  }}
                 >
                   {`${new Date(album.release_date).getFullYear()} • `}
                   {album.artists.map((artist, artistIndex: number) => (
@@ -139,10 +142,6 @@ const AlbumCard = (props: AlbumCardProps) => {
                         event.stopPropagation();
                       }}
                       state={artist}
-                      sx={{
-                        display: "inline-block",
-                        whiteSpace: "break-spaces",
-                      }}
                     >
                       <Typography
                         component="span"
