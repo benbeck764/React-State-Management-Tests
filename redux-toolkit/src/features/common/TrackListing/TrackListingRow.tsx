@@ -1,6 +1,8 @@
 import { FC, useRef } from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import { StyledEllipsingTextContainer } from "@benbeck764/react-components/common";
 import {
   SimplifiedSpotifyTrack,
   SpotifyAlbum,
@@ -23,6 +25,7 @@ const TrackListingRow: FC<TrackListingRowProps> = (
   props: TrackListingRowProps
 ) => {
   const { album, track } = props;
+  const theme = useTheme();
   const rowRef = useRef<HTMLDivElement>(null);
   const hovered = useHovered(rowRef);
 
@@ -58,7 +61,7 @@ const TrackListingRow: FC<TrackListingRowProps> = (
               variant="button"
               dataUri={album.uri}
               offsetUri={track.uri}
-            ></PlayButton>
+            />
           ) : (
             <>
               {trackPlaying ? (
@@ -71,6 +74,7 @@ const TrackListingRow: FC<TrackListingRowProps> = (
                       isCurrentTrack
                         ? theme.palette.primary.main
                         : theme.palette.text.primary,
+                    width: "14px",
                   }}
                 >
                   {track.track_number}
@@ -91,18 +95,38 @@ const TrackListingRow: FC<TrackListingRowProps> = (
           >
             {track.name}
           </Typography>
-          <Stack direction="row" gap={0.5}>
+          <StyledEllipsingTextContainer
+            lines={1}
+            reserveHeight={
+              +(
+                theme.typography.paragraph.lineHeight
+                  ?.toString()
+                  .replace("px", "") || 0
+              )
+            }
+            sx={{
+              height: "unset",
+              color: (theme) =>
+                hovered ? theme.palette.text.primary : theme.palette.grey[400],
+            }}
+          >
             {track.artists.map((artist: SpotifyArtist, artistIndex: number) => (
               <AppLink
                 key={artist.id}
                 to={getArtistUrl(artist.id)}
                 state={artist}
-                sx={{ display: "inline-block" }}
+                sx={{
+                  display: "inline-block",
+                  ml: artistIndex === 0 ? 0 : 0.5,
+                }}
               >
                 <Typography
                   variant="paragraph"
                   sx={{
-                    color: (theme) => theme.palette.grey[400],
+                    color: (theme) =>
+                      hovered
+                        ? theme.palette.text.primary
+                        : theme.palette.grey[400],
                   }}
                 >
                   {artist.name}
@@ -110,7 +134,7 @@ const TrackListingRow: FC<TrackListingRowProps> = (
                 </Typography>
               </AppLink>
             ))}
-          </Stack>
+          </StyledEllipsingTextContainer>
         </Stack>
       </Stack>
       <Typography

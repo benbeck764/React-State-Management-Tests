@@ -4,7 +4,10 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { TypographySkeleton } from "@benbeck764/react-components/common";
+import {
+  StyledEllipsingTextContainer,
+  TypographySkeleton,
+} from "@benbeck764/react-components/common";
 import PlayButton from "../../../player/PlayButton";
 import { useHovered } from "../../../../utilities/hooks/useHovered";
 import { AppRootState, useAppSelector } from "../../../../state/store";
@@ -121,19 +124,41 @@ const TrackCardSearch = (props: TrackCardProps) => {
               >
                 {track.name}
               </Typography>
-              <Stack direction="row" gap={0.5}>
+              <StyledEllipsingTextContainer
+                lines={1}
+                reserveHeight={
+                  +(
+                    theme.typography.paragraphSmall.lineHeight
+                      ?.toString()
+                      .replace("px", "") || 0
+                  )
+                }
+                sx={{
+                  height: "unset",
+                  color: (theme) =>
+                    hovered
+                      ? theme.palette.text.primary
+                      : theme.palette.grey[400],
+                }}
+              >
                 {track.artists.map(
                   (artist: SpotifyArtist, artistIndex: number) => (
                     <AppLink
                       key={artist.id}
                       to={getArtistUrl(artist.id)}
                       state={artist}
-                      sx={{ display: "inline-block" }}
+                      sx={{
+                        display: "inline-block",
+                        ml: artistIndex === 0 ? 0 : 0.5,
+                      }}
                     >
                       <Typography
                         variant="paragraphSmall"
                         sx={{
-                          color: (theme) => theme.palette.grey[400],
+                          color: (theme) =>
+                            hovered
+                              ? theme.palette.text.primary
+                              : theme.palette.grey[400],
                         }}
                       >
                         {artist.name}
@@ -142,7 +167,7 @@ const TrackCardSearch = (props: TrackCardProps) => {
                     </AppLink>
                   )
                 )}
-              </Stack>
+              </StyledEllipsingTextContainer>
             </Stack>
           </Stack>
           <Stack>
