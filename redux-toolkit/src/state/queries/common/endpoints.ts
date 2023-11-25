@@ -39,4 +39,12 @@ export const endpoints = {
     },
     search: "search",
   },
+  genius: {
+    base: "https://api.genius.com/",
+    auth: "https://api.genius.com/oauth/authorize",
+    search: "search",
+    songs: {
+      byId: (songId: number) => `songs/${songId}`,
+    },
+  },
 };
