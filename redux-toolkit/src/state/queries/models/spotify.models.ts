@@ -39,6 +39,11 @@ export type GetAlbumTracksRequest = {
   offset?: number;
 };
 
+export type GetTrackRequest = {
+  id: string;
+  market?: string;
+};
+
 export type SearchItemRequest = {
   q: string;
   type: (
