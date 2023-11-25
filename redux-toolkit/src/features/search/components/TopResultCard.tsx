@@ -189,7 +189,7 @@ const TopResultCard: FC<TopResultCardProps> = (props: TopResultCardProps) => {
                     }
                   />
                 )}
-                {topResult.type === "track" && (
+                {(topResult.type === "track" || topResult.type === "album") && (
                   <Stack
                     direction="row"
                     flexWrap="wrap"
@@ -226,7 +226,7 @@ const TopResultCard: FC<TopResultCardProps> = (props: TopResultCardProps) => {
                       sx={{ maxWidth: 60, height: 20 }}
                       label={
                         <Typography variant="paragraphSmallBold">
-                          Song
+                          {topResult.type === "track" ? "Song" : "Album"}
                         </Typography>
                       }
                     />
