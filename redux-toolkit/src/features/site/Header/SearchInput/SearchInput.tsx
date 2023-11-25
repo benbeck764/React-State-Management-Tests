@@ -27,7 +27,7 @@ const SearchInput: FC = () => {
 
   const handleOnSubmit = useCallback(
     (term: string) => {
-      if (searchTerm) navigate(getSearchUrl(term));
+      if (searchTerm) navigate(getSearchUrl(encodeURI(term)));
     },
     [navigate, searchTerm]
   );
