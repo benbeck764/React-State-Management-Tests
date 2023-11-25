@@ -1,3 +1,5 @@
+export const GENIUS_CLIENT_ACCESS_TOKEN = "genius.token";
+
 //#region Request Types
 export type GeniusSongRequest = {
   id: number;

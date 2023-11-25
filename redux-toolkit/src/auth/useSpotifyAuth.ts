@@ -23,20 +23,20 @@ export const useSpotifyAuth = (): SpotifyAuthContext => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.search]);
 
-  const generateRandomString = (length: number) => {
+  const generateRandomString = (length: number): string => {
     const possible =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const values = crypto.getRandomValues(new Uint8Array(length));
     return values.reduce((acc, x) => acc + possible[x % possible.length], "");
   };
 
-  const sha256 = async (plain: string) => {
+  const sha256 = async (plain: string): Promise<ArrayBuffer> => {
     const encoder = new TextEncoder();
     const data = encoder.encode(plain);
     return window.crypto.subtle.digest("SHA-256", data);
   };
 
-  const base64encode = (input: ArrayBuffer) => {
+  const base64encode = (input: ArrayBuffer): string => {
     return btoa(String.fromCharCode(...new Uint8Array(input)))
       .replace(/=/g, "")
       .replace(/\+/g, "-")
@@ -81,9 +81,9 @@ export const useSpotifyAuth = (): SpotifyAuthContext => {
     window.location.href = authUrl.toString();
   };
 
-  const getAccessToken = async (code: string) => {
+  const getAccessToken = async (code: string): Promise<void> => {
     const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-    if (!clientId) throw new Error("Missing Spotify Client ID");
+    if (!clientId) throw new Error("Error: Missing Spotify Client ID!");
 
     const codeVerifier = localStorage.getItem(SPOTIFY_VERIFIER_CODE);
     if (!codeVerifier) return;

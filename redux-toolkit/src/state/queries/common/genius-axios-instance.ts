@@ -1,15 +1,10 @@
 import axios, {
   AxiosError,
-  AxiosHeaders,
   AxiosInstance,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import {
-  SPOTIFY_ACCESS_TOKEN,
-  SpotifyAccessToken,
-} from "../models/spotify.models";
-import { endpoints } from "./endpoints";
+import { GENIUS_CLIENT_ACCESS_TOKEN } from "../models/genius.models";
 
 let axiosInstance: AxiosInstance;
 
@@ -23,18 +18,15 @@ export const getGeniusAxiosInstance = (): AxiosInstance => {
 
   axiosInstance.interceptors.request.use(
     async (request: InternalAxiosRequestConfig) => {
-      const tokenString = localStorage.getItem(SPOTIFY_ACCESS_TOKEN);
-      if (!tokenString) return request;
+      const accessToken = localStorage.getItem(GENIUS_CLIENT_ACCESS_TOKEN);
+      if (!accessToken) return request;
 
-      const { access_token: accessToken } = JSON.parse(
-        tokenString
-      ) as SpotifyAccessToken;
-
-      if (accessToken) {
-        request.headers.Accept = "application/json";
-        request.headers["Content-Type"] = "application/json";
-        request.headers["Authorization"] = `Bearer ${accessToken}`;
-      }
+      request.headers.Accept = "application/json";
+      request.headers["Content-Type"] = "application/json";
+      request.params = {
+        ...request.params,
+        access_token: accessToken,
+      };
 
       return request;
     }
@@ -44,35 +36,11 @@ export const getGeniusAxiosInstance = (): AxiosInstance => {
     (response: AxiosResponse<unknown>) => response,
     async (error: AxiosError) => {
       if (error.response?.status === 401) {
-        const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-        const tokenString = localStorage.getItem(SPOTIFY_ACCESS_TOKEN);
-        if (!tokenString) return error.response;
+        const token = process.env.REACT_APP_GENIUS_CLIENT_ACCESS_TOKEN;
+        if (!token)
+          throw new Error("Error: Missing Genius Client Access Token!");
 
-        const { refresh_token: refreshToken } = JSON.parse(
-          tokenString
-        ) as SpotifyAccessToken;
-
-        const headers = new AxiosHeaders().set(
-          "Content-Type",
-          "application/x-www-form-urlencoded"
-        );
-
-        if (refreshToken && clientId) {
-          const response = await axios.post<SpotifyAccessToken>(
-            endpoints.spotify.token,
-            new URLSearchParams({
-              grant_type: "refresh_token",
-              refresh_token: refreshToken,
-              client_id: clientId,
-            }),
-            { headers }
-          );
-
-          localStorage.setItem(
-            SPOTIFY_ACCESS_TOKEN,
-            JSON.stringify(response.data)
-          );
-        }
+        localStorage.setItem(GENIUS_CLIENT_ACCESS_TOKEN, token);
       }
 
       return Promise.reject(error);
