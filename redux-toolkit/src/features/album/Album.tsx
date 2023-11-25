@@ -15,6 +15,8 @@ import { AppLink } from "../common/AppLink";
 import { getArtistUrl } from "../../routing/common/url";
 import PlayButton from "../player/PlayButton";
 import FavoriteButton from "../common/FavoriteButton";
+import Skeleton from "@mui/material/Skeleton";
+import { TypographySkeleton } from "@benbeck764/react-components/common";
 
 const Album: FC = () => {
   const location = useLocation();
@@ -35,6 +37,26 @@ const Album: FC = () => {
   if (loading || !album) {
     return (
       <Stack gap={1}>
+        <Stack direction="row" gap={2} py={2}>
+          <Stack>
+            <Skeleton variant="rectangular" height={250} width={250}></Skeleton>
+          </Stack>
+          <Stack justifyContent="flex-end">
+            <Stack gap={0.75}>
+              <TypographySkeleton variant="paragraphBold" charCount={6} />
+              <TypographySkeleton
+                variant="h3"
+                charCount={15}
+                charCountVariance={5}
+              />
+              <Stack direction="row" gap={1}>
+                <TypographySkeleton variant="paragraphBold" charCount={6} />
+                <TypographySkeleton variant="paragraph" charCount={4} />
+                <TypographySkeleton variant="paragraph" charCount={6} />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Stack>
         <TrackListing loading={true} />
       </Stack>
     );
@@ -48,7 +70,7 @@ const Album: FC = () => {
               height={250}
               width={250}
               src={album.images[0].url}
-            ></Box>
+            />
           </Stack>
           <Stack justifyContent="flex-end">
             <Stack gap={0.75}>
