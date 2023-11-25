@@ -27,7 +27,6 @@ const Search: FC = () => {
     { skip: !searchQuery }
   );
 
-  const topArtist = searchResult?.artists?.items?.[0];
   const topTracks = searchResult
     ? [...searchResult.tracks.items].splice(0, 4)
     : [];
@@ -55,12 +54,12 @@ const Search: FC = () => {
     return (
       <Stack gap={6}>
         <Grid container columnSpacing={2}>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Stack gap={2} height="100%">
               <TopResultCard loading={true} />
             </Stack>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Stack gap={2}>
               <Typography variant="h5">Songs</Typography>
               <TracksGrid
@@ -92,12 +91,16 @@ const Search: FC = () => {
     return (
       <Stack gap={6}>
         <Grid container columnSpacing={2}>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Stack gap={2} height="100%">
-              <TopResultCard artist={topArtist} loading={fetching} />
+              <TopResultCard
+                searchResult={searchResult}
+                searchTerm={searchQuery}
+                loading={fetching}
+              />
             </Stack>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Stack gap={2}>
               <Typography variant="h5">Songs</Typography>
               {topTracks && (
