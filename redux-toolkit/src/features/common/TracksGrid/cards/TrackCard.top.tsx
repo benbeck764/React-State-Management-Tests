@@ -11,6 +11,8 @@ import { useHovered } from "../../../../utilities/hooks/useHovered";
 import { AppRootState, useAppSelector } from "../../../../state/store";
 import { formatMilliseconds } from "../../../../utilities/number";
 import { TrackCardProps } from "./TrackCard";
+import { getTrackUrl } from "../../../../routing/common/url";
+import { AppLink } from "../../AppLink";
 
 const TrackCardTopTracks = (props: TrackCardProps) => {
   const theme = useTheme();
@@ -80,7 +82,7 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
                       variant="button"
                       dataUri={track.artists?.[0].uri}
                       offsetUri={track.uri}
-                    ></PlayButton>
+                    />
                   )}
                   {playType === "album" && (
                     <PlayButton
@@ -88,14 +90,14 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
                       variant="button"
                       dataUri={track.album.uri}
                       offsetUri={track.uri}
-                    ></PlayButton>
+                    />
                   )}
                   {playType === "track" && (
                     <PlayButton
                       type="track"
                       variant="button"
                       dataUri={track.uri}
-                    ></PlayButton>
+                    />
                   )}
                 </>
               ) : (
@@ -114,18 +116,20 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
               height={40}
               width={40}
               sx={{ borderRadius: "4px" }}
-            ></Box>
-            <Typography
-              variant="paragraphBold"
-              sx={{
-                color: (theme) =>
-                  isCurrentTrack
-                    ? theme.palette.primary.main
-                    : theme.palette.text.primary,
-              }}
-            >
-              {track.name}
-            </Typography>
+            />
+            <AppLink to={getTrackUrl(track.id)} state={track}>
+              <Typography
+                variant="paragraphBold"
+                sx={{
+                  color: (theme) =>
+                    isCurrentTrack
+                      ? theme.palette.primary.main
+                      : theme.palette.text.primary,
+                }}
+              >
+                {track.name}
+              </Typography>
+            </AppLink>
           </Stack>
           <Stack>
             <Typography

@@ -13,7 +13,7 @@ import { useHovered } from "../../../../utilities/hooks/useHovered";
 import { AppRootState, useAppSelector } from "../../../../state/store";
 import { formatMilliseconds } from "../../../../utilities/number";
 import { TrackCardProps } from "./TrackCard";
-import { getArtistUrl } from "../../../../routing/common/url";
+import { getArtistUrl, getTrackUrl } from "../../../../routing/common/url";
 import { SpotifyArtist } from "../../../../state/queries/models/spotify.models";
 import { AppLink } from "../../AppLink";
 
@@ -113,17 +113,19 @@ const TrackCardSearch = (props: TrackCardProps) => {
             </Box>
 
             <Stack>
-              <Typography
-                variant="paragraphBold"
-                sx={{
-                  color: (theme) =>
-                    isCurrentTrack
-                      ? theme.palette.primary.main
-                      : theme.palette.text.primary,
-                }}
-              >
-                {track.name}
-              </Typography>
+              <AppLink to={getTrackUrl(track.id)} state={track}>
+                <Typography
+                  variant="paragraphBold"
+                  sx={{
+                    color: (theme) =>
+                      isCurrentTrack
+                        ? theme.palette.primary.main
+                        : theme.palette.text.primary,
+                  }}
+                >
+                  {track.name}
+                </Typography>
+              </AppLink>
               <StyledEllipsingTextContainer
                 lines={1}
                 reserveHeight={

@@ -9,7 +9,7 @@ import {
   SpotifyArtist,
 } from "../../../state/queries/models/spotify.models";
 import { AppLink } from "../AppLink";
-import { getArtistUrl } from "../../../routing/common/url";
+import { getArtistUrl, getTrackUrl } from "../../../routing/common/url";
 import { formatMilliseconds } from "../../../utilities/number";
 import { useAppSelector, AppRootState } from "../../../state/store";
 import Equalizer from "../Equalizer";
@@ -84,17 +84,19 @@ const TrackListingRow: FC<TrackListingRowProps> = (
           )}
         </Stack>
         <Stack>
-          <Typography
-            variant="paragraphBold"
-            sx={{
-              color: (theme) =>
-                isCurrentTrack
-                  ? theme.palette.primary.main
-                  : theme.palette.text.primary,
-            }}
-          >
-            {track.name}
-          </Typography>
+          <AppLink to={getTrackUrl(track.id)} state={track}>
+            <Typography
+              variant="paragraphBold"
+              sx={{
+                color: (theme) =>
+                  isCurrentTrack
+                    ? theme.palette.primary.main
+                    : theme.palette.text.primary,
+              }}
+            >
+              {track.name}
+            </Typography>
+          </AppLink>
           <StyledEllipsingTextContainer
             lines={1}
             reserveHeight={
