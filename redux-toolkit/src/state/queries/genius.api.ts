@@ -7,7 +7,7 @@ import {
 } from "./models/genius.models";
 
 const retryAxiosBaseQuery = retry(
-  axiosBaseQuery({ baseUrl: endpoints.spotify.base }),
+  axiosBaseQuery({ instanceType: "genius", baseUrl: endpoints.genius.base }),
   {
     maxRetries: 1,
   }

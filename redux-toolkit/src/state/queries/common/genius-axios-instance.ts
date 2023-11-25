@@ -13,7 +13,7 @@ import { endpoints } from "./endpoints";
 
 let axiosInstance: AxiosInstance;
 
-export const getAxiosInstance = (): AxiosInstance => {
+export const getGeniusAxiosInstance = (): AxiosInstance => {
   if (axiosInstance) return axiosInstance;
   axiosInstance = axios.create({
     headers: {

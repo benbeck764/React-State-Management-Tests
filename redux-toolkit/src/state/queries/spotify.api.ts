@@ -11,7 +11,7 @@ import { Optional } from "../../utilities/types";
 
 // Built-in Retry Logic
 const retryAxiosBaseQuery = retry(
-  axiosBaseQuery({ baseUrl: endpoints.spotify.base }),
+  axiosBaseQuery({ instanceType: "spotify", baseUrl: endpoints.spotify.base }),
   {
     maxRetries: 1,
   }

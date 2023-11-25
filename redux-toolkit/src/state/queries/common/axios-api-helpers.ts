@@ -1,11 +1,17 @@
 import type { BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import type { AxiosRequestConfig, AxiosError } from "axios";
-import { getAxiosInstance } from "./axios-instance";
+import { getSpotifyAxiosInstance } from "./spotify-axios-instance";
+import { getGeniusAxiosInstance } from "./genius-axios-instance";
 
+type AxiosInstanceType = "spotify" | "genius";
 export const axiosBaseQuery =
-  (
-    { baseUrl }: { baseUrl: string } = { baseUrl: "" }
-  ): BaseQueryFn<
+  ({
+    instanceType,
+    baseUrl,
+  }: {
+    instanceType: AxiosInstanceType;
+    baseUrl: string;
+  }): BaseQueryFn<
     {
       url: string;
       method: AxiosRequestConfig["method"];
@@ -18,7 +24,10 @@ export const axiosBaseQuery =
   > =>
   async ({ url, method, data, params, headers }) => {
     try {
-      const axiosInstance = getAxiosInstance();
+      const axiosInstance =
+        instanceType === "spotify"
+          ? getSpotifyAxiosInstance()
+          : getGeniusAxiosInstance();
       const result = await axiosInstance({
         url: baseUrl + url,
         method,
