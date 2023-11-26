@@ -8,6 +8,7 @@ import {
   GetArtistAlbumsResponse,
   GetArtistTopTracksRequest,
   GetArtistTopTracksResponse,
+  GetArtistsResponse,
   GetDiscographyResponse,
   SimplifiedSpotifyAlbum,
   SpotifyArtist,
@@ -20,6 +21,13 @@ const artistApi = spotifyApi.injectEndpoints({
       query: (id: string) => ({
         url: endpoints.spotify.artists.byId(id),
         method: "GET",
+      }),
+    }),
+    getArtists: builder.query<GetArtistsResponse, { artistIds: string[] }>({
+      query: (req: { artistIds: string[] }) => ({
+        url: endpoints.spotify.artists.all,
+        method: "GET",
+        params: { ids: req.artistIds.join(",") },
       }),
     }),
     getArtistAlbums: builder.query<
@@ -161,6 +169,7 @@ const artistApi = spotifyApi.injectEndpoints({
 
 export const {
   useGetArtistQuery,
+  useGetArtistsQuery,
   useGetArtistAlbumsQuery,
   useGetArtistDiscographyQuery,
   useGetArtistTopTracksQuery,

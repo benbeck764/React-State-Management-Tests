@@ -8,7 +8,7 @@ import AppGrid, {
 import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
 import { createCardViewDefinitions } from "./ArtistsGrid.card";
 
-export type ArtistCardVariant = "small" | "large";
+export type ArtistCardVariant = "small" | "large" | "track";
 type ArtistsGridProps = {
   data: SpotifyArtist[] | undefined;
   loading: boolean;

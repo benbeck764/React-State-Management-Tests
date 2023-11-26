@@ -25,6 +25,7 @@ export const endpoints = {
       recentlyPlayed: "me/player/recently-played",
     },
     artists: {
+      all: "artists",
       byId: (artistId: string) => `artists/${artistId}`,
       albums: (artistId: string) => `artists/${artistId}/albums`,
       topTracks: (artistId: string) => `artists/${artistId}/top-tracks`,

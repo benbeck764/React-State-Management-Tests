@@ -78,6 +78,10 @@ type GetItemsBaseResponse<T> = {
 export type GetUserTopArtistsResponse = GetItemsBaseResponse<SpotifyArtist>;
 export type GetUserTopTracksResponse = GetItemsBaseResponse<SpotifyTrack>;
 
+export type GetArtistsResponse = {
+  artists: SpotifyArtist[];
+};
+
 export type GetArtistAlbumsResponse =
   GetItemsBaseResponse<SimplifiedSpotifyAlbum>;
 export type GetArtistTopTracksResponse = {

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import {
   SpotifyArtist,
@@ -10,12 +10,15 @@ import {
   useGeniusSearchQuery,
   useGetGeniusLyricsQuery,
 } from "../../state/queries/genius.api";
-import { useGetArtistQuery } from "../../state/queries/artist.api";
+import { useGetArtistsQuery } from "../../state/queries/artist.api";
 import TrackHeader from "./components/TrackHeader";
 import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
+import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
+import { getArtistUrl } from "../../routing/common/url";
 
 const Track: FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
 
@@ -31,11 +34,12 @@ const Track: FC = () => {
 
   const track = skipQuery ? state : queriedTrack;
 
-  const { data: artist, isFetching: loadingArtist } = useGetArtistQuery(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    track?.artists?.[0]?.id!,
-    { skip: !track }
-  );
+  const { data: artistsResponse, isFetching: loadingArtists } =
+    useGetArtistsQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      { artistIds: track?.artists?.map((a: SpotifyArtist) => a.id)! },
+      { skip: !track?.artists?.length }
+    );
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
@@ -55,10 +59,7 @@ const Track: FC = () => {
     useGeniusSearchQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       getTitle(track?.name!, track?.artists!),
-      //`${track?.name} ${track?.artists?.[0]?.name}`
-      {
-        skip: !track,
-      }
+      { skip: !track }
     );
 
   const geniusSearchSong = geniusSearchResult?.response?.hits?.[0]?.result;
@@ -72,17 +73,28 @@ const Track: FC = () => {
       }
     );
 
+  const handleArtistSelected = (artist: SpotifyArtist) => {
+    navigate(getArtistUrl(artist.id), { state: artist });
+  };
+
   return (
     <Stack>
       <TrackHeader
-        loading={loadingTrack || loadingArtist}
+        loading={loadingTrack || loadingArtists}
         track={track}
-        artist={artist}
+        artist={artistsResponse?.artists?.[0]}
       />
       <TrackButtons loading={loadingTrack} track={track} />
       <TrackLyrics
         loading={loadingGeniusSearch || loadingGeniusLyrics}
         lyrics={geniusLyrics}
+      />
+      <ArtistsGrid
+        data={artistsResponse?.artists}
+        loading={loadingTrack || loadingArtists}
+        pageSize={loadingTrack || loadingArtists ? 3 : undefined}
+        onArtistSelected={handleArtistSelected}
+        cardVariant="track"
       />
     </Stack>
   );
