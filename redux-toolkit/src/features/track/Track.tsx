@@ -1,8 +1,10 @@
 import { FC } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { SpotifyTrack } from "../../state/queries/models/spotify.models";
+import {
+  SpotifyArtist,
+  SpotifyTrack,
+} from "../../state/queries/models/spotify.models";
 import { useGetTrackQuery } from "../../state/queries/track.api";
 import {
   useGeniusSearchQuery,
@@ -34,10 +36,29 @@ const Track: FC = () => {
     { skip: !track }
   );
 
+  const getTitle = (title: string, artists: SpotifyArtist[]) => {
+    const artist = artists?.[0]?.name;
+    const searchQuery = `${title} ${artist}`;
+
+    return searchQuery
+      .toLowerCase()
+      .replace(/ *\([^)]*\) */g, "")
+      .replace(/ *\[[^\]]*]/, "")
+      .replace(/feat.|ft./g, "")
+      .replace(/\s+/g, " ")
+      .replace(/\s*-\s*\d{4}\s*(Remaster|Remastered)\s*/i, "")
+      .trim();
+  };
+
   const { data: geniusSearchResult, isFetching: loadingGeniusSearch } =
-    useGeniusSearchQuery(`${track?.name} ${track?.artists?.[0]?.name}`, {
-      skip: !track,
-    });
+    useGeniusSearchQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      getTitle(track?.name!, track?.artists!),
+      //`${track?.name} ${track?.artists?.[0]?.name}`
+      {
+        skip: !track,
+      }
+    );
 
   const geniusSearchSong = geniusSearchResult?.response?.hits?.[0]?.result;
 
