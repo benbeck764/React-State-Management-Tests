@@ -44,46 +44,56 @@ export const geniusApi = createApi({
     getGeniusLyrics: builder.query<string[], string>({
       queryFn: async (geniusUrl: string) => {
         try {
+          // Proxy request to /lyrics to avoid CORS issue with Genius
           const res = await axios.get(
             geniusUrl.replace("https://genius.com", "/lyrics")
           );
           if (res.status >= 200 && res.status <= 299) {
             const lyrics: string[] = [];
+
             let insideLyricsContainer = false;
-            let firstBreak = true;
+            let firstSection = true;
 
-            const parser = new htmlparser2.Parser({
-              ontext: (text) => {
-                if (insideLyricsContainer) {
-                  if (firstBreak) {
-                    firstBreak = false;
-                  } else {
-                    // Add some space
-                    if (text.endsWith("]")) {
-                      lyrics.push(...["", "", "", "", ""]);
+            const parser = new htmlparser2.Parser(
+              {
+                ontext: (text) => {
+                  if (insideLyricsContainer) {
+                    if (firstSection) {
+                      firstSection = false;
+                    } else {
+                      // Add some space after each song "section", except the first
+                      if (text.endsWith("]"))
+                        lyrics.push(...["", "", "", "", ""]);
                     }
-                  }
 
-                  lyrics.push(text);
-                }
+                    lyrics.push(text);
+                  }
+                },
+                onopentag: (name, attribs) => {
+                  if (
+                    name === "div" &&
+                    attribs["data-lyrics-container"] === "true"
+                  )
+                    insideLyricsContainer = true;
+                },
+                onclosetag: (tagname) => {
+                  if (tagname === "div" && insideLyricsContainer)
+                    insideLyricsContainer = false;
+                },
               },
-              onopentag: (name, attribs) => {
-                if (
-                  name === "div" &&
-                  attribs["data-lyrics-container"] === "true"
-                )
-                  insideLyricsContainer = true;
-              },
-              onclosetag: (tagname) => {
-                if (tagname === "div" && insideLyricsContainer)
-                  insideLyricsContainer = false;
-              },
-            });
+              {
+                decodeEntities: true,
+              }
+            );
 
             // Decode HTML & Unicode entities
             let text = res.data as string;
-            text = text.replace("<i>", "");
-            text = text.replace("</i>", "");
+            // Remove <i> tags to avoid breaking lines on these tags.
+            // The text should remain as a whole line.
+            text = text.replace(/<i>/g, "");
+            text = text.replace(/<\/i>/g, "");
+
+            // Catch any unicode values that `decodeEntities` above does not catch.
             text = text.replace(
               /&amp;|&quot;|&apos;|&#(?:x([\da-fA-F]+)|(\d+));/g,
               (match, hex, dec) => {
@@ -108,8 +118,6 @@ export const geniusApi = createApi({
 
             parser.write(text);
             parser.end();
-
-            console.log(lyrics);
 
             return { data: lyrics };
           } else {
