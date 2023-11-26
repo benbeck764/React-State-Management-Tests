@@ -12,6 +12,7 @@ import {
 } from "../../state/queries/genius.api";
 import { useGetArtistQuery } from "../../state/queries/artist.api";
 import TrackHeader from "./components/TrackHeader";
+import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
 
 const Track: FC = () => {
@@ -78,7 +79,7 @@ const Track: FC = () => {
         track={track}
         artist={artist}
       />
-
+      <TrackButtons loading={loadingTrack} track={track} />
       <TrackLyrics
         loading={loadingGeniusSearch || loadingGeniusLyrics}
         lyrics={geniusLyrics}
