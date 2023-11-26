@@ -58,6 +58,7 @@ export const geniusApi = createApi({
                   if (firstBreak) {
                     firstBreak = false;
                   } else {
+                    // Add some space
                     if (text.endsWith("]")) {
                       lyrics.push(...["", "", "", "", ""]);
                     }
