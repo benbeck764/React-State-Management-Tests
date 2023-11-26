@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import {
+  SpotifyAlbum,
   SpotifyArtist,
   SpotifyTrack,
 } from "../../state/queries/models/spotify.models";
@@ -15,16 +16,18 @@ import {
   useGetGeniusLyricsQuery,
 } from "../../state/queries/genius.api";
 import {
+  useGetArtistAlbumsQuery,
   useGetArtistTopTracksQuery,
   useGetArtistsQuery,
 } from "../../state/queries/artist.api";
-import { getArtistUrl } from "../../routing/common/url";
+import { getAlbumUrl, getArtistUrl } from "../../routing/common/url";
 import TrackHeader from "./components/TrackHeader";
 import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
 import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
 import TrackRecommendations from "./components/TrackRecommendations";
 import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
+import TrackPopularAlbums from "./components/TrackPopularAlbums";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -70,6 +73,13 @@ const Track: FC = () => {
       { skip: !track }
     );
 
+  const { data: popularAlbumsResponse, isFetching: loadingPopularAlbums } =
+    useGetArtistAlbumsQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      { id: artistsResponse?.artists?.[0]?.id!, limit: 6 },
+      { skip: !artistsResponse }
+    );
+
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
     const searchQuery = `${title} ${artist}`;
@@ -106,6 +116,10 @@ const Track: FC = () => {
     navigate(getArtistUrl(artist.id), { state: artist });
   };
 
+  const handleAlbumSelected = (album: SpotifyAlbum) => {
+    navigate(getAlbumUrl(album.id), { state: album });
+  };
+
   return (
     <Stack>
       <TrackHeader
@@ -135,9 +149,17 @@ const Track: FC = () => {
       </Box>
       <Box my={1.5}>
         <TrackTopArtistTracks
-          tracks={topTracksData?.tracks}
           loading={loadingTopTracks}
+          tracks={topTracksData?.tracks}
           artist={artistsResponse?.artists?.[0]}
+        />
+      </Box>
+      <Box my={1.5}>
+        <TrackPopularAlbums
+          loading={loadingPopularAlbums}
+          albums={popularAlbumsResponse?.items}
+          artist={artistsResponse?.artists?.[0]}
+          onAlbumSelected={handleAlbumSelected}
         />
       </Box>
     </Stack>

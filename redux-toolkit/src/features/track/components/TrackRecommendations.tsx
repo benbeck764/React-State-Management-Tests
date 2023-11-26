@@ -23,7 +23,7 @@ const TrackRecommendations: FC<TrackRecommendationsProps> = (
           <TypographySkeleton variant="paragraphSmall" charCount={20} />
         </Stack>
         <TracksGrid
-          data={tracks}
+          data={undefined}
           cardType="search"
           loading={true}
           pageSize={5}

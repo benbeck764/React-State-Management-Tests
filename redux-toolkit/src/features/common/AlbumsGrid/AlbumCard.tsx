@@ -43,7 +43,7 @@ const AlbumCard = (props: AlbumCardProps) => {
   if (props.loadingPlaceholder) {
     return (
       <StyledCard>
-        <Stack alignItems="center" gap={2}>
+        <Stack gap={2}>
           <Skeleton variant="circular" width={150} height={150} />
           <TypographySkeleton
             variant="h6"

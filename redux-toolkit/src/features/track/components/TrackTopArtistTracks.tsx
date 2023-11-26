@@ -23,7 +23,7 @@ const TrackTopArtistTracks: FC<TrackTopArtistTracksProps> = (
 
   if (loading || !tracks?.length || !artist) {
     return (
-      <Stack gap={2}>
+      <Stack gap={2} alignItems="flex-start">
         <Stack>
           <TypographySkeleton variant="paragraphSmall" charCount={17} />
           <TypographySkeleton
@@ -33,7 +33,7 @@ const TrackTopArtistTracks: FC<TrackTopArtistTracksProps> = (
           />
         </Stack>
         <TracksGrid
-          data={tracks}
+          data={undefined}
           cardType="search"
           loading={true}
           pageSize={5}
