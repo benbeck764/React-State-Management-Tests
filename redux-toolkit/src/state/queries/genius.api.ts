@@ -79,14 +79,33 @@ export const geniusApi = createApi({
               },
             });
 
-            const decodedHTML = (res.data as string).replace(
-              /&#x([0-9A-Fa-f]+);/g,
-              (_, hex: string) => String.fromCharCode(parseInt(hex, 16))
+            // Decode HTML & Unicode entities
+            let text = res.data as string;
+            text = text.replace("<i>", "");
+            text = text.replace("</i>", "");
+            text = text.replace(
+              /&amp;|&quot;|&apos;|&#(?:x([\da-fA-F]+)|(\d+));/g,
+              (match, hex, dec) => {
+                if (hex) {
+                  return String.fromCharCode(parseInt(hex, 16));
+                } else if (dec) {
+                  return String.fromCharCode(parseInt(dec, 10));
+                } else {
+                  switch (match) {
+                    case "&amp;":
+                      return "&";
+                    case "&quot;":
+                      return `"`;
+                    case "&apos;":
+                      return "'";
+                    default:
+                      return match;
+                  }
+                }
+              }
             );
 
-            console.log(decodedHTML);
-
-            parser.write(decodedHTML);
+            parser.write(text);
             parser.end();
 
             console.log(lyrics);
