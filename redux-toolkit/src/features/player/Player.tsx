@@ -10,7 +10,11 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { AppLink } from "../common/AppLink";
-import { getAlbumUrl, getArtistUrl } from "../../routing/common/url";
+import {
+  getAlbumUrl,
+  getArtistUrl,
+  getTrackUrl,
+} from "../../routing/common/url";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
@@ -142,17 +146,19 @@ const Player: FC = () => {
                 justifyContent="flex-start"
                 gap={2}
               >
-                <Avatar
-                  variant="rounded"
-                  src={item.album.images[0].url}
-                  sx={{ width: 57.5, height: 57.5 }}
-                />
+                <AppLink
+                  to={getAlbumUrl(item.album.uri.split(":")[2])}
+                  state={item.album}
+                >
+                  <Avatar
+                    variant="rounded"
+                    src={item.album.images[0].url}
+                    sx={{ width: 57.5, height: 57.5 }}
+                  />
+                </AppLink>
                 <Stack maxWidth={370} sx={{ overflow: "hidden" }}>
                   <ScrollingContainer>
-                    <AppLink
-                      to={getAlbumUrl(item.album.uri.split(":")[2])}
-                      state={item.album}
-                    >
+                    <AppLink to={getTrackUrl(item.id)} state={item}>
                       <Typography
                         variant="paragraph"
                         sx={{ textWrap: "nowrap" }}
