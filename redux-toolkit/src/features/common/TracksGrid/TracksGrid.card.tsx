@@ -1,3 +1,4 @@
+import { SxProps, Theme } from "@mui/material/styles";
 import {
   AppGridCardViewDefinitions,
   AppGridVirtualizedProps,
@@ -9,7 +10,8 @@ import { PlayButtonPlayType } from "../../player/PlayButton";
 export const createCardViewDefinitions = (
   cardType: TrackCardType,
   playType: PlayButtonPlayType,
-  virtualization?: AppGridVirtualizedProps
+  virtualization?: AppGridVirtualizedProps,
+  sx?: SxProps<Theme>
 ): AppGridCardViewDefinitions<SpotifyTrack> => ({
   xs: {
     virtualizedProps: virtualization,
@@ -25,7 +27,7 @@ export const createCardViewDefinitions = (
     },
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
-    cardSx: { borderRadius: "16px" },
+    cardSx: { borderRadius: "16px", ...sx },
   },
   lg: {
     virtualizedProps: virtualization,
@@ -41,7 +43,7 @@ export const createCardViewDefinitions = (
     },
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
-    cardSx: { borderRadius: "16px" },
+    cardSx: { borderRadius: "16px", ...sx },
   },
   xl: {
     virtualizedProps: virtualization,
@@ -58,6 +60,6 @@ export const createCardViewDefinitions = (
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
     rowSpacing: 0,
-    cardSx: { borderRadius: "0px" },
+    cardSx: { borderRadius: "0px", ...sx },
   },
 });

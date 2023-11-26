@@ -24,6 +24,20 @@ export const getMUITheme = (themeBaseOptions: ThemeOptions): ThemeOptions => {
           },
         },
       },
+      MuiButton: {
+        styleOverrides: {
+          text: {
+            "&.MuiButton-text": {
+              "&:focus": {
+                color: themeBase.palette?.text.primary,
+              },
+              "&:hover": {
+                color: themeBase.palette?.text.primary,
+              },
+            },
+          },
+        },
+      },
       MuiCard: {
         defaultProps: {
           elevation: 0,

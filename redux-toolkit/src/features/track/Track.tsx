@@ -14,13 +14,17 @@ import {
   useGeniusSearchQuery,
   useGetGeniusLyricsQuery,
 } from "../../state/queries/genius.api";
-import { useGetArtistsQuery } from "../../state/queries/artist.api";
+import {
+  useGetArtistTopTracksQuery,
+  useGetArtistsQuery,
+} from "../../state/queries/artist.api";
 import { getArtistUrl } from "../../routing/common/url";
 import TrackHeader from "./components/TrackHeader";
 import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
 import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
 import TrackRecommendations from "./components/TrackRecommendations";
+import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -46,6 +50,13 @@ const Track: FC = () => {
       { skip: !track?.artists?.length }
     );
 
+  const { data: topTracksData, isFetching: loadingTopTracks } =
+    useGetArtistTopTracksQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      { id: artistsResponse?.artists?.[0]?.id!, market: "US" },
+      { skip: !artistsResponse }
+    );
+
   const { data: recommendationsResponse, isFetching: loadingRecommendations } =
     useGetRecommendationsQuery(
       {
@@ -58,14 +69,6 @@ const Track: FC = () => {
       },
       { skip: !track }
     );
-
-  if (recommendationsResponse) {
-    console.log(
-      recommendationsResponse.tracks.map(
-        (t) => `${t.name} - ${t.artists?.[0].name} (${t.popularity})`
-      )
-    );
-  }
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
@@ -124,10 +127,17 @@ const Track: FC = () => {
         onArtistSelected={handleArtistSelected}
         cardVariant="track"
       />
-      <Box my={3}>
+      <Box my={1.5}>
         <TrackRecommendations
           tracks={recommendationsResponse?.tracks}
           loading={loadingRecommendations}
+        />
+      </Box>
+      <Box my={1.5}>
+        <TrackTopArtistTracks
+          tracks={topTracksData?.tracks}
+          loading={loadingTopTracks}
+          artist={artistsResponse?.artists?.[0]}
         />
       </Box>
     </Stack>

@@ -5,6 +5,7 @@ import AppGrid, {
   AppGridVirtualizedProps,
 } from "@benbeck764/react-components-grid/Grid";
 import Typography from "@mui/material/Typography";
+import { SxProps, Theme } from "@mui/material/styles";
 import { createCardViewDefinitions } from "./TracksGrid.card";
 import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import { PlayButtonPlayType } from "../../player/PlayButton";
@@ -17,10 +18,12 @@ type TracksGridProps = {
   playType: PlayButtonPlayType;
   virtualization?: AppGridVirtualizedProps;
   pageSize?: number;
+  sx?: SxProps<Theme>;
 };
 
 const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
-  const { data, cardType, playType, loading, virtualization, pageSize } = props;
+  const { data, cardType, playType, loading, virtualization, pageSize, sx } =
+    props;
 
   const gridData: AppGridData<SpotifyTrack> = {
     pages:
@@ -48,7 +51,7 @@ const TracksGrid: FC<TracksGridProps> = (props: TracksGridProps) => {
 
   const gridProps: AppGridProps<SpotifyTrack> = {
     data: gridData,
-    cardView: createCardViewDefinitions(cardType, playType, virtualization),
+    cardView: createCardViewDefinitions(cardType, playType, virtualization, sx),
     displayMode: "card",
     cursorStyle: "pointer",
     noItemsMessage: (
