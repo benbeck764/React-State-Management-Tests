@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "clean": "rimraf node_modules"
   },
+  "proxy": "http://localhost:5173",
   "dependencies": {
     "@benbeck764/react-components": "1.4.0-beta.20",
     "@benbeck764/react-components-grid": "1.4.0-beta.20",

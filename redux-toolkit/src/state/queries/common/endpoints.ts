@@ -39,9 +39,9 @@ export const endpoints = {
     },
     search: "search",
   },
+  // Genius API uses Vite proxy server to handle issues with CORS
   genius: {
-    base: "https://api.genius.com/",
-    auth: "https://api.genius.com/oauth/authorize",
+    base: "http://localhost:5173/api/",
     search: "search",
     songs: {
       byId: (songId: number) => `songs/${songId}`,

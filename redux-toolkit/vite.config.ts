@@ -13,5 +13,13 @@ export default defineConfig(({ mode }: { mode: string }) => {
       "process.env": env,
     },
     plugins: [react()],
+    server: {
+      proxy: {
+        "/api": {
+          target: "https://api.genius.com",
+          changeOrigin: true,
+        },
+      },
+    },
   };
 });
