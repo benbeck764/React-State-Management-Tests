@@ -14,7 +14,11 @@ import {
   SearchItemResponse,
   SpotifyArtist,
 } from "../../../state/queries/models/spotify.models";
-import { getAlbumUrl, getArtistUrl } from "../../../routing/common/url";
+import {
+  getAlbumUrl,
+  getArtistUrl,
+  getTrackUrl,
+} from "../../../routing/common/url";
 import { AppLink } from "../../common/AppLink";
 import { StyledCard } from "../../common/common.styles";
 import { useHovered } from "../../../utilities/hooks/useHovered";
@@ -67,7 +71,7 @@ const TopResultCard: FC<TopResultCardProps> = (props: TopResultCardProps) => {
         {
           type: "track",
           name: topTrack.name,
-          resultUrl: "", // [TODO]
+          resultUrl: getTrackUrl(topTrack.id),
           imageUri: topTrack.album.images?.[0].url,
           playUri: topTrack.uri,
           popularity: topTrack.popularity,

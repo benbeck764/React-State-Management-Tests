@@ -19,6 +19,11 @@ export default defineConfig(({ mode }: { mode: string }) => {
           target: "https://api.genius.com",
           changeOrigin: true,
         },
+        "/lyrics": {
+          target: "https://genius.com",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/lyrics/, ""),
+        },
       },
     },
   };

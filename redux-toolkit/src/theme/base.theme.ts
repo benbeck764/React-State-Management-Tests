@@ -91,7 +91,7 @@ const paragraphLarge = {
 };
 
 const paragraphSmallBold = {
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 700,
   lineHeight: lineHeights.paragraphSmallBold + "px",
   letterSpacing: 0,

@@ -83,7 +83,7 @@ const Album: FC = () => {
                 {album.artists.map(
                   (a: SimplifiedSpotifyArtist, index: number) => (
                     <Fragment key={index}>
-                      <AppLink to={getArtistUrl(a.id)}>
+                      <AppLink to={getArtistUrl(a.id)} state={a}>
                         <Typography variant="paragraphBold">{`${a.name}`}</Typography>
                       </AppLink>
                       <Typography variant="paragraphBold">{` • `}</Typography>
