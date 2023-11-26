@@ -15,14 +15,14 @@ const TrackButtons: FC<TrackButtonsProps> = (props: TrackButtonsProps) => {
 
   if (loading || !track) {
     return (
-      <Stack direction="row" alignItems="center" gap={2} my={2}>
+      <Stack direction="row" alignItems="center" gap={2}>
         <Skeleton variant="circular" height={48} width={48} />
         <Skeleton variant="circular" height={38} width={38} />
       </Stack>
     );
   } else {
     return (
-      <Stack direction="row" alignItems="center" gap={2} my={2}>
+      <Stack direction="row" alignItems="center" gap={2}>
         {/* [TODO]: Fix this Play button, should start a Playlist... */}
         <PlayButton
           variant="action-button"

@@ -13,7 +13,7 @@ const TrackLyrics: FC<TrackLyricsProps> = (props: TrackLyricsProps) => {
   if (loading || !lyrics) {
     return (
       <Stack gap={2}>
-        <TypographySkeleton variant="h5" charCount={6} />
+        <TypographySkeleton variant="h4" charCount={6} />
         <Stack gap={0.5}>
           {Array.from(Array(20).keys()).map((num: number) => (
             <TypographySkeleton
@@ -29,7 +29,7 @@ const TrackLyrics: FC<TrackLyricsProps> = (props: TrackLyricsProps) => {
   } else {
     return (
       <Stack gap={2}>
-        <Typography variant="h5">Lyrics</Typography>
+        <Typography variant="h4">Lyrics</Typography>
         <Stack gap={0.5}>
           {lyrics.map((lyricLine: string, index: number) => (
             <Typography

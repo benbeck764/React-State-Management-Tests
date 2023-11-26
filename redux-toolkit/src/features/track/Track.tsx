@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import {
   SpotifyArtist,
@@ -14,11 +15,12 @@ import {
   useGetGeniusLyricsQuery,
 } from "../../state/queries/genius.api";
 import { useGetArtistsQuery } from "../../state/queries/artist.api";
+import { getArtistUrl } from "../../routing/common/url";
 import TrackHeader from "./components/TrackHeader";
 import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
 import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
-import { getArtistUrl } from "../../routing/common/url";
+import TrackRecommendations from "./components/TrackRecommendations";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -48,11 +50,22 @@ const Track: FC = () => {
     useGetRecommendationsQuery(
       {
         limit: 5,
-        seed_artists: track?.artists?.[0].id,
+        //seed_artists: track?.artists.map((a: SpotifyArtist) => a.id).join(","),
+        //seed_artists: track?.artists?.[0].id,
+        //seed_genres: track?.artists?.[0].genres?.join(","),
         seed_tracks: track?.id,
+        //target_popularity: track?.popularity,
       },
       { skip: !track }
     );
+
+  if (recommendationsResponse) {
+    console.log(
+      recommendationsResponse.tracks.map(
+        (t) => `${t.name} - ${t.artists?.[0].name} (${t.popularity})`
+      )
+    );
+  }
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
@@ -97,7 +110,9 @@ const Track: FC = () => {
         track={track}
         artist={artistsResponse?.artists?.[0]}
       />
-      <TrackButtons loading={loadingTrack} track={track} />
+      <Box my={2}>
+        <TrackButtons loading={loadingTrack} track={track} />
+      </Box>
       <TrackLyrics
         loading={loadingGeniusSearch || loadingGeniusLyrics}
         lyrics={geniusLyrics}
@@ -109,6 +124,12 @@ const Track: FC = () => {
         onArtistSelected={handleArtistSelected}
         cardVariant="track"
       />
+      <Box my={3}>
+        <TrackRecommendations
+          tracks={recommendationsResponse?.tracks}
+          loading={loadingRecommendations}
+        />
+      </Box>
     </Stack>
   );
 };
