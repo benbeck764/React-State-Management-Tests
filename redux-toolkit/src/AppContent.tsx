@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useLayoutEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import AppPageLoader from "@benbeck764/react-components/PageLoader";
 import { AppRouting } from "./routing/AppRouting";
@@ -13,6 +14,7 @@ import { Header } from "./features/site/Header/Header";
 import Player from "./features/player/Player";
 
 const AppContent: FC = () => {
+  const { pathname } = useLocation();
   const { isAuthenticated, loginWithRedirect } = useSpotifyAuth();
   useGeniusAuth();
 
@@ -23,6 +25,14 @@ const AppContent: FC = () => {
       }
     })(loginWithRedirect);
   }, [isAuthenticated, loginWithRedirect]);
+
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [pathname]);
 
   if (!isAuthenticated) return <AppPageLoader />;
 
