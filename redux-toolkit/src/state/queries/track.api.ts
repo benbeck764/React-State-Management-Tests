@@ -1,5 +1,10 @@
 import { endpoints } from "./common/endpoints";
-import { GetTrackRequest, SpotifyTrack } from "./models/spotify.models";
+import {
+  GetRecommendationsRequest,
+  GetRecommendationsResponse,
+  GetTrackRequest,
+  SpotifyTrack,
+} from "./models/spotify.models";
 import { spotifyApi } from "./spotify.api";
 
 const trackApi = spotifyApi.injectEndpoints({
@@ -11,8 +16,18 @@ const trackApi = spotifyApi.injectEndpoints({
         params: req,
       }),
     }),
+    getRecommendations: builder.query<
+      GetRecommendationsResponse,
+      GetRecommendationsRequest
+    >({
+      query: (req: GetRecommendationsRequest) => ({
+        url: endpoints.spotify.tracks.recommendations,
+        method: "GET",
+        params: req,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useGetTrackQuery } = trackApi;
+export const { useGetTrackQuery, useGetRecommendationsQuery } = trackApi;

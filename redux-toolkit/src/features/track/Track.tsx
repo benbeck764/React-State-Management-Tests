@@ -5,7 +5,10 @@ import {
   SpotifyArtist,
   SpotifyTrack,
 } from "../../state/queries/models/spotify.models";
-import { useGetTrackQuery } from "../../state/queries/track.api";
+import {
+  useGetRecommendationsQuery,
+  useGetTrackQuery,
+} from "../../state/queries/track.api";
 import {
   useGeniusSearchQuery,
   useGetGeniusLyricsQuery,
@@ -39,6 +42,16 @@ const Track: FC = () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       { artistIds: track?.artists?.map((a: SpotifyArtist) => a.id)! },
       { skip: !track?.artists?.length }
+    );
+
+  const { data: recommendationsResponse, isFetching: loadingRecommendations } =
+    useGetRecommendationsQuery(
+      {
+        limit: 5,
+        seed_artists: track?.artists?.[0].id,
+        seed_tracks: track?.id,
+      },
+      { skip: !track }
     );
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {

@@ -36,6 +36,7 @@ export const endpoints = {
       tracks: (albumId: string) => `albums/${albumId}/tracks`,
     },
     tracks: {
+      recommendations: "recommendations",
       byId: (trackId: string) => `tracks/${trackId}`,
     },
     search: "search",
