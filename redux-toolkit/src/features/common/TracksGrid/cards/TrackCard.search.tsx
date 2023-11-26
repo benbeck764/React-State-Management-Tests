@@ -114,17 +114,28 @@ const TrackCardSearch = (props: TrackCardProps) => {
 
             <Stack>
               <AppLink to={getTrackUrl(track.id)} state={track}>
-                <Typography
-                  variant="paragraphBold"
-                  sx={{
-                    color: (theme) =>
-                      isCurrentTrack
-                        ? theme.palette.primary.main
-                        : theme.palette.text.primary,
-                  }}
+                <StyledEllipsingTextContainer
+                  lines={1}
+                  reserveHeight={
+                    +(
+                      theme.typography.paragraphBold.lineHeight
+                        ?.toString()
+                        .replace("px", "") || 0
+                    )
+                  }
                 >
-                  {track.name}
-                </Typography>
+                  <Typography
+                    variant="paragraphBold"
+                    sx={{
+                      color: (theme) =>
+                        isCurrentTrack
+                          ? theme.palette.primary.main
+                          : theme.palette.text.primary,
+                    }}
+                  >
+                    {track.name}
+                  </Typography>
+                </StyledEllipsingTextContainer>
               </AppLink>
               <StyledEllipsingTextContainer
                 lines={1}

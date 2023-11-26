@@ -4,7 +4,10 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { TypographySkeleton } from "@benbeck764/react-components/common";
+import {
+  StyledEllipsingTextContainer,
+  TypographySkeleton,
+} from "@benbeck764/react-components/common";
 import PlayButton from "../../../player/PlayButton";
 import Equalizer from "../../Equalizer";
 import { useHovered } from "../../../../utilities/hooks/useHovered";
@@ -118,17 +121,28 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
               sx={{ borderRadius: "4px" }}
             />
             <AppLink to={getTrackUrl(track.id)} state={track}>
-              <Typography
-                variant="paragraphBold"
-                sx={{
-                  color: (theme) =>
-                    isCurrentTrack
-                      ? theme.palette.primary.main
-                      : theme.palette.text.primary,
-                }}
+              <StyledEllipsingTextContainer
+                lines={1}
+                reserveHeight={
+                  +(
+                    theme.typography.paragraphBold.lineHeight
+                      ?.toString()
+                      .replace("px", "") || 0
+                  )
+                }
               >
-                {track.name}
-              </Typography>
+                <Typography
+                  variant="paragraphBold"
+                  sx={{
+                    color: (theme) =>
+                      isCurrentTrack
+                        ? theme.palette.primary.main
+                        : theme.palette.text.primary,
+                  }}
+                >
+                  {track.name}
+                </Typography>
+              </StyledEllipsingTextContainer>
             </AppLink>
           </Stack>
           <Stack>
