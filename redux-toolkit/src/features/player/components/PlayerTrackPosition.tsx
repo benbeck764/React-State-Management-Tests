@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { StyledSlider } from "../Player.styles";
-import { formatMilliseconds } from "../../../utilities/number";
+import { formatAsTrackDurationString } from "../../../utilities/time";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
@@ -46,7 +46,7 @@ const PlayerTrackPosition: FC<PlayerTrackPositionProps> = (
         variant="paragraphExtraSmall"
         sx={{ color: (theme) => theme.palette.grey[400] }}
       >
-        {formatMilliseconds(position)}
+        {formatAsTrackDurationString(position)}
       </Typography>
       <StyledSlider
         aria-label="Track Position"
@@ -64,7 +64,7 @@ const PlayerTrackPosition: FC<PlayerTrackPositionProps> = (
         variant="paragraphExtraSmall"
         sx={{ color: (theme) => theme.palette.grey[400] }}
       >
-        {formatMilliseconds(track.duration_ms)}
+        {formatAsTrackDurationString(track.duration_ms)}
       </Typography>
     </Stack>
   );

@@ -9,7 +9,7 @@ import {
   SpotifyArtist,
   SpotifyTrack,
 } from "../../../state/queries/models/spotify.models";
-import { formatMilliseconds } from "../../../utilities/number";
+import { formatAsTrackDurationString } from "../../../utilities/time";
 import { getAlbumUrl, getArtistUrl } from "../../../routing/common/url";
 import { AppLink } from "../../common/AppLink";
 
@@ -104,7 +104,7 @@ const TrackHeader: FC<TrackHeaderProps> = (props: TrackHeaderProps) => {
                   ).getFullYear()}`}</Typography>
                   <Typography variant="paragraphSmall">•</Typography>
                   <Typography variant="paragraphSmall">
-                    {formatMilliseconds(track.duration_ms)}
+                    {formatAsTrackDurationString(track.duration_ms)}
                   </Typography>
                 </Stack>
               </Stack>

@@ -8,6 +8,7 @@ import AppCard from "@benbeck764/react-components/Card";
 import Box from "@mui/material/Box";
 import {
   SimplifiedSpotifyArtist,
+  SimplifiedSpotifyTrack,
   SpotifyAlbum,
 } from "../../state/queries/models/spotify.models";
 import { AppLink } from "../common/AppLink";
@@ -17,6 +18,7 @@ import FavoriteButton from "../common/FavoriteButton";
 import Skeleton from "@mui/material/Skeleton";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import { getAlbumType } from "../../utilities/spotify.utils";
+import { formatAsLongDurationString } from "../../utilities/time";
 
 const Album: FC = () => {
   const location = useLocation();
@@ -53,6 +55,7 @@ const Album: FC = () => {
                 <TypographySkeleton variant="paragraphBold" charCount={6} />
                 <TypographySkeleton variant="paragraph" charCount={4} />
                 <TypographySkeleton variant="paragraph" charCount={6} />
+                <TypographySkeleton variant="paragraph" charCount={20} />
               </Stack>
             </Stack>
           </Stack>
@@ -61,6 +64,12 @@ const Album: FC = () => {
       </Stack>
     );
   } else {
+    const albumTotalDuration = album.tracks.items.reduce<number>(
+      (total: number, track: SimplifiedSpotifyTrack) =>
+        total + track.duration_ms,
+      0
+    );
+
     return (
       <Stack gap={1}>
         <Stack direction="row" gap={2} py={2}>
@@ -93,7 +102,9 @@ const Album: FC = () => {
                 <Typography>
                   {`${new Date(album.release_date).getFullYear()} • ${
                     album.total_tracks
-                  } song${album.total_tracks > 1 ? "s" : ""}`}
+                  } song${
+                    album.total_tracks > 1 ? "s" : ""
+                  }, ${formatAsLongDurationString(albumTotalDuration)}`}
                 </Typography>
               </Stack>
             </Stack>

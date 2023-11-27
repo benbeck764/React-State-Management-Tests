@@ -12,7 +12,7 @@ import PlayButton from "../../../player/PlayButton";
 import Equalizer from "../../Equalizer";
 import { useHovered } from "../../../../utilities/hooks/useHovered";
 import { AppRootState, useAppSelector } from "../../../../state/store";
-import { formatMilliseconds } from "../../../../utilities/number";
+import { formatAsTrackDurationString } from "../../../../utilities/time";
 import { TrackCardProps } from "./TrackCard";
 import { getTrackUrl } from "../../../../routing/common/url";
 import { AppLink } from "../../AppLink";
@@ -150,7 +150,7 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
               variant="paragraph"
               sx={{ color: (theme) => theme.palette.grey[400] }}
             >
-              {formatMilliseconds(track.duration_ms)}
+              {formatAsTrackDurationString(track.duration_ms)}
             </Typography>
           </Stack>
         </Stack>

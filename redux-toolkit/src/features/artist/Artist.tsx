@@ -143,7 +143,7 @@ const Artist: FC = () => {
             )}
           </Stack>
           <AlbumsGrid
-            data={albumsData?.items}
+            data={albumsData?.items as SpotifyAlbum[] | undefined}
             loading={isLoadingAlbums}
             onAlbumSelected={handleAlbumSelected}
           />

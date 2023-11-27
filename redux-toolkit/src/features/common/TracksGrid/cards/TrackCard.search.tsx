@@ -11,7 +11,7 @@ import {
 import PlayButton from "../../../player/PlayButton";
 import { useHovered } from "../../../../utilities/hooks/useHovered";
 import { AppRootState, useAppSelector } from "../../../../state/store";
-import { formatMilliseconds } from "../../../../utilities/number";
+import { formatAsTrackDurationString } from "../../../../utilities/time";
 import { TrackCardProps } from "./TrackCard";
 import { getArtistUrl, getTrackUrl } from "../../../../routing/common/url";
 import { SpotifyArtist } from "../../../../state/queries/models/spotify.models";
@@ -188,7 +188,7 @@ const TrackCardSearch = (props: TrackCardProps) => {
               variant="paragraph"
               sx={{ color: (theme) => theme.palette.grey[400] }}
             >
-              {formatMilliseconds(track.duration_ms)}
+              {formatAsTrackDurationString(track.duration_ms)}
             </Typography>
           </Stack>
         </Stack>

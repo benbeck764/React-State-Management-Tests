@@ -10,7 +10,7 @@ import {
 } from "../../../state/queries/models/spotify.models";
 import { AppLink } from "../AppLink";
 import { getArtistUrl, getTrackUrl } from "../../../routing/common/url";
-import { formatMilliseconds } from "../../../utilities/number";
+import { formatAsTrackDurationString } from "../../../utilities/time";
 import { useAppSelector, AppRootState } from "../../../state/store";
 import Equalizer from "../Equalizer";
 import { useHovered } from "../../../utilities/hooks/useHovered";
@@ -143,7 +143,7 @@ const TrackListingRow: FC<TrackListingRowProps> = (
         variant="paragraph"
         sx={{ color: (theme) => theme.palette.grey[400] }}
       >
-        {formatMilliseconds(track.duration_ms)}
+        {formatAsTrackDurationString(track.duration_ms)}
       </Typography>
     </Stack>
   );
