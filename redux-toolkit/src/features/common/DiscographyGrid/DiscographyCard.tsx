@@ -37,9 +37,9 @@ const ArtistCard = (props: AlbumCardProps) => {
           <Stack gap={1.5}>
             <Skeleton variant="rectangular" width={125} height={125} />
           </Stack>
-          <Stack gap={0.5}>
+          <Stack gap={1.5}>
             <TypographySkeleton
-              variant="h2"
+              variant="h4"
               charCount={22}
               charCountVariance={10}
               lines={1}
@@ -71,27 +71,27 @@ const ArtistCard = (props: AlbumCardProps) => {
               src={album.images[0].url}
             />
           </Stack>
-          <Stack gap={0.5}>
+          <Stack gap={1.5}>
             <StyledEllipsingTextContainer
               lines={1}
               reserveHeight={
                 +(
-                  theme.typography.h3.fontSize?.toString().replace("px", "") ||
+                  theme.typography.h4.fontSize?.toString().replace("px", "") ||
                   0
-                ) * +(theme.typography.h3.lineHeight?.toString() || 0)
+                ) * +(theme.typography.h4.lineHeight?.toString() || 0)
               }
             >
               <AppLink to={getAlbumUrl(album.id)} state={album}>
-                <Typography variant="h3">{album.name}</Typography>
+                <Typography variant="h4">{album.name}</Typography>
               </AppLink>
             </StyledEllipsingTextContainer>
             <Typography
               variant="paragraph"
               sx={{ color: (theme) => theme.palette.grey[400] }}
             >
-              {`${new Date(album.release_date).getFullYear()} • ${capitalize(
-                album.album_type
-              )} • ${album.total_tracks} song${
+              {`${capitalize(album.album_type)} • ${new Date(
+                album.release_date
+              ).getFullYear()} • ${album.total_tracks} song${
                 album.total_tracks > 1 ? "s" : ""
               }`}
             </Typography>

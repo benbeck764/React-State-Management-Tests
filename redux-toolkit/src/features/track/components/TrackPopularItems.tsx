@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { capitalize } from "@mui/material/utils";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import {
+  DiscographyType,
   SpotifyAlbum,
   SpotifyArtist,
 } from "../../../state/queries/models/spotify.models";
@@ -13,7 +14,7 @@ import { getArtistDiscographyUrl } from "../../../routing/common/url";
 
 type TrackPopularAlbumsProps = {
   loading: boolean;
-  variant: "releases" | "albums";
+  variant: "releases" | "albums" | "singles";
   albums?: SpotifyAlbum[];
   artist?: SpotifyArtist;
   onAlbumSelected: (album: SpotifyAlbum) => void;
@@ -48,6 +49,22 @@ const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
       </Stack>
     );
   } else {
+    let discographyType: DiscographyType = "all";
+    let title: string;
+    switch (variant) {
+      case "releases":
+        discographyType = "all";
+        title = `Popular ${capitalize(variant)} by ${artist.name}`;
+        break;
+      case "albums":
+        discographyType = "album";
+        title = `Popular ${capitalize(variant)} by ${artist.name}`;
+        break;
+      case "singles":
+        discographyType = "single";
+        title = `Popular Singles and EPs by ${artist.name}`;
+        break;
+    }
     return (
       <Stack gap={1}>
         <Stack
@@ -55,12 +72,10 @@ const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
           justifyContent="space-between"
           alignItems="center"
         >
-          <AppLink to={getArtistDiscographyUrl(artist.id)}>
-            <Typography variant="h4">{`Popular ${capitalize(variant)} by ${
-              artist.name
-            }`}</Typography>
+          <AppLink to={getArtistDiscographyUrl(artist.id, discographyType)}>
+            <Typography variant="h4">{title}</Typography>
           </AppLink>
-          <AppLink to={getArtistDiscographyUrl(artist.id)}>
+          <AppLink to={getArtistDiscographyUrl(artist.id, discographyType)}>
             <Typography
               variant="paragraphSmallBold"
               sx={{ color: (theme) => theme.palette.grey[400] }}

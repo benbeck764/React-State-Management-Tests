@@ -326,6 +326,12 @@ type SpotifyRecommendationSeed = {
 
 //#endregion
 
+//#region Custom Types
+
+export type DiscographyType = "all" | "album" | "single";
+
+//#endregion
+
 //#region Player Models
 
 export type SpotifyDevice = {

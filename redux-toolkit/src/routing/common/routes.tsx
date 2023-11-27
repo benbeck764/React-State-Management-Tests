@@ -24,8 +24,8 @@ export const AppRoutes: Record<RouteName, AppRoute> = {
     params: [":artistId"],
   },
   [RouteName.ArtistDiscography]: {
-    path: "/artist/:artistId/discography",
-    params: [":artistId"],
+    path: "/artist/:artistId/discography/:discographyType",
+    params: [":artistId", ":discographyType"],
   },
   [RouteName.Album]: {
     path: "/album/:albumId",

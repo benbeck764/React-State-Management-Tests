@@ -132,7 +132,7 @@ const Artist: FC = () => {
           >
             <Typography variant="h4">Discography</Typography>
             {artistId && (
-              <AppLink to={getArtistDiscographyUrl(artistId)}>
+              <AppLink to={getArtistDiscographyUrl(artistId, "all")}>
                 <Typography
                   variant="paragraphLink"
                   sx={{ color: (theme) => theme.palette.grey[400] }}
