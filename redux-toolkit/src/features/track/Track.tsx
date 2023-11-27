@@ -81,6 +81,19 @@ const Track: FC = () => {
       { id: artistsResponse?.artists?.[0]?.id!, limit: 50 }, // Max 50 per API spec
       { skip: !artistsResponse }
     );
+  const popularAlbums = artistAlbumsResponse?.items?.slice(0, 6);
+
+  const { data: artistSinglesResponse, isFetching: loadingArtistSingles } =
+    useGetArtistAlbumsQuery(
+      {
+        /* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */
+        id: artistsResponse?.artists?.[0]?.id!,
+        limit: 50,
+        include_groups: "single",
+      }, // Max 50 per API spec
+      { skip: !artistsResponse }
+    );
+  const popularSingles = artistSinglesResponse?.items?.slice(0, 6);
 
   const { data: albums, isFetching: loadingPopularAlbums } =
     useGetMultipleAlbumsQuery(
@@ -100,8 +113,6 @@ const Track: FC = () => {
     );
     popularReleases = popularReleases.slice(0, 6);
   }
-
-  const popularAlbums = artistAlbumsResponse?.items?.slice(0, 6);
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
@@ -193,6 +204,15 @@ const Track: FC = () => {
           albums={popularAlbums as SpotifyAlbum[] | undefined}
           loading={loadingPopularAlbums}
           variant="albums"
+          artist={artistsResponse?.artists?.[0]}
+          onAlbumSelected={handleAlbumSelected}
+        />
+      </Box>
+      <Box my={1.5}>
+        <TrackPopularItems
+          albums={popularSingles as SpotifyAlbum[] | undefined}
+          loading={loadingArtistSingles}
+          variant="singles"
           artist={artistsResponse?.artists?.[0]}
           onAlbumSelected={handleAlbumSelected}
         />

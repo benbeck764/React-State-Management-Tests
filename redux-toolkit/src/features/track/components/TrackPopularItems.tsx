@@ -49,11 +49,11 @@ const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
       </Stack>
     );
   } else {
-    let discographyType: DiscographyType = "all";
+    let discographyType: DiscographyType;
     let title: string;
     switch (variant) {
       case "releases":
-        discographyType = "all";
+        discographyType = "album";
         title = `Popular ${capitalize(variant)} by ${artist.name}`;
         break;
       case "albums":
