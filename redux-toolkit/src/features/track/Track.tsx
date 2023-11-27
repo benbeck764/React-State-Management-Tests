@@ -17,6 +17,7 @@ import TrackRecommendations from "./components/TrackRecommendations";
 import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
 import TrackPopularItems from "./components/TrackPopularItems";
 import TrackArtists from "./components/TrackArtists";
+import TrackArtistsPopularItems from "./components/TrackArtistsPopularItems";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -41,6 +42,8 @@ const Track: FC = () => {
       { artistIds: track?.artists?.map((a: SpotifyArtist) => a.id)! },
       { skip: !track?.artists?.length }
     );
+  const allArtists = artistsResponse?.artists;
+  const [artist, ...otherArtists] = allArtists ?? [];
 
   const handleArtistSelected = (artist: SpotifyArtist) => {
     navigate(getArtistUrl(artist.id), { state: artist });
@@ -55,7 +58,7 @@ const Track: FC = () => {
       <TrackHeader
         loading={loadingTrack || loadingArtists}
         track={track}
-        artist={artistsResponse?.artists?.[0]}
+        artist={artist}
       />
       <Box my={2}>
         <TrackButtons loading={loadingTrack} track={track} />
@@ -63,7 +66,7 @@ const Track: FC = () => {
       <TrackLyrics track={track} />
       <Box my={1.5}>
         <TrackArtists
-          artists={artistsResponse?.artists}
+          artists={allArtists}
           loading={loadingTrack || loadingArtists}
           onArtistSelected={handleArtistSelected}
         />
@@ -72,29 +75,37 @@ const Track: FC = () => {
         <TrackRecommendations track={track} />
       </Box>
       <Box my={1.5}>
-        <TrackTopArtistTracks artists={artistsResponse?.artists} />
+        <TrackTopArtistTracks artists={allArtists} />
       </Box>
       <Box my={1.5}>
         <TrackPopularItems
           variant="releases"
-          artists={artistsResponse?.artists}
+          artists={allArtists}
           onAlbumSelected={handleAlbumSelected}
         />
       </Box>
       <Box my={1.5}>
         <TrackPopularItems
           variant="albums"
-          artists={artistsResponse?.artists}
+          artists={allArtists}
           onAlbumSelected={handleAlbumSelected}
         />
       </Box>
       <Box my={1.5}>
         <TrackPopularItems
           variant="singles"
-          artists={artistsResponse?.artists}
+          artists={allArtists}
           onAlbumSelected={handleAlbumSelected}
         />
       </Box>
+      {otherArtists?.map((otherArtist: SpotifyArtist) => (
+        <Box key={otherArtist.id} my={1.5}>
+          <TrackArtistsPopularItems
+            artist={otherArtist}
+            onAlbumSelected={handleAlbumSelected}
+          />
+        </Box>
+      ))}
     </Stack>
   );
 };
