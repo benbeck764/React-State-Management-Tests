@@ -2,14 +2,56 @@ import { FC } from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
+import {
+  SpotifyArtist,
+  SpotifyTrack,
+} from "../../../state/queries/models/spotify.models";
+import {
+  useGeniusSearchQuery,
+  useGetGeniusLyricsQuery,
+} from "../../../state/queries/genius.api";
 
 type TrackLyricsProps = {
-  loading: boolean;
-  lyrics?: string[];
+  track?: SpotifyTrack | null;
 };
 
 const TrackLyrics: FC<TrackLyricsProps> = (props: TrackLyricsProps) => {
-  const { loading, lyrics } = props;
+  const { track } = props;
+
+  const getTitle = (title: string, artists: SpotifyArtist[]) => {
+    const artist = artists?.[0]?.name;
+    const searchQuery = `${title} ${artist}`;
+
+    return searchQuery
+      .toLowerCase()
+      .replace(/ *\([^)]*\) */g, "")
+      .replace(/ *\[[^\]]*]/, "")
+      .replace(/feat.|ft./g, "")
+      .replace(/\s+/g, " ")
+      .replace(/\s*-\s*\d{4}\s*(Remaster|Remastered)\s*/i, "")
+      .trim();
+  };
+
+  const { data: geniusSearchResult, isFetching: loadingGeniusSearch } =
+    useGeniusSearchQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      getTitle(track?.name!, track?.artists!),
+      { skip: !track }
+    );
+
+  const geniusSearchSong = geniusSearchResult?.response?.hits?.[0]?.result;
+
+  const { data: lyrics, isFetching: loadingGeniusLyrics } =
+    useGetGeniusLyricsQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      geniusSearchSong?.url!,
+      {
+        skip: !geniusSearchSong?.id,
+      }
+    );
+
+  const loading = loadingGeniusSearch || loadingGeniusLyrics;
+
   if (loading || !lyrics) {
     return (
       <Stack gap={2}>

@@ -8,28 +8,20 @@ import {
   SpotifyArtist,
   SpotifyTrack,
 } from "../../state/queries/models/spotify.models";
-import {
-  useGetRecommendationsQuery,
-  useGetTrackQuery,
-} from "../../state/queries/track.api";
-import {
-  useGeniusSearchQuery,
-  useGetGeniusLyricsQuery,
-} from "../../state/queries/genius.api";
+import { useGetTrackQuery } from "../../state/queries/track.api";
 import {
   useGetArtistAlbumsQuery,
-  useGetArtistTopTracksQuery,
   useGetArtistsQuery,
 } from "../../state/queries/artist.api";
 import { getAlbumUrl, getArtistUrl } from "../../routing/common/url";
 import TrackHeader from "./components/TrackHeader";
 import TrackButtons from "./components/TrackButtons";
 import TrackLyrics from "./components/TrackLyrics";
-import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
 import TrackRecommendations from "./components/TrackRecommendations";
 import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
 import TrackPopularItems from "./components/TrackPopularItems";
 import { useGetMultipleAlbumsQuery } from "../../state/queries/album.api";
+import TrackArtists from "./components/TrackArtists";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -53,26 +45,6 @@ const Track: FC = () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       { artistIds: track?.artists?.map((a: SpotifyArtist) => a.id)! },
       { skip: !track?.artists?.length }
-    );
-
-  const { data: topTracksData, isFetching: loadingTopTracks } =
-    useGetArtistTopTracksQuery(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      { id: artistsResponse?.artists?.[0]?.id!, market: "US" },
-      { skip: !artistsResponse }
-    );
-
-  const { data: recommendationsResponse, isFetching: loadingRecommendations } =
-    useGetRecommendationsQuery(
-      {
-        limit: 5,
-        //seed_artists: track?.artists.map((a: SpotifyArtist) => a.id).join(","),
-        //seed_artists: track?.artists?.[0].id,
-        //seed_genres: track?.artists?.[0].genres?.join(","),
-        seed_tracks: track?.id,
-        //target_popularity: track?.popularity,
-      },
-      { skip: !track }
     );
 
   const { data: artistAlbumsResponse, isFetching: loadingArtistAlbums } =
@@ -114,38 +86,6 @@ const Track: FC = () => {
     popularReleases = popularReleases.slice(0, 6);
   }
 
-  const getTitle = (title: string, artists: SpotifyArtist[]) => {
-    const artist = artists?.[0]?.name;
-    const searchQuery = `${title} ${artist}`;
-
-    return searchQuery
-      .toLowerCase()
-      .replace(/ *\([^)]*\) */g, "")
-      .replace(/ *\[[^\]]*]/, "")
-      .replace(/feat.|ft./g, "")
-      .replace(/\s+/g, " ")
-      .replace(/\s*-\s*\d{4}\s*(Remaster|Remastered)\s*/i, "")
-      .trim();
-  };
-
-  const { data: geniusSearchResult, isFetching: loadingGeniusSearch } =
-    useGeniusSearchQuery(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      getTitle(track?.name!, track?.artists!),
-      { skip: !track }
-    );
-
-  const geniusSearchSong = geniusSearchResult?.response?.hits?.[0]?.result;
-
-  const { data: geniusLyrics, isFetching: loadingGeniusLyrics } =
-    useGetGeniusLyricsQuery(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      geniusSearchSong?.url!,
-      {
-        skip: !geniusSearchSong?.id,
-      }
-    );
-
   const handleArtistSelected = (artist: SpotifyArtist) => {
     navigate(getArtistUrl(artist.id), { state: artist });
   };
@@ -164,31 +104,19 @@ const Track: FC = () => {
       <Box my={2}>
         <TrackButtons loading={loadingTrack} track={track} />
       </Box>
-      <TrackLyrics
-        loading={loadingGeniusSearch || loadingGeniusLyrics}
-        lyrics={geniusLyrics}
-      />
+      <TrackLyrics track={track} />
       <Box my={1.5}>
-        <ArtistsGrid
-          data={artistsResponse?.artists}
+        <TrackArtists
+          artists={artistsResponse?.artists}
           loading={loadingTrack || loadingArtists}
-          pageSize={loadingTrack || loadingArtists ? 3 : undefined}
           onArtistSelected={handleArtistSelected}
-          cardVariant="track"
         />
       </Box>
       <Box my={1.5}>
-        <TrackRecommendations
-          tracks={recommendationsResponse?.tracks}
-          loading={loadingRecommendations}
-        />
+        <TrackRecommendations track={track} />
       </Box>
       <Box my={1.5}>
-        <TrackTopArtistTracks
-          loading={loadingTopTracks}
-          tracks={topTracksData?.tracks}
-          artist={artistsResponse?.artists?.[0]}
-        />
+        <TrackTopArtistTracks artists={artistsResponse?.artists} />
       </Box>
       <Box my={1.5}>
         <TrackPopularItems

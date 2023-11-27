@@ -4,16 +4,31 @@ import Typography from "@mui/material/Typography";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import { SpotifyTrack } from "../../../state/queries/models/spotify.models";
 import TracksGrid from "../../common/TracksGrid/TracksGrid";
+import { useGetRecommendationsQuery } from "../../../state/queries/track.api";
 
 type TrackRecommendationsProps = {
-  loading: boolean;
-  tracks?: SpotifyTrack[];
+  track?: SpotifyTrack | null;
 };
 
 const TrackRecommendations: FC<TrackRecommendationsProps> = (
   props: TrackRecommendationsProps
 ) => {
-  const { loading, tracks } = props;
+  const { track } = props;
+
+  const { data: recommendationsResponse, isFetching: loading } =
+    useGetRecommendationsQuery(
+      {
+        limit: 5,
+        //seed_artists: track?.artists.map((a: SpotifyArtist) => a.id).join(","),
+        //seed_artists: track?.artists?.[0].id,
+        //seed_genres: track?.artists?.[0].genres?.join(","),
+        seed_tracks: track?.id,
+        //target_popularity: track?.popularity,
+      },
+      { skip: !track }
+    );
+
+  const tracks = recommendationsResponse?.tracks;
 
   if (loading || !tracks?.length) {
     return (

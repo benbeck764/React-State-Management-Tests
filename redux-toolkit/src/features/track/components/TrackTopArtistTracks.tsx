@@ -3,23 +3,29 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import AppButton from "@benbeck764/react-components/Button";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
-import {
-  SpotifyArtist,
-  SpotifyTrack,
-} from "../../../state/queries/models/spotify.models";
+import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
 import TracksGrid from "../../common/TracksGrid/TracksGrid";
+import { useGetArtistTopTracksQuery } from "../../../state/queries/artist.api";
 
 type TrackTopArtistTracksProps = {
-  loading: boolean;
-  tracks?: SpotifyTrack[];
-  artist?: SpotifyArtist;
+  artists?: SpotifyArtist[];
 };
 
 const TrackTopArtistTracks: FC<TrackTopArtistTracksProps> = (
   props: TrackTopArtistTracksProps
 ) => {
-  const { loading, tracks, artist } = props;
+  const { artists } = props;
   const [expanded, setExpanded] = useState<boolean>(false);
+
+  const artist = artists?.[0];
+
+  const { data: topTracksData, isFetching: loading } =
+    useGetArtistTopTracksQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      { id: artist?.id!, market: "US" },
+      { skip: !artists?.length }
+    );
+  const tracks = topTracksData?.tracks;
 
   if (loading || !tracks?.length || !artist) {
     return (
