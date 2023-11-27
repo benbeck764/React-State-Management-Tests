@@ -20,6 +20,7 @@ import TrackArtists from "./components/TrackArtists";
 import TrackArtistsPopularItems from "./components/TrackArtistsPopularItems";
 import TrackRelatedArtists from "./components/TrackRelatedArtists";
 import TrackAlbum from "./components/TrackAlbum";
+import TrackCopyrights from "./components/TrackCopyrights";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -116,6 +117,9 @@ const Track: FC = () => {
       </Box>
       <Box my={2.5}>
         <TrackAlbum track={track} onAlbumSelected={handleAlbumSelected} />
+      </Box>
+      <Box my={1.5}>
+        <TrackCopyrights track={track} />
       </Box>
     </Stack>
   );

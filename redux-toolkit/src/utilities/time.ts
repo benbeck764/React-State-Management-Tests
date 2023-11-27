@@ -1,3 +1,5 @@
+import { SpotifyDatePrecision } from "../state/queries/models/spotify.models";
+
 // "hh:mm:ss"
 export const formatAsTrackDurationString = (milliseconds: number): string => {
   const date = new Date(milliseconds);
@@ -29,6 +31,35 @@ export const formatAsLongDurationString = (milliseconds: number): string => {
   if (seconds > 0) timeComponents.push(`${seconds} sec`);
 
   return timeComponents.join(" ");
+};
+
+export const formatWithPrecision = (
+  dateString: string,
+  precision: SpotifyDatePrecision
+): string => {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {};
+
+  switch (precision) {
+    case "day":
+      options.day = "numeric";
+      options.month = "long";
+      options.year = "numeric";
+      break;
+    case "month":
+      options.month = "long";
+      options.year = "numeric";
+      break;
+    case "year":
+      options.year = "numeric";
+      break;
+    default:
+      throw new Error(
+        'Invalid precision. Please use "day", "month", or "year".'
+      );
+  }
+
+  return date.toLocaleDateString(undefined, options);
 };
 
 const padZero = (number: number) => {

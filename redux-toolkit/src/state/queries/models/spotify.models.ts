@@ -171,6 +171,8 @@ export type GetRecommendationsResponse = {
 
 //#region Models
 
+export type SpotifyDatePrecision = "year" | "month" | "day";
+
 export type SpotifyAccessToken = {
   access_token: string;
   token_type: string;
@@ -204,7 +206,7 @@ type SpotifyRestrictions = {
   reason: string;
 };
 
-type SpotifyCopyRights = {
+export type SpotifyCopyRights = {
   text: string;
   type: string;
 };
@@ -246,7 +248,7 @@ export type SpotifyAlbum = {
   images: SpotifyImage[];
   name: string;
   release_date: string;
-  release_date_precision: string;
+  release_date_precision: SpotifyDatePrecision;
   restrictions: SpotifyRestrictions;
   type: "album";
   uri: string;
@@ -392,7 +394,7 @@ type SpotifyEpisode = {
   languages: string[];
   name: string;
   release_date: string;
-  release_date_precision: string;
+  release_date_precision: SpotifyDatePrecision;
   resume_point: SpotifyResumePoint;
   type: "episode";
   uri: string;
