@@ -44,6 +44,9 @@ const ArtistDiscography: FC = () => {
     case "single":
       groups = "single";
       break;
+    case "compilation":
+      groups = "compilation";
+      break;
     default:
       // `undefined` will result in all types (i.e. "album,single,appears_on,compilation")
       groups = undefined;

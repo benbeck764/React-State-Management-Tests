@@ -328,7 +328,7 @@ type SpotifyRecommendationSeed = {
 
 //#region Custom Types
 
-export type DiscographyType = "all" | "album" | "single";
+export type DiscographyType = "all" | "album" | "single" | "compilation";
 
 //#endregion
 
