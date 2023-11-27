@@ -86,7 +86,7 @@ const TrackCardSearch = (props: TrackCardProps) => {
                 component="img"
                 height={40}
                 width={40}
-                src={track.album.images[0].url}
+                src={track.album.images?.[0]?.url}
                 sx={{ borderRadius: "4px", opacity: hovered ? 0.4 : 1 }}
               />
               {hovered && (

@@ -78,7 +78,7 @@ const Album: FC = () => {
               component="img"
               height={250}
               width={250}
-              src={album.images[0].url}
+              src={album.images?.[0]?.url}
             />
           </Stack>
           <Stack justifyContent="flex-end">

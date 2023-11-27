@@ -115,7 +115,7 @@ const TrackCardTopTracks = (props: TrackCardProps) => {
             </Stack>
             <Box
               component="img"
-              src={track.album.images[0].url}
+              src={track.album.images?.[0]?.url}
               height={40}
               width={40}
               sx={{ borderRadius: "4px" }}
