@@ -5,27 +5,77 @@ import { capitalize } from "@mui/material/utils";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import {
   DiscographyType,
+  SimplifiedSpotifyAlbum,
   SpotifyAlbum,
   SpotifyArtist,
 } from "../../../state/queries/models/spotify.models";
 import AlbumsGrid from "../../common/AlbumsGrid/AlbumsGrid";
 import { AppLink } from "../../common/AppLink";
 import { getArtistDiscographyUrl } from "../../../routing/common/url";
+import { useGetMultipleAlbumsQuery } from "../../../state/queries/album.api";
+import { useGetArtistAlbumsQuery } from "../../../state/queries/artist.api";
 
 type TrackPopularAlbumsProps = {
-  loading: boolean;
   variant: "releases" | "albums" | "singles";
-  albums?: SpotifyAlbum[];
-  artist?: SpotifyArtist;
+  artists?: SpotifyArtist[];
   onAlbumSelected: (album: SpotifyAlbum) => void;
 };
 
 const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
   props: TrackPopularAlbumsProps
 ) => {
-  const { loading, variant, albums, artist, onAlbumSelected } = props;
+  const { variant, artists, onAlbumSelected } = props;
 
-  if (loading || !albums?.length || !artist) {
+  const { data: artistAlbumsResponse, isFetching: loadingArtistAlbums } =
+    useGetArtistAlbumsQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      { id: artists?.[0]?.id!, limit: 50 }, // Max 50 per API spec
+      { skip: !artists || variant === "singles" }
+    );
+
+  const { data: artistSinglesResponse, isFetching: loadingArtistSingles } =
+    useGetArtistAlbumsQuery(
+      {
+        /* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */
+        id: artists?.[0]?.id!,
+        limit: 50,
+        include_groups: "single",
+      }, // Max 50 per API spec
+      { skip: !artists || variant !== "singles" }
+    );
+
+  const { data: multipleAlbums, isFetching: loadingPopularAlbums } =
+    useGetMultipleAlbumsQuery(
+      {
+        /* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */
+        ids: artistAlbumsResponse?.items?.map(
+          (a: SimplifiedSpotifyAlbum) => a.id
+        )!,
+      },
+      {
+        skip:
+          !artistAlbumsResponse ||
+          loadingArtistAlbums ||
+          variant !== "releases",
+      }
+    );
+
+  let popularReleases = multipleAlbums ? [...multipleAlbums] : undefined;
+  if (popularReleases) {
+    popularReleases = popularReleases.sort(
+      (a: SpotifyAlbum, b: SpotifyAlbum) => b.popularity - a.popularity
+    );
+    popularReleases = popularReleases.slice(0, 6);
+  }
+
+  const popularAlbums = artistAlbumsResponse?.items?.slice(0, 6);
+  const popularSingles = artistSinglesResponse?.items?.slice(0, 6);
+
+  const artist = artists?.[0];
+  const loading =
+    loadingArtistAlbums || loadingArtistSingles || loadingPopularAlbums;
+
+  if (loading || !artist) {
     return (
       <Stack gap={1}>
         <Stack
@@ -49,18 +99,22 @@ const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
       </Stack>
     );
   } else {
+    let albums: SpotifyAlbum[] | undefined;
     let discographyType: DiscographyType;
     let title: string;
     switch (variant) {
       case "releases":
+        albums = popularReleases;
         discographyType = "album";
         title = `Popular ${capitalize(variant)} by ${artist.name}`;
         break;
       case "albums":
+        albums = popularAlbums as SpotifyAlbum[] | undefined;
         discographyType = "album";
         title = `Popular ${capitalize(variant)} by ${artist.name}`;
         break;
       case "singles":
+        albums = popularSingles as SpotifyAlbum[] | undefined;
         discographyType = "single";
         title = `Popular Singles and EPs by ${artist.name}`;
         break;
