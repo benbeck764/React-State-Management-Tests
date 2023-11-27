@@ -163,6 +163,13 @@ const artistApi = spotifyApi.injectEndpoints({
         params: request,
       }),
     }),
+    getArtistRelatedArtists: builder.query<GetArtistsResponse, { id: string }>({
+      query: (request: { id: string }) => ({
+        url: endpoints.spotify.artists.relatedArtists(request.id),
+        method: "GET",
+        params: request,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -173,4 +180,5 @@ export const {
   useGetArtistAlbumsQuery,
   useGetArtistDiscographyQuery,
   useGetArtistTopTracksQuery,
+  useGetArtistRelatedArtistsQuery,
 } = artistApi;

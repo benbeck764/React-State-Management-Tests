@@ -17,21 +17,17 @@ export const getSiteRoutes = (): RouteProps[] => [
     ),
     children: (
       <>
-        <Route
-          index
-          path={AppRoutes[RouteName.Site].path}
-          element={<Home />}
-        ></Route>
+        <Route index path={AppRoutes[RouteName.Site].path} element={<Home />} />
         <Route
           index
           path={AppRoutes[RouteName.Search].path}
           element={<Search />}
-        ></Route>
+        />
         <Route
           index
           path="*"
           element={<Navigate to={AppRoutes[RouteName.Site].path} replace />}
-        ></Route>
+        />
       </>
     ),
   },

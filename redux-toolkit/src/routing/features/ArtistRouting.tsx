@@ -8,6 +8,9 @@ const Artist = lazy(() => import("../../features/artist/Artist"));
 const ArtistDiscography = lazy(
   () => import("../../features/artist/ArtistDiscography")
 );
+const RelatedArtists = lazy(
+  () => import("../../features/artist/RelatedArtists")
+);
 
 export const getArtistRoutes = (): RouteProps[] => [
   {
@@ -23,17 +26,22 @@ export const getArtistRoutes = (): RouteProps[] => [
           index
           path={AppRoutes[RouteName.Artist].path}
           element={<Artist />}
-        ></Route>
+        />
         <Route
           index
           path={AppRoutes[RouteName.ArtistDiscography].path}
           element={<ArtistDiscography />}
-        ></Route>
+        />
+        <Route
+          index
+          path={AppRoutes[RouteName.RelatedArtists].path}
+          element={<RelatedArtists />}
+        />
         <Route
           index
           path="*"
           element={<Navigate to={AppRoutes[RouteName.Artist].path} replace />}
-        ></Route>
+        />
       </>
     ),
   },

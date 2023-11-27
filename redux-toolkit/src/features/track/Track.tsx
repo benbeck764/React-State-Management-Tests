@@ -18,6 +18,7 @@ import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
 import TrackPopularItems from "./components/TrackPopularItems";
 import TrackArtists from "./components/TrackArtists";
 import TrackArtistsPopularItems from "./components/TrackArtistsPopularItems";
+import TrackRelatedArtists from "./components/TrackRelatedArtists";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -106,6 +107,12 @@ const Track: FC = () => {
           />
         </Box>
       ))}
+      <Box my={1.5}>
+        <TrackRelatedArtists
+          artist={artist}
+          onArtistSelected={handleArtistSelected}
+        />
+      </Box>
     </Stack>
   );
 };

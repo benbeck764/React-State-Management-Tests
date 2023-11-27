@@ -16,6 +16,10 @@ export const getArtistDiscographyUrl = (
   ]);
 };
 
+export const getRelatedArtistsUrl = (artistId: string): string => {
+  return replaceParams(RouteName.RelatedArtists, [artistId]);
+};
+
 export const getAlbumUrl = (albumId: string): string => {
   return replaceParams(RouteName.Album, [albumId]);
 };

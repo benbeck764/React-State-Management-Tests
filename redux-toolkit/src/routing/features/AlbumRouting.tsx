@@ -20,12 +20,12 @@ export const getAlbumRoutes = (): RouteProps[] => [
           index
           path={AppRoutes[RouteName.Album].path}
           element={<Album />}
-        ></Route>
+        />
         <Route
           index
           path="*"
           element={<Navigate to={AppRoutes[RouteName.Album].path} replace />}
-        ></Route>
+        />
       </>
     ),
   },

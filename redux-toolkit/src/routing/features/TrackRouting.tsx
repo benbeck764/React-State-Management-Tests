@@ -20,12 +20,12 @@ export const getTrackRoutes = (): RouteProps[] => [
           index
           path={AppRoutes[RouteName.Track].path}
           element={<Track />}
-        ></Route>
+        />
         <Route
           index
           path="*"
           element={<Navigate to={AppRoutes[RouteName.Track].path} replace />}
-        ></Route>
+        />
       </>
     ),
   },
