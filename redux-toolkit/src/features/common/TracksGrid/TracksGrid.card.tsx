@@ -27,6 +27,7 @@ export const createCardViewDefinitions = (
     },
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
+    gridProps: { sx: { width: "100%" } },
     cardSx: { borderRadius: "16px", ...sx },
   },
   lg: {
@@ -43,6 +44,7 @@ export const createCardViewDefinitions = (
     },
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
+    gridProps: { sx: { width: "100%" } },
     cardSx: { borderRadius: "16px", ...sx },
   },
   xl: {
@@ -60,6 +62,7 @@ export const createCardViewDefinitions = (
     loadingPlaceholder: <TrackCard type={cardType} loadingPlaceholder />,
     columnCount: 1,
     rowSpacing: 0,
+    gridProps: { sx: { width: "100%" } },
     cardSx: { borderRadius: "0px", ...sx },
   },
 });
