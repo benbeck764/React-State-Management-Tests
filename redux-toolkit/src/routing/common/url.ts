@@ -6,14 +6,11 @@ export const getArtistUrl = (artistId: string): string => {
   return replaceParams(RouteName.Artist, [artistId]);
 };
 
-export const getArtistDiscographyUrl = (
+export const getDiscographyUrl = (
   artistId: string,
   discographyType: DiscographyType
 ): string => {
-  return replaceParams(RouteName.ArtistDiscography, [
-    artistId,
-    discographyType,
-  ]);
+  return replaceParams(RouteName.Discography, [artistId, discographyType]);
 };
 
 export const getRelatedArtistsUrl = (artistId: string): string => {

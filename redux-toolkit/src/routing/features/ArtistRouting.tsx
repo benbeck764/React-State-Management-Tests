@@ -5,11 +5,11 @@ import { AppRoutes, RouteName } from "../common/routes";
 import AppPageLoader from "@benbeck764/react-components/PageLoader";
 
 const Artist = lazy(() => import("../../features/artist/Artist"));
-const ArtistDiscography = lazy(
-  () => import("../../features/artist/ArtistDiscography")
+const Discography = lazy(
+  () => import("../../features/artist/views/Discography")
 );
 const RelatedArtists = lazy(
-  () => import("../../features/artist/RelatedArtists")
+  () => import("../../features/artist/views/RelatedArtists")
 );
 
 export const getArtistRoutes = (): RouteProps[] => [
@@ -29,8 +29,8 @@ export const getArtistRoutes = (): RouteProps[] => [
         />
         <Route
           index
-          path={AppRoutes[RouteName.ArtistDiscography].path}
-          element={<ArtistDiscography />}
+          path={AppRoutes[RouteName.Discography].path}
+          element={<Discography />}
         />
         <Route
           index

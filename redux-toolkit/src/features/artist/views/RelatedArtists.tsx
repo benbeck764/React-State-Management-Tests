@@ -2,10 +2,10 @@ import { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useGetArtistRelatedArtistsQuery } from "../../state/queries/artist.api";
-import { getArtistUrl } from "../../routing/common/url";
-import { SpotifyArtist } from "../../state/queries/models/spotify.models";
-import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
+import { useGetArtistRelatedArtistsQuery } from "../../../state/queries/artist.api";
+import { getArtistUrl } from "../../../routing/common/url";
+import { SpotifyArtist } from "../../../state/queries/models/spotify.models";
+import ArtistsGrid from "../../common/ArtistsGrid/ArtistsGrid";
 
 const RelatedArtists: FC = () => {
   const navigate = useNavigate();

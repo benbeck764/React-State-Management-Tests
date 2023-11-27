@@ -10,17 +10,15 @@ import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import HeadsetIcon from "@mui/icons-material/Headset";
 import {
-  useGetArtistAlbumsQuery,
   useGetArtistQuery,
   useGetArtistTopTracksQuery,
 } from "../../state/queries/artist.api";
-import AlbumsGrid from "../common/AlbumsGrid/AlbumsGrid";
 import TracksGrid from "../common/TracksGrid/TracksGrid";
 import { StyledTopTracksHeader } from "./Artist.styles";
-import { getAlbumUrl, getArtistDiscographyUrl } from "../../routing/common/url";
-import { AppLink } from "../common/AppLink";
+import { getAlbumUrl } from "../../routing/common/url";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import PlayButton from "../player/PlayButton";
+import ArtistDiscography from "./components/ArtistDiscography";
 
 const Artist: FC = () => {
   const location = useLocation();
@@ -39,9 +37,6 @@ const Artist: FC = () => {
   });
 
   const artist = skipQuery ? state : queriedArtist;
-
-  const { data: albumsData, isFetching: isLoadingAlbums } =
-    useGetArtistAlbumsQuery({ id: artistId!, limit: 12 }, { skip: !artistId });
 
   const { data: topTracksData, isFetching: isLoadingTopTracks } =
     useGetArtistTopTracksQuery(
@@ -82,7 +77,7 @@ const Artist: FC = () => {
                 {artist.images.length > 1 ? (
                   <Box
                     component="img"
-                    src={artist.images[1].url}
+                    src={artist.images[0].url}
                     width={300}
                     height={300}
                     sx={{ borderRadius: 2 }}
@@ -125,26 +120,8 @@ const Artist: FC = () => {
           </Box>
         </Stack>
         <Box>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography variant="h4">Discography</Typography>
-            {artistId && (
-              <AppLink to={getArtistDiscographyUrl(artistId, "all")}>
-                <Typography
-                  variant="paragraphLink"
-                  sx={{ color: (theme) => theme.palette.grey[400] }}
-                >
-                  Show all
-                </Typography>
-              </AppLink>
-            )}
-          </Stack>
-          <AlbumsGrid
-            data={albumsData?.items as SpotifyAlbum[] | undefined}
-            loading={isLoadingAlbums}
+          <ArtistDiscography
+            artist={artist}
             onAlbumSelected={handleAlbumSelected}
           />
         </Box>

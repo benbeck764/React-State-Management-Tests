@@ -1,19 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetTopArtistsQuery } from "../../state/queries/spotify.api";
+import { useGetTopArtistsQuery } from "../../../state/queries/spotify.api";
 import {
   DiscographyType,
   SpotifyArtist,
-} from "../../state/queries/models/spotify.models";
+} from "../../../state/queries/models/spotify.models";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import DiscographyGrid from "../common/DiscographyGrid/DiscographyGrid";
-import { useGetArtistDiscographyQuery } from "../../state/queries/artist.api";
-import { AppLink } from "../common/AppLink";
-import { getArtistUrl } from "../../routing/common/url";
-import useScrollDetection from "../../utilities/hooks/useScrollDetection";
+import DiscographyGrid from "../../common/DiscographyGrid/DiscographyGrid";
+import { useGetArtistDiscographyQuery } from "../../../state/queries/artist.api";
+import { AppLink } from "../../common/AppLink";
+import { getArtistUrl } from "../../../routing/common/url";
+import useScrollDetection from "../../../utilities/hooks/useScrollDetection";
 
-const ArtistDiscography: FC = () => {
+const Discography: FC = () => {
   const params = useParams();
   const artistId = params["artistId"];
   const discographyType = params["discographyType"] as
@@ -101,4 +101,4 @@ const ArtistDiscography: FC = () => {
   );
 };
 
-export default ArtistDiscography;
+export default Discography;

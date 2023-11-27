@@ -11,7 +11,7 @@ import {
 } from "../../../state/queries/models/spotify.models";
 import AlbumsGrid from "../../common/AlbumsGrid/AlbumsGrid";
 import { AppLink } from "../../common/AppLink";
-import { getArtistDiscographyUrl } from "../../../routing/common/url";
+import { getDiscographyUrl } from "../../../routing/common/url";
 import { useGetMultipleAlbumsQuery } from "../../../state/queries/album.api";
 import { useGetArtistAlbumsQuery } from "../../../state/queries/artist.api";
 
@@ -109,12 +109,12 @@ const TrackArtistsPopularItems: FC<TrackPopularAlbumsProps> = (
               >
                 Popular releases
               </Typography>
-              <AppLink to={getArtistDiscographyUrl(artist.id, "album")}>
+              <AppLink to={getDiscographyUrl(artist.id, "album")}>
                 <Typography variant="h4">{artist.name}</Typography>
               </AppLink>
             </Stack>
           </Stack>
-          <AppLink to={getArtistDiscographyUrl(artist.id, "album")}>
+          <AppLink to={getDiscographyUrl(artist.id, "album")}>
             <Typography
               variant="paragraphSmallBold"
               sx={{ color: (theme) => theme.palette.grey[400] }}
