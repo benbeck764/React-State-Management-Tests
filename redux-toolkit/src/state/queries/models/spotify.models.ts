@@ -258,7 +258,10 @@ export type SpotifyAlbum = {
   label: string;
   popularity: number;
 };
-export type SimplifiedSpotifyAlbum = SpotifyAlbum & { album_group: string };
+export type SimplifiedSpotifyAlbum = Omit<
+  SpotifyAlbum,
+  "tracks" | "copyrights" | "external_ids" | "genres" | "label" | "popularity"
+> & { album_group: "album" | "single" | "compilation" | "appears_on" };
 
 type SpotifyAlbumTracks = {
   href: string;

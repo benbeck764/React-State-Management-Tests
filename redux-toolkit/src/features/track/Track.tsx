@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import {
+  SimplifiedSpotifyAlbum,
   SpotifyAlbum,
   SpotifyArtist,
   SpotifyTrack,
@@ -27,7 +28,8 @@ import TrackLyrics from "./components/TrackLyrics";
 import ArtistsGrid from "../common/ArtistsGrid/ArtistsGrid";
 import TrackRecommendations from "./components/TrackRecommendations";
 import TrackTopArtistTracks from "./components/TrackTopArtistTracks";
-import TrackPopularAlbums from "./components/TrackPopularAlbums";
+import TrackPopularItems from "./components/TrackPopularItems";
+import { useGetMultipleAlbumsQuery } from "../../state/queries/album.api";
 
 const Track: FC = () => {
   const navigate = useNavigate();
@@ -73,12 +75,33 @@ const Track: FC = () => {
       { skip: !track }
     );
 
-  const { data: popularAlbumsResponse, isFetching: loadingPopularAlbums } =
+  const { data: artistAlbumsResponse, isFetching: loadingArtistAlbums } =
     useGetArtistAlbumsQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      { id: artistsResponse?.artists?.[0]?.id!, limit: 6 },
+      { id: artistsResponse?.artists?.[0]?.id!, limit: 50 }, // Max 50 per API spec
       { skip: !artistsResponse }
     );
+
+  const { data: albums, isFetching: loadingPopularAlbums } =
+    useGetMultipleAlbumsQuery(
+      {
+        /* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */
+        ids: artistAlbumsResponse?.items?.map(
+          (a: SimplifiedSpotifyAlbum) => a.id
+        )!,
+      },
+      { skip: !artistAlbumsResponse || loadingArtistAlbums }
+    );
+
+  let popularReleases = albums ? [...albums] : undefined;
+  if (popularReleases) {
+    popularReleases = popularReleases.sort(
+      (a: SpotifyAlbum, b: SpotifyAlbum) => b.popularity - a.popularity
+    );
+    popularReleases = popularReleases.slice(0, 6);
+  }
+
+  const popularAlbums = artistAlbumsResponse?.items?.slice(0, 6);
 
   const getTitle = (title: string, artists: SpotifyArtist[]) => {
     const artist = artists?.[0]?.name;
@@ -134,13 +157,15 @@ const Track: FC = () => {
         loading={loadingGeniusSearch || loadingGeniusLyrics}
         lyrics={geniusLyrics}
       />
-      <ArtistsGrid
-        data={artistsResponse?.artists}
-        loading={loadingTrack || loadingArtists}
-        pageSize={loadingTrack || loadingArtists ? 3 : undefined}
-        onArtistSelected={handleArtistSelected}
-        cardVariant="track"
-      />
+      <Box my={1.5}>
+        <ArtistsGrid
+          data={artistsResponse?.artists}
+          loading={loadingTrack || loadingArtists}
+          pageSize={loadingTrack || loadingArtists ? 3 : undefined}
+          onArtistSelected={handleArtistSelected}
+          cardVariant="track"
+        />
+      </Box>
       <Box my={1.5}>
         <TrackRecommendations
           tracks={recommendationsResponse?.tracks}
@@ -155,9 +180,19 @@ const Track: FC = () => {
         />
       </Box>
       <Box my={1.5}>
-        <TrackPopularAlbums
+        <TrackPopularItems
+          albums={popularReleases}
+          loading={loadingPopularAlbums || !popularReleases}
+          variant="releases"
+          artist={artistsResponse?.artists?.[0]}
+          onAlbumSelected={handleAlbumSelected}
+        />
+      </Box>
+      <Box my={1.5}>
+        <TrackPopularItems
+          albums={popularAlbums as SpotifyAlbum[] | undefined}
           loading={loadingPopularAlbums}
-          albums={popularAlbumsResponse?.items}
+          variant="albums"
           artist={artistsResponse?.artists?.[0]}
           onAlbumSelected={handleAlbumSelected}
         />

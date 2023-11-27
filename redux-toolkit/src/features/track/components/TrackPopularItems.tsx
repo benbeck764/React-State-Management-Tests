@@ -1,9 +1,9 @@
 import { FC } from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { capitalize } from "@mui/material/utils";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
 import {
-  SimplifiedSpotifyAlbum,
   SpotifyAlbum,
   SpotifyArtist,
 } from "../../../state/queries/models/spotify.models";
@@ -13,15 +13,16 @@ import { getArtistDiscographyUrl } from "../../../routing/common/url";
 
 type TrackPopularAlbumsProps = {
   loading: boolean;
-  albums?: SimplifiedSpotifyAlbum[];
+  variant: "releases" | "albums";
+  albums?: SpotifyAlbum[];
   artist?: SpotifyArtist;
   onAlbumSelected: (album: SpotifyAlbum) => void;
 };
 
-const TrackPopularAlbums: FC<TrackPopularAlbumsProps> = (
+const TrackPopularItems: FC<TrackPopularAlbumsProps> = (
   props: TrackPopularAlbumsProps
 ) => {
-  const { loading, albums, artist, onAlbumSelected } = props;
+  const { loading, variant, albums, artist, onAlbumSelected } = props;
 
   if (loading || !albums?.length || !artist) {
     return (
@@ -55,7 +56,9 @@ const TrackPopularAlbums: FC<TrackPopularAlbumsProps> = (
           alignItems="center"
         >
           <AppLink to={getArtistDiscographyUrl(artist.id)}>
-            <Typography variant="h4">{`Popular Albums by ${artist.name}`}</Typography>
+            <Typography variant="h4">{`Popular ${capitalize(variant)} by ${
+              artist.name
+            }`}</Typography>
           </AppLink>
           <AppLink to={getArtistDiscographyUrl(artist.id)}>
             <Typography
@@ -78,4 +81,4 @@ const TrackPopularAlbums: FC<TrackPopularAlbumsProps> = (
   }
 };
 
-export default TrackPopularAlbums;
+export default TrackPopularItems;
