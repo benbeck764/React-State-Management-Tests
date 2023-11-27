@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { capitalize } from "@mui/material/utils";
 import {
   StyledEllipsingTextContainer,
   TypographySkeleton,
@@ -16,6 +15,7 @@ import TrackListing from "../TrackListing/TrackListing";
 import { getAlbumUrl } from "../../../routing/common/url";
 import PlayButton from "../../player/PlayButton";
 import FavoriteButton from "../FavoriteButton";
+import { getAlbumType } from "../../../utilities/spotify.utils";
 
 type AlbumCardProps =
   | {
@@ -89,7 +89,7 @@ const ArtistCard = (props: AlbumCardProps) => {
               variant="paragraph"
               sx={{ color: (theme) => theme.palette.grey[400] }}
             >
-              {`${capitalize(album.album_type)} • ${new Date(
+              {`${getAlbumType(album)} • ${new Date(
                 album.release_date
               ).getFullYear()} • ${album.total_tracks} song${
                 album.total_tracks > 1 ? "s" : ""

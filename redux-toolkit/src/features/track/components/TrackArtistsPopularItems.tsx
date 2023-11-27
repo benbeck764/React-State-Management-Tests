@@ -28,7 +28,7 @@ const TrackArtistsPopularItems: FC<TrackPopularAlbumsProps> = (
   const { data: artistAlbumsResponse, isFetching: loadingArtistAlbums } =
     useGetArtistAlbumsQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      { id: artist?.id!, limit: 50 }, // Max 50 per API spec
+      { id: artist?.id!, limit: 50, include_groups: "album,single" }, // Max 50 per API spec
       { skip: !artist }
     );
 
@@ -53,7 +53,6 @@ const TrackArtistsPopularItems: FC<TrackPopularAlbumsProps> = (
     popularReleases = popularReleases.slice(0, 6);
   }
 
-  const popularAlbums = artistAlbumsResponse?.items?.slice(0, 6);
   const loading = loadingArtistAlbums || loadingPopularAlbums;
 
   if (loading || !artist) {
@@ -125,7 +124,7 @@ const TrackArtistsPopularItems: FC<TrackPopularAlbumsProps> = (
           </AppLink>
         </Stack>
         <AlbumsGrid
-          data={popularAlbums as SpotifyAlbum[] | undefined}
+          data={popularReleases as SpotifyAlbum[] | undefined}
           loading={loading}
           cardType="minimal"
           pageSize={6}

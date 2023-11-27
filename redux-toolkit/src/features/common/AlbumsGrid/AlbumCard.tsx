@@ -9,7 +9,6 @@ import {
 } from "@benbeck764/react-components/common";
 import { SpotifyAlbum } from "../../../state/queries/models/spotify.models";
 import { StyledCard } from "../common.styles";
-import { capitalize } from "@mui/material/utils";
 import PlayButton from "../../player/PlayButton";
 import Box from "@mui/material/Box";
 import { useRef } from "react";
@@ -18,6 +17,7 @@ import { useAppSelector, AppRootState } from "../../../state/store";
 import Equalizer from "../Equalizer";
 import { AppLink } from "../AppLink";
 import { getArtistUrl } from "../../../routing/common/url";
+import { getAlbumType } from "../../../utilities/spotify.utils";
 
 export type AlbumCardType = "minimal" | "detailed";
 type AlbumCardProps =
@@ -110,7 +110,7 @@ const AlbumCard = (props: AlbumCardProps) => {
                 >
                   {`${new Date(
                     album.release_date
-                  ).getFullYear()} • ${capitalize(album.album_type)}`}
+                  ).getFullYear()} • ${getAlbumType(album)}`}
                 </Typography>
                 {albumPlaying && <Equalizer />}
               </>

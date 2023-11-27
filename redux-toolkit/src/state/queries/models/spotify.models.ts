@@ -237,7 +237,7 @@ export type SimplifiedSpotifyArtist = Pick<
 >;
 
 export type SpotifyAlbum = {
-  album_type: string;
+  album_type: "album" | "single" | "compilation";
   total_tracks: number;
   available_markets: string[];
   external_urls: SpotifyExternalUrls;

@@ -6,7 +6,6 @@ import { useGetAlbumQuery } from "../../state/queries/album.api";
 import TrackListing from "../common/TrackListing/TrackListing";
 import AppCard from "@benbeck764/react-components/Card";
 import Box from "@mui/material/Box";
-import { capitalize } from "@mui/material/utils";
 import {
   SimplifiedSpotifyArtist,
   SpotifyAlbum,
@@ -17,6 +16,7 @@ import PlayButton from "../player/PlayButton";
 import FavoriteButton from "../common/FavoriteButton";
 import Skeleton from "@mui/material/Skeleton";
 import { TypographySkeleton } from "@benbeck764/react-components/common";
+import { getAlbumType } from "../../utilities/spotify.utils";
 
 const Album: FC = () => {
   const location = useLocation();
@@ -75,7 +75,7 @@ const Album: FC = () => {
           <Stack justifyContent="flex-end">
             <Stack gap={0.75}>
               <Typography variant="paragraphBold">
-                {capitalize(album.album_type)}
+                {getAlbumType(album)}
               </Typography>
               <Typography variant="h3">{album.name}</Typography>
 
