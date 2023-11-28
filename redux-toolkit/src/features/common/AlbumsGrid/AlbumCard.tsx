@@ -24,6 +24,7 @@ type AlbumCardProps =
   | {
       album: SpotifyAlbum;
       type: AlbumCardType;
+      latestRelease?: boolean;
       loadingPlaceholder?: never;
     }
   | {
@@ -56,7 +57,7 @@ const AlbumCard = (props: AlbumCardProps) => {
       </StyledCard>
     );
   } else {
-    const { album, type } = props;
+    const { album, type, latestRelease } = props;
 
     const isCurrentAlbum =
       playbackState !== null && album.uri === playbackState.context?.uri;
@@ -108,9 +109,11 @@ const AlbumCard = (props: AlbumCardProps) => {
                   align="center"
                   sx={{ color: (theme) => theme.palette.grey[400] }}
                 >
-                  {`${new Date(
-                    album.release_date
-                  ).getFullYear()} • ${getAlbumType(album)}`}
+                  {`${
+                    latestRelease
+                      ? "Latest Release"
+                      : new Date(album.release_date).getFullYear()
+                  } • ${getAlbumType(album)}`}
                 </Typography>
                 {albumPlaying && <Equalizer />}
               </>
@@ -133,7 +136,11 @@ const AlbumCard = (props: AlbumCardProps) => {
                     whiteSpace: "break-spaces",
                   }}
                 >
-                  {`${new Date(album.release_date).getFullYear()} • `}
+                  {`${
+                    latestRelease
+                      ? "Latest Release"
+                      : new Date(album.release_date).getFullYear()
+                  } • `}
                   {album.artists.map((artist, artistIndex: number) => (
                     <AppLink
                       key={artist.uri}

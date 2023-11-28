@@ -197,7 +197,7 @@ const ArtistDiscography: FC<ArtistDiscographyProps> = (
           justifyContent="space-between"
         >
           <Typography variant="h4">Discography</Typography>
-          <AppLink to={getDiscographyUrl(artist.id, "all")}>
+          <AppLink to={getDiscographyUrl(artist.id, selected?.type ?? "all")}>
             <Typography
               variant="paragraphBold"
               sx={{ color: (theme) => theme.palette.grey[400] }}
@@ -257,6 +257,10 @@ const ArtistDiscography: FC<ArtistDiscographyProps> = (
               : undefined
           }
           loading={loading}
+          latestRelease={
+            selected?.type === "all" ||
+            selected?.type === latestRelease?.album_type
+          }
           onAlbumSelected={onAlbumSelected}
           pageSize={6}
         />

@@ -119,7 +119,7 @@ const Artist: FC = () => {
             </Box>
           </Box>
         </Stack>
-        <Box>
+        <Box my={1}>
           <ArtistDiscography
             artist={artist}
             onAlbumSelected={handleAlbumSelected}

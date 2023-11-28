@@ -14,6 +14,7 @@ type AlbumsGridProps = {
   cardType?: AlbumCardType;
   loading: boolean;
   pageSize?: number;
+  latestRelease?: boolean;
   onAlbumSelected?: (album: SpotifyAlbum) => void;
 };
 
@@ -23,6 +24,7 @@ const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
     cardType = "minimal",
     loading,
     pageSize,
+    latestRelease = false,
     onAlbumSelected,
   } = props;
 
@@ -52,7 +54,7 @@ const AlbumsGrid: FC<AlbumsGridProps> = (props: AlbumsGridProps) => {
 
   const gridProps: AppGridProps<SpotifyAlbum> = {
     data: gridData,
-    cardView: createCardViewDefinitions(cardType),
+    cardView: createCardViewDefinitions(cardType, latestRelease),
     displayMode: "card",
     cursorStyle: "pointer",
     onItemClicked: onAlbumSelected,
