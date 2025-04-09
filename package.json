@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "description": "React State Management Spotify Examples",
+  "scripts": {
+    "clean": "pnpm -r clean && rimraf node_modules",
+    "lint": "pnpm -r lint"
+  },
+  "dependencies": {
+    "@benbeck764/react-components": "1.4.0-beta.20",
+    "@benbeck764/react-components-grid": "1.4.0-beta.20",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.17.1",
+    "@mui/material": "^5.15.17",
+    "@mui/system": "^5.16.14",
+    "@reduxjs/toolkit": "^1.9.7",
+    "axios": "^1.6.1",
+    "htmlparser2": "^9.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@types/spotify-web-playback-sdk": "^0.1.19",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "prettier": "^3.3.3",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.10",
+    "vite-plugin-dts": "^3.6.4",
+    "vite-tsconfig-paths": "^4.3.1"
+  }
+}

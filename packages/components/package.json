@@ -1,0 +1,59 @@
+{
+  "name": "@spotify-examples/components",
+  "description": "React Spotify Components",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm lint && vite build",
+    "clean": "pnpm clean:packages & pnpm clean:dist",
+    "clean:dist": "rimraf dist",
+    "clean:packages": "rimraf node_modules",
+    "eslint": "eslint . --max-warnings 0",
+    "lint": "pnpm eslint && pnpm type-check",
+    "prettier": "prettier --write",
+    "preview": "vite preview",
+    "type-check": "tsc -b --noEmit"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "main": "dist/components.js",
+  "module": "dist/components.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@spotify-examples/spotify-models": "workspace:*"
+  },
+  "devDependencies": {
+    "@benbeck764/react-components": "1.4.0-beta.20",
+    "@benbeck764/react-components-grid": "1.4.0-beta.20",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.17.1",
+    "@mui/material": "^5.15.17",
+    "@mui/system": "^5.16.14",
+    "htmlparser2": "^9.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@benbeck764/react-components": "1.4.0-beta.20",
+    "@benbeck764/react-components-grid": "1.4.0-beta.20",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.17.1",
+    "@mui/material": "^5.15.17",
+    "@mui/system": "^5.16.14",
+    "htmlparser2": "^9.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "sideEffects": false
+}

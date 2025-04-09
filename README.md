@@ -1,7 +1,8 @@
 # React-State-Management-Tests
-Testing of various React state management libraries:
+Testing of various React state management, data fetching & caching libraries:
 
-- [ ] Redux Toolkit
+- [X] Redux Toolkit (RTK Query)
+- [ ] TanStack Query
 - [ ] MobX
 - [ ] Zustand
 - [ ] Recoil

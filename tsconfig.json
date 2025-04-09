@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ES2020",
+        "skipLibCheck": true,
+        "useDefineForClassFields": true,
+
+        "moduleResolution": "bundler",
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "resolveJsonModule": true,
+        "jsx": "react-jsx",
+
+        "strict": true,
+        "noUnusedLocals": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

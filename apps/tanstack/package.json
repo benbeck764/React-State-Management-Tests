@@ -1,0 +1,28 @@
+{
+  "name": "@spotify-examples/tanstack",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm lint && vite build",
+    "clean": "pnpm clean:packages & pnpm clean:dist",
+    "clean:dist": "rimraf dist",
+    "clean:packages": "rimraf node_modules",
+    "eslint": "eslint . --max-warnings 0",
+    "lint": "pnpm eslint && pnpm type-check",
+    "prettier": "prettier --write",
+    "preview": "vite preview",
+    "type-check": "tsc -b --noEmit"
+  },
+  "proxy": "http://localhost:5174",
+  "dependencies": {
+    "@spotify-examples/components": "workspace:*",
+    "@spotify-examples/spotify-api": "workspace:*",
+    "@spotify-examples/spotify-auth": "workspace:*",
+    "@spotify-examples/spotify-models": "workspace:*",
+    "@spotify-examples/utilities": "workspace:*",
+    "@tanstack/react-query": "^5.72.2",
+    "@tanstack/react-router": "^1.115.2"
+  }
+}

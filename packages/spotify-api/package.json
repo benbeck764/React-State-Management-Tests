@@ -1,0 +1,37 @@
+{
+  "name": "@spotify-examples/spotify-api",
+  "description": "Spotify API",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm lint && vite build",
+    "clean": "pnpm clean:packages & pnpm clean:dist",
+    "clean:dist": "rimraf dist",
+    "clean:packages": "rimraf node_modules",
+    "eslint": "eslint . --max-warnings 0",
+    "lint": "pnpm eslint && pnpm type-check",
+    "prettier": "prettier --write",
+    "preview": "vite preview",
+    "type-check": "tsc -b --noEmit"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "main": "dist/spotify-api.js",
+  "module": "dist/spotify-api.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@spotify-examples/spotify-models": "workspace:*"
+  },
+  "devDependencies": {},
+  "peerDependencies": {},
+  "sideEffects": false
+}

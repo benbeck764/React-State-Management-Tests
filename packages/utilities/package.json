@@ -1,0 +1,35 @@
+{
+  "name": "@spotify-examples/utilities",
+  "description": "TypeScript/React Utilities",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm lint && vite build",
+    "clean": "pnpm clean:packages & pnpm clean:dist",
+    "clean:dist": "rimraf dist",
+    "clean:packages": "rimraf node_modules",
+    "eslint": "eslint . --max-warnings 0",
+    "lint": "pnpm eslint && pnpm type-check",
+    "prettier": "prettier --write",
+    "preview": "vite preview",
+    "type-check": "tsc -b --noEmit"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "main": "dist/utilities.js",
+  "module": "dist/utilities.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {},
+  "sideEffects": false
+}
